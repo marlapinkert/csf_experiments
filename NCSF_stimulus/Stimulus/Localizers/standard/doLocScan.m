@@ -1,0 +1,223 @@
+function doLocScan(params)
+% doLocScan(params)
+%
+% Runs any of several retinotopy scans
+%
+% 99.08.12 RFD wrote it, consolidating several variants of retinotopy scan code.
+% 05.06.09 SOD modified for OSX, lots of changes.
+% 04/2006  SOD converted from doRetinotopyScan
+
+% defaults
+if ~exist('params', 'var')
+	error('No parameters specified!');
+end
+
+% quit key
+try
+    quitProgKey = params.display.quitProgKey;
+catch
+    quitProgKey = KbName('q');
+end
+
+% make/load stimulus
+switch params.experiment
+    case 'moving bars vs fixation'
+        [stimulus, onebackSequence] = makeBarStimulus(params);
+    case {'contrast sensitivity function 6sf', 'contrast sensitivity quick eye track'}
+        [stimulus, onebackSequence, params] = makeCrfStimulus(params);
+    otherwise
+        [stimulus, onebackSequence] = makeLocStimulus(params);
+end
+
+% add scotoma
+params.scotoma = []; % [1.46 -4.91 0.565 0.361 131 5];
+if isfield(params,'scotoma')
+    if ~isempty(params.scotoma)
+        stimulus = insertScotoma(stimulus,params,params.scotoma);
+    end
+end
+
+% loading mex functions for the first time can be
+% extremely slow (seconds!), so we want to make sure that 
+% the ones we are using are loaded.
+KbCheck;GetSecs;WaitSecs(0.001);
+
+try
+    % check for OpenGL
+    AssertOpenGL;
+    
+    Screen('Preference','SkipSyncTests', 1);
+    
+    % Open the screen
+    params.display                = openScreen(params.display);
+    params.display.devices        = params.devices;
+
+    % to allow blending
+    % Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    % Store the images in textures
+    stimulus = createTextures(params.display,stimulus);
+    % ********************************************************
+        %% Initialize EyeLink if requested
+    if params.doEyelink
+        fprintf('\n[%s]: Setting up Eyelink..\n',mfilename)
+        % Eyelink('SetAddress','192.168.1.5'); % Eyelink IP address?
+        el = EyelinkInitDefaults(params.display.windowPtr);
+        %EyelinkUpdateDefaults(el);
+        %
+        % %     Initialize the eyetracker
+        Eyelink('Initialize', 'PsychEyelinkDispatchCallback');
+
+        % --- MD EDIT ---
+        % Example: [windowPtr, rect] = Screen('OpenWindow', screenid, 0, [], 32, 2);
+        
+        % Get the screen resolution (width and height of your Psychtoolbox window)
+        screenWidth_PTB = params.display.rect(3) - params.display.rect(1); % rect(3) is right edge, rect(1) is left edge
+        screenHeight_PTB = params.display.rect(4) - params.display.rect(2); % rect(4) is bottom edge, rect(2) is top edge
+        Eyelink('command', 'screen_pixel_coords = %ld %ld %ld %ld', 0, 0, screenWidth_PTB - 1, screenHeight_PTB - 1);
+        Eyelink('message', 'DISPLAY_COORDS %ld %ld %ld %ld', 0, 0, screenWidth_PTB - 1, screenHeight_PTB - 1);
+        if params.eyeViewing == 'L'
+            Eyelink('Command', 'eyetrack_spec = LEFT');
+        else
+            Eyelink('Command', 'eyetrack_spec = RIGHT');
+        end
+        % --- MD EDIT end ---
+
+
+        % %     Set up 5 point calibration
+        s = Eyelink('command', 'calibration_type=HV9');
+        %
+        % %     Calibrate the eye tracker
+        EyelinkDoTrackerSetup(el);
+        %
+        % %     Throw an error if calibration failed
+        if s~=0
+            error('link_sample_data error, status: ', s)
+        end
+   
+%         el = prepEyelink(params.display.windowPtr);
+        % elfilename needs to be short...
+        alphabet = ['A':'Z', 'a':'z'];
+        randomIndices = randi(length(alphabet), 1, 6);
+        randomString = alphabet(randomIndices);
+        randomString = char(randomString);
+
+        ELfileName = sprintf('%s.edf', randomString);
+        
+        edfFileStatus = Eyelink('OpenFile', ELfileName);
+        
+        if edfFileStatus ~= 0, fprintf('Cannot open .edf file. Existing ...');
+            try
+                Eyelink('CloseFile');
+                Eyelink('Shutdown');
+            end
+            return; 
+        else
+            fprintf('\n[%s]: Succesfully openend Eyelink file..\n',mfilename)
+        end
+        % cal = EyelinkDoTrackerSetup(el);
+    end
+% ********************************************************
+    % getting to the source rather than doScan->doTrial->showStimulus 
+    for n = 1:params.repetitions
+        % set priority
+%        Priority(params.runPriority);
+        
+        % wait for go signal
+        % waituntillspacepress;
+        % pressKey2Begin(params.display);      
+
+        % countdown + get start time (time0)
+        % [time0] = countDown(params.display,params.startScan+2,params.startScan);
+
+        % Trigger ret code
+%        dispStringInCenter(params.display,'Waiting for scanner to start',0.6,[],'white');
+        
+        dispStringInCenter(params.display,'Waiting for scanner to start',0.6,40,[0 0 0]);
+        %% ILONA CODE SNIPPET -> FIX FOR SCANNER        
+        try
+            [keyboardIndx, productNames] = GetKeyboardIndices;
+            deviceString = 'Current Designs, Inc. 932';
+    
+            if ischar(deviceString)
+                for ii = 1:length(productNames)
+                    if strcmp(productNames{ii}, deviceString)
+                        deviceNumber = keyboardIndx(ii);
+                        break
+                    end
+                end
+            else
+                deviceNumber = deviceString;
+            end
+            KbQueueRelease() 
+            KbTriggerWait(KbName('t'), deviceNumber);
+        catch
+            KbQueueRelease() 
+            KbTriggerWait(KbName('t'))
+        end
+        %% Continue
+
+        % [junk time0]=deviceUMC('wait for trigger',params.devices.UMCport);  
+        if params.doEyelink
+            Eyelink('StartRecording');
+        end   
+        % go
+        %[response, timing, quitProg] = showScanStimulus(params.display,stimulus,time0);
+        [response, timing, quitProg] = showScanStimulus(params.display,stimulus);
+        params.x_response = response;
+        params.x_timing = timing;         
+
+        if params.doEyelink
+            Eyelink('StopRecording');
+            Eyelink('ReceiveFile', ELfileName, params.output_folder ,1);
+        
+            Eyelink('CloseFile');
+        
+            Eyelink('Shutdown');            
+            % Rename the file
+            movefile([params.output_folder '/' ELfileName], [params.output_folder '/' params.sesFileName datestr(now,30) '.edf']);
+        end
+        % reset priority
+        % Priority(0);
+        
+        % get performance
+        [pc,rc,nn] = getFixationPerformance(params.fix,stimulus,response); 
+        params.x_pc = pc;
+        params.x_rc= rc;
+        params.x_nn = nn;
+        % disp(sprintf('[%s]:Fixation dot task(%d): percent correct: %.1f %%, reaction time: %.1f secs',mfilename,nn,pc,rc));
+        fprintf('[%s]:Fixation dot task(%d): percent correct: %.1f %%, reaction time: %.1f secs',mfilename,nn,pc,rc);
+        
+%         % get 1-back performance
+%         if exist('onebackSequence') && ~isempty(onebackSequence)
+%             [pc,rc,nn] = getDetectionPerformance(params.fix,stimulus,response,onebackSequence);
+%             % disp(sprintf('[%s]:One-back task(%d): percent correct: %.1f %%, reaction time: %.1f secs',mfilename,nn,pc,rc));
+%             fprintf('[%s]:One-back task(%d): percent correct: %.1f %%, reaction time: %.1f secs',mfilename,nn,pc,rc);
+%         end
+%         
+        % save 
+        if params.savestimparams == 1
+
+            filename = [ params.output_folder '/' params.sesFileName datestr(now,30) '.mat'];
+
+            save(filename);                % save parameters
+            % disp(sprintf('[%s]:Saving in %s.',mfilename,filename));
+            fprintf('[%s]:Saving in %s.',mfilename,filename);
+        end
+        
+        % keep going?
+        if quitProg % don't keep going if quit signal is given
+            break;
+        end
+    end
+    
+    % Close the one on-screen and many off-screen windows
+    closeScreen(params.display);
+catch
+    % clean up if error occurred
+    Screen('CloseAll');
+%    setGamma(0);
+    Priority(0);
+    ShowCursor;
+    rethrow(lasterror);
+end

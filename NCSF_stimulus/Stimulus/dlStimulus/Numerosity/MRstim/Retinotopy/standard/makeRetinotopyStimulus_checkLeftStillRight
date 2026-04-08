@@ -1,0 +1,453 @@
+function stimulus = makeRetinotopyStimulus_checkSpeed(params)
+% makeRetinotopyStimulus - make various retinotopy stimuli
+% Matlab code to generate various retinotopy stimuli
+% Generates one full cycle, as well as the sequence for the entire scan.
+%
+% 99.09.15 RFD: I fixed the sequence generation algorithm so that
+%   timing is now frame-accurate.  The algorithm now keeps track
+%   of timing error that accumulates due to rounding to the nearest
+%   frame and corrects for that error when it gets to be more than 
+%   half a frame.  
+%   The algorithm also randomely reverses the drift direction, rather
+%   than reversing every half-an image duration.
+% 2005.06.15 SOD: changed for OSX - stimulus presentation will now be 
+%                 time-based rather than frame based. Because of bugs
+%                 with framerate estimations.
+
+
+% load matrix or make it
+if ~isempty(params.loadMatrix),
+    % we should really put some checks that the matrix loaded is
+    % appropriate etc.
+    load(params.loadMatrix);
+    fprintf(1,'[%s]:loading images from %s.\n',mfilename,params.loadMatrix);
+%    disp(sprintf('[%s]:size stimulus: %dx%d pixels.',mfilename,n,m));
+else
+    outerRad = params.radius;
+    innerRad = params.innerRad;
+    wedgeWidth = params.wedgeWidth;
+    ringWidth = params.ringWidth;
+
+    numImages = params.numImages;
+    numMotSteps = params.temporal.motionSteps;
+    numSubRings = params.numSubRings;
+    numSubWedges = params.numSubWedges;
+
+    %%% Set check colormap indices %%%
+    %bk = findName(params.display.reservedColor,'background');
+    %minCmapVal = max([params.display.reservedColor(:).fbVal])+1;
+    %maxCmapVal = params.display.numColors-1;
+    bk = params.display.backColorIndex;
+    
+    minCmapVal = min([params.display.stimRgbRange]);
+    maxCmapVal = max([params.display.stimRgbRange]);
+
+
+    %%% Initialize image template %%%
+    sSize.pix = fliplr(params.display.numPixels);
+    sSize.deg = pix2angle(params.display,sSize.pix);
+    
+
+    m=sSize.pix(1);%angle2pix(params.display,2*outerRad); 
+    n=sSize.pix(2);
+    mask = ones(n,m);
+    
+    xFixDev=pix2angle(params.display, params.display.fixX-sSize.pix(2)/2);
+    yFixDev=pix2angle(params.display, params.display.fixY-sSize.pix(1)/2);
+    [x, y] = meshgrid(linspace(-sSize.deg(2)./2-xFixDev,sSize.deg(2)./2-xFixDev,sSize.pix(2)),...
+                 linspace(-sSize.deg(1)./2-yFixDev,sSize.deg(1)./2-yFixDev,sSize.pix(1)));
+    fprintf(1,'[%s]:size stimulus: %dx%d pixels.\n',mfilename,n,m);
+    
+    mask = makecircle(m*24/28,m);
+    
+    % r = eccentricity; theta = polar angle
+    r = sqrt (x.^2  + y.^2);
+    theta = atan2 (y, x);					% atan2 returns values between -pi and pi
+    theta(theta<0) = theta(theta<0)+2*pi;	% correct range to be between 0 and 2*pi
+
+    % Calculate checkerboard.
+    % Wedges alternating between -1 and 1 within stimulus window.
+    % The computational contortions are to avoid sign=0 for sin zero-crossings
+    wedges = sign(2*round((sin(theta*numSubWedges*(2*pi/wedgeWidth))+1)/2)-1);
+    posWedges = find(wedges==1);
+    negWedges = find(wedges==-1);
+
+    %rings = wedges.*0;
+    rings = sign(2*round((sin(r*numSubRings*(2*pi/ringWidth))+1)/2)-1);
+
+    checks   = zeros(size(rings,1),size(rings,2),params.temporal.motionSteps);
+    for ii=1:numMotSteps,
+        tmprings1 = sign(2*round((sin(r*numSubRings*(2*pi/ringWidth)+(ii-1)/numMotSteps*2*pi)+1)/2)-1);
+        tmprings2 = sign(2*round((sin(r*numSubRings*(2*pi/ringWidth)+(ii-1)/numMotSteps*2*pi)+1)/2)-1);
+        rings(posWedges)=tmprings1(posWedges);
+        rings(negWedges)=tmprings2(negWedges);
+
+        checks(:,:,ii)=minCmapVal+ceil((maxCmapVal-minCmapVal) * (wedges.*rings+1)./2);
+    end;
+    
+    % Loop that creates the final images
+    fprintf('[%s]:Creating %d images:',mfilename,numImages);
+    images=zeros(m,n,numImages*params.temporal.motionSteps,'uint8');
+    for imgNum=1:params.numImages
+
+        switch params.type;
+            case 'wedge',
+                switch(lower(params.display.fixType))
+                    case {'left disk','right disk'},
+                        loAngle = 2*pi*((imgNum-1)/(numImages*2));
+                        hiAngle = loAngle + wedgeWidth;
+                        % for second wedge
+                        loAngle2 = loAngle + pi;
+                        hiAngle2 = loAngle2 + wedgeWidth;
+                    otherwise
+                        loAngle = 2*pi*((imgNum-1)/numImages);
+                        hiAngle = loAngle + wedgeWidth;
+                end;
+                loEcc = innerRad;
+                hiEcc = outerRad;
+            case 'ring',
+                loAngle = 0;
+                hiAngle = 2*pi;
+                loEcc = outerRad * (imgNum-1)/numImages;
+                hiEcc = loEcc+ringWidth;
+            case 'center-surround',
+                loAngle = 0;
+                hiAngle = 2*pi;
+                if mod(imgNum,2)
+                    loEcc = params.centerInnerRad;
+                    hiEcc = params.centerOuterRad;
+                else
+                    loEcc = params.surroundInnerRad;
+                    hiEcc = params.surroundOuterRad;
+                end
+                switch(lower(params.display.fixType))
+                    case {'left disk','right disk'},
+                        hiEcc = hiEcc.*2;
+                end;
+            otherwise,
+                error('Unknown stimulus type!');
+
+        end
+        % This isn't as bad as it looks
+        % Can fiddle with this to clip the edges of an expanding ring - want the ring to completely 
+        % disappear from view before it re-appears again in the middle.
+
+        % Can we do this just be removing the second | from the window expression? so...
+        window = ( ((theta>=loAngle & theta<hiAngle) | ...
+            (hiAngle>2*pi & theta<mod(hiAngle,2*pi))) );%& ...
+%             ((r>=loEcc & r<=hiEcc)) & ...
+%             r<outerRad) ;
+    
+%         if isfield(params.display, 'Rect')
+%             windowRadius = pix2angle(params.display, (params.display.Rect(4)-params.display.Rect(2)))/2;
+%             window=window & r<windowRadius;
+%         end
+        
+        % if we have a fixation to the side double the wedges
+        switch(lower(params.display.fixType))
+            case {'left disk','right disk'},
+                switch params.type;
+                    case 'wedge',
+                        window = window +...
+                            ( ((theta>=loAngle2 & theta<hiAngle2) | ...
+                            (hiAngle2>2*pi & theta<mod(hiAngle2,2*pi))) & ...
+                            ((r>=loEcc & r<=hiEcc)) & ...
+                            r<outerRad);
+                        window = window > .5;
+                        % hack!
+                end;
+                window = window .* mask;
+                window = window > .5;
+        end;
+
+        % yet another loop to be able to move the checks...
+        for ii=1:numMotSteps, 
+            img = bk*ones(m,n);
+            tmpvar = checks(:,:,ii);
+            img(window) = tmpvar(window);	
+            images(:,:,imgNum*numMotSteps-numMotSteps+ii) = uint8(img);
+        end;
+        fprintf('.');drawnow;
+    end
+    fprintf('Done.\n');
+end;
+%save 
+%return;
+
+
+% Now we compile the actual sequence
+% seq = [];
+% curCmapFrame = 1;
+% if params.seqDirection==0
+% 	imSeq = 1:params.numImages;
+% else
+% 	imSeq = params.numImages:-1:1;
+% end
+
+duration.stimframe          = 1./params.temporal.frequency./params.temporal.motionSteps;
+duration.scan.seconds       = params.ncycles*params.period;
+duration.scan.stimframes    = params.ncycles*params.period./duration.stimframe;
+duration.cycle.seconds      = params.period;
+duration.cycle.stimframes   = params.period./duration.stimframe;
+duration.prescan.seconds    = params.prescanDuration;
+duration.prescan.stimframes = params.prescanDuration./duration.stimframe;
+
+% make stimulus sequence
+% main wedges/rings
+sequence = ...
+    ones(1,duration.cycle.stimframes./params.numImages)'*...
+    (1:params.temporal.motionSteps:params.temporal.motionSteps*params.numImages);
+
+
+if params.insertBlanks.do,
+    if params.insertBlanks.phaseLock, % keep 1 cycle and repeat
+        completeCycle = sequence(:);
+        sequence = [completeCycle;...
+                    completeCycle(1:round(end/2));...
+                    completeCycle;...
+                    completeCycle(1:round(end/2));...
+                    completeCycle;...
+                    completeCycle(1:round(end/2));...
+                    completeCycle;...
+                    completeCycle(1:round(end/2))];
+    else
+        sequence = repmat(sequence(:),params.ncycles,1);
+    end;
+else
+    sequence = repmat(sequence(:),params.ncycles,1);
+end;
+
+
+% motion frames within wedges/rings - lowpass
+% nn=0.8./duration.stimframe; % this should be a less random choice, ie in seconds
+% motionSeq = ones(nn,1)*round(rand(1,ceil(length(sequence)/nn)));
+% if strcmpi(params.display.fixType, 'large cross')
+% fixSeq=motionSeq;
+% end
+% motionSeq = motionSeq(:)-0.5;
+motionSeq=0-ones(length(sequence),1);
+motionSeq = motionSeq(1:length(sequence));
+
+
+
+
+%Insert
+%motionSeq=ones(size(motionSeq));
+add=size(images,3)+1;
+images(:,:,add)   = uint8(ones(size(images,1),size(images,2)).*bk);
+add=size(images,3)-1;
+
+motionSeq = cumsum(sign(motionSeq));
+
+% wrap
+above = find(motionSeq>params.temporal.motionSteps);
+while ~isempty(above),
+    motionSeq(above)=motionSeq(above)-params.temporal.motionSteps;
+    above = find(motionSeq>params.temporal.motionSteps);
+end;
+below = find(motionSeq<1);
+while ~isempty(below),
+    motionSeq(below)=motionSeq(below)+params.temporal.motionSteps;
+    below = find(motionSeq<1);
+end;
+
+%Insert
+%End of visual field mapping ecog
+% onTimes=[1 0.05 0.25 0.1 2 0.5 2 0.5 1 0.05 0.25 0.1 0.1 0.5 1 2 0.05 0.25];
+% offTimes=[3 3.5 2.5 3 3.5 2.5 2 3.5 2.5 3 3 3 2 2.5 2 2.5 3.5 2.5];
+% endTime=3.3; %Odd number, to make a round number of frames
+%Inserted in ecog number stimuli
+% onTimes=[2 0.3];
+% offTimes=[2 2];
+%endTime=1; %Odd number, to make a round number of frames
+%onOffSequence=[offTimes; onTimes];
+%To meausure HRF
+
+offTimes=[13 9 24 11 13 6 12 8 19 6 11 15 19 14 24 10 14 9 8 7 10 19 7 24 15 12];
+onTimes=ones(size(offTimes));
+%offTimes=[10 10 10 10 10 10 10 10 10 10 10 10];
+endTime=0; %Odd number, to make a round number of frames
+onOffSequence=[onTimes; offTimes];
+
+onOffSequence=onOffSequence(:);
+onOffSequence=[onOffSequence; endTime];
+onOffSequence=onOffSequence.*(params.temporal.motionSteps*params.temporal.frequency);
+onOffSequence=cumsum(onOffSequence);
+sequence=sequence+motionSeq-1;
+
+%Insert
+% for insertCounter=1:2:length(onOffSequence)
+%     if insertCounter==1
+%         sequence(1:onOffSequence(1))=add;
+%     else
+%         sequence(onOffSequence(insertCounter-1)+1:onOffSequence(insertCounter))=add;
+%     end
+% end
+
+%Insert FOR HRF MEASUREMENT
+for insertCounter=2:2:length(onOffSequence)
+    if insertCounter==2
+        sequence(onOffSequence(1)+1:onOffSequence(2))=add;
+    else
+        sequence(onOffSequence(insertCounter-1)+1:onOffSequence(insertCounter))=add;
+    end
+end
+
+% fixation dot sequence
+% fixSeq = ones(nn,1)*round(rand(1,ceil(length(sequence)/nn)));
+% fixSeq = fixSeq(:)+1;
+% fixSeq = fixSeq(1:length(sequence));
+% % force binary
+% fixSeq(fixSeq>2)=2; 
+% fixSeq(fixSeq<1)=1;
+
+minsec = 6./duration.stimframe;
+if ~strcmpi(params.display.fixType, 'large cross')
+    fixSeq = ones(minsec,1)*round(rand(1,ceil(length(sequence)/minsec)));
+end
+fixSeq = fixSeq(:)+1;
+fixSeq = fixSeq(1:length(sequence));
+% force binary
+fixSeq(fixSeq>2)=2; 
+fixSeq(fixSeq<1)=1;
+
+% direction
+if params.seqDirection~=0
+	sequence = flipud(sequence);
+end
+
+% insert blanks
+% if params.insertBlanks.do,
+%     seq2      = zeros(size(sequence));
+%     oneCycle  = length(seq2)/params.insertBlanks.freq;
+%     switch params.experiment,
+%         case {'full-field, on-off (impulse)'},
+%             onPeriod  = round(params.impulse./duration.stimframe);
+%             offPeriod = oneCycle-onPeriod;
+%             seq2      = repmat([zeros(onPeriod,1); ones(offPeriod,1)],params.insertBlanks.freq,1);
+% %             sequence = ones(duration.scan.stimframes,1).*(params.temporal.motionSteps*params.numImages);
+% %             impulseInStimframes = round(params.impulse/duration.stimframe);
+% %             sequence(1:impulseInStimframes) = 1;
+% 
+%         case {'full-field, red/green - red only with blanks','full-field, red/green - green only with blanks'},
+%             % ugly hack for Yoichiro's exp't
+%             onPeriod  = oneCycle./24.*4.5;
+%             offPeriod = oneCycle./24.*7.5;
+%             seq2      = repmat([zeros(onPeriod,1); ones(offPeriod,1)],params.insertBlanks.freq.*2,1);
+%         otherwise,
+%             offPeriod = ceil((duration.cycle.seconds/2)/duration.stimframe);
+%             onPeriod  = oneCycle-offPeriod;
+%             seq2      = repmat([zeros(onPeriod,1); ones(offPeriod,1)],params.insertBlanks.freq,1);
+%     end
+%     add       = size(images,3)+1;
+%     if isempty(params.loadMatrix),
+%         sequence(seq2==1) = add;
+%         images(:,:,add)   = uint8(ones(size(images,1),size(images,2)).*bk);
+%     end;
+%     clear seq2;
+%     fprintf('[%s]:Stimulus on for %.1f and off for %.1f seconds.',...
+%         mfilename,onPeriod*duration.stimframe,offPeriod*duration.stimframe);
+% end;
+        
+% Insert the preappend images by copying some images from the
+% end of the seq and tacking them on at the beginning
+sequence = [sequence(length(sequence)+1-duration.prescan.stimframes:end); sequence];
+timing   = (0:length(sequence)-1)'.*duration.stimframe;
+cmap     = params.display.gammaTable;
+fixSeq   = [fixSeq(length(fixSeq)+1-duration.prescan.stimframes:end); fixSeq];
+%fixSeq=ones(size(fixSeq));
+
+
+% hack to do red blue experiment
+switch params.experiment,
+    case {'full-field, red/green'},
+        resample=1;
+        images(images==0)=1;
+        images(images==255)=254;
+        if resample==1
+            minlumR=1;
+            maxlumR=165;
+            minlumB=1;
+            maxlumB=255;
+            
+            gammaR=params.display.gamma(:,1);
+            gamRangeR=gammaR(minlumR:maxlumR);
+            difR=maxlumR-minlumR+1;
+            rangeR=1:difR;
+            rangeR=rangeR(:);
+            resampleR=linspace(1, difR, 254);
+            newGammaR=spline(rangeR, gamRangeR, resampleR);
+            newGammaR=newGammaR(:);
+            
+            cmap(:,:,1) = [[0;newGammaR;1] params.display.gamma(:,2).*0+params.display.gamma(128,2) ...
+            params.display.gamma(:,3).*0+params.display.gamma(128,3)];
+        
+            gammaB=params.display.gamma(:,3);
+            gamRangeB=gammaB(minlumB:maxlumB);
+            difB=maxlumB-minlumB+1;
+            rangeB=1:difB;
+            rangeB=rangeB(:);
+            resampleB=linspace(1, difB, 254);
+            newGammaB=spline(rangeB, gamRangeB, resampleB);
+            newGammaB=newGammaB(:);
+            
+            cmap(:,:,2) = [params.display.gamma(:,1).*0+params.display.gamma(128,1) ...
+            params.display.gamma(:,2).*0+params.display.gamma(128,2) [0;newGammaB;1]];
+        
+            cmap(1,:,:) = 0;
+            cmap(256,:,:) = 1;
+            
+        else
+            cmap(:,:,1) = [params.display.gamma(:,1) params.display.gamma(:,2).*0+params.display.gamma(128,2) ...
+                params.display.gamma(:,3).*0+params.display.gamma(128,3)];
+
+            cmap(:,:,2) = [params.display.gamma(:,1).*0+params.display.gamma(128,1) ...
+                params.display.gamma(:,2).*0+params.display.gamma(128,2) params.display.gamma(:,3)];
+        end
+
+        % put in clut changes -clut
+        s = diff(sequence<=max(sequence(:))./2);
+        f = find(s~=0);
+        s = [-s(f(1)); s];
+        f = s>0;
+        s(f) = -2;
+        ii = find(s<0);
+        sequence(ii) = s(ii);
+    case {'full-field, red/green - red only','full-field, red/green - red only with blanks'},
+        mask        = ones(size(params.display.gamma,1),1)*[1 0 0];
+        cmap(:,:,1) = params.display.gamma .* mask;
+        mask        = ones(size(params.display.gamma,1),1)*[1 0 0];
+        cmap(:,:,2) = params.display.gamma .* mask;
+        % put in clut changes -clut
+        s = diff(sequence<=max(sequence(:))./2);
+        f = find(s~=0);
+        s = [-s(f(1)); s];
+        f = s>0;
+        s(f) = -2;
+        ii = find(s<0);
+        sequence(ii) = s(ii);
+    case {'full-field, red/green - green only','full-field, red/green - green only with blanks'},
+        mask        = ones(size(params.display.gamma,1),1)*[0 0 1];
+        cmap(:,:,1) = params.display.gamma .* mask;
+        mask        = ones(size(params.display.gamma,1),1)*[0 0 1];
+        cmap(:,:,2) = params.display.gamma .* mask;
+        % put in clut changes -clut
+        s = diff(sequence<=max(sequence(:))./2);
+        f = find(s~=0);
+        s = [-s(f(1)); s];
+        f = s>0;
+        s(f) = -2;
+        ii = find(s<0);
+        sequence(ii) = s(ii);
+        % scale images
+        %images      = round((images-params.display.backColorRgb).*params.contrast)+params.display.backColorRgb;        
+end;
+
+% make stimulus structure for output
+stimulus = createStimulusStruct(images,cmap,sequence,[],timing,fixSeq);
+
+% save matrix if requested
+if ~isempty(params.saveMatrix),
+    save(params.saveMatrix,'images');
+end;
+

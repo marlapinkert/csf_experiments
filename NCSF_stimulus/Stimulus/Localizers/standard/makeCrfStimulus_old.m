@@ -1,0 +1,289 @@
+function [stimulus, onebackSeq, params] = makeCrfStimulus(params)
+% makeCrfStimulus - 2019 CAR & SOD
+% assume TR = 1.5
+% block design: 1 block = 21s (14TR)
+% baseline = 15s
+
+% params.period = block length (±15sec)
+% params.ncycles = number of blocks (=8)
+params.baseline = 15;
+
+params.maxcontrast = 80; % percent
+params.mincontrast = 1; % DAC values
+
+% background
+bk = params.display.backColorIndex;
+
+% various time measurements:
+% confusingly cycle == blocklength here, so really cycle =
+% 2*(the number reported here)
+%duration.stimframe           = 1./params.temporal.frequency./params.temporal.motionSteps;
+duration.stimframe            = 1/params.display.frameRate;
+duration.stimframe_on         = 0.3; % sec
+duration.stimframe_off        = 0.2; % sec
+duration.scan.seconds         = params.ncycles*params.period + (params.ncycles+1)*params.baseline;
+% duration.scan.stimframes    = params.ncycles*params.period.*2./duration.stimframe;
+% duration.cycle.seconds      = params.period;
+% duration.cycle.stimframes   = params.period./duration.stimframe;
+% duration.prescan.seconds    = params.prescanDuration;
+% duration.prescan.stimframes = params.prescanDuration./duration.stimframe;
+params.contrasts              = round(bk*(logspace(log10(params.mincontrast),log10(params.maxcontrast),params.period/params.framePeriod))/100);
+
+% spatial frequencies
+switch params.experiment
+    case 'contrast sensitivity function 4sf'
+        params.sf = [6 3 18 12  3 18 12  6]; % c/deg
+    case 'contrast sensitivity function 5sf'
+        params.sf = [3 18 6 .5 12 6 .5 12 18 3]; % c/deg RE-ENABLE!!
+%         params.sf = [.5 .5 .5 .5 18 18 18 18 3 3]; % c/deg
+    otherwise
+end
+    
+% contrast
+switch params.experiment
+    case 'contrast sensitivity function 4sf'
+        params.cd = [1 0  1  0  1  0  1  0]; % 0=ramp up, 1=ramp down
+    case 'contrast sensitivity function 5sf'
+        params.cd = [1 0  1  0  1  0  1  0  1  0];
+    otherwise 
+end
+
+% number of baseline block TRs
+params.baselineTRs = params.baseline/params.framePeriod;
+
+% number of stimulus block TRs
+params.stimTRs = params.period/params.framePeriod;
+
+% Michelson contrast values
+params.maxLuminance = (bk-1)+params.contrasts; % bk = 128, max value = 255
+params.minLuminance = bk-params.contrasts;
+params.MCcontrast = (params.maxLuminance - params.minLuminance)./(params.maxLuminance + params.minLuminance)*100;
+
+params.sf_vect = repelem(0,params.baselineTRs);
+params.contrasts_vect = repelem(0,params.baselineTRs);
+for i_block = 1:2:length(params.sf) 
+    % Spatial frequency vetor (spatial frequency for each TR) 
+    params.sf_vect = [params.sf_vect repelem(params.sf(i_block),params.stimTRs) repelem(params.sf(i_block+1),params.stimTRs) ...
+        repelem(0,params.baselineTRs)];
+    % Contrast vector (contrast for each TR)
+    params.contrasts_vect = [params.contrasts_vect  fliplr(params.MCcontrast) params.MCcontrast repelem(0,params.baselineTRs)];
+end
+
+% stimulus size
+stimsize = params.radius;
+
+minCmapVal = min([params.display.stimRgbRange]);
+maxCmapVal = max([params.display.stimRgbRange]);
+
+%%% Initialize image template %%%
+m=angle2pix(params.display,2*stimsize);
+n=angle2pix(params.display,2*stimsize);
+
+% here we crop the image if it is larger than the screen
+% seems that you have to have a square matrix, bug either in my or
+% psychtoolbox' code - so we make it square
+[x,y]=meshgrid(linspace(-stimsize,stimsize,n),linspace(stimsize,-stimsize,m));
+if m>params.display.numPixels(2)
+    start  = round((m-params.display.numPixels(2))/2);
+    len    = params.display.numPixels(2);
+    y = y(start+1:start+len, start+1:start+len);
+    x = x(start+1:start+len, start+1:start+len);
+    m = len;
+    n = len;
+end
+fprintf('[%s]:size stimulus: %dx%d pixels.\n',mfilename,n,m);
+
+% make a circular mask (option for soft edge)
+% edgewidth = min(params.sf); % edgewidth in c/deg
+edgewidth = 3; % edgewidth in c/deg
+
+% convert edgewidth in c/deg to deg. We do this by / 0.5 cycles (raised
+% cosine is 0.5 cycle.
+edgewidth = edgewidth / 0.5; % edgewidth in deg
+edgewidth = angle2pix(params.display,1/edgewidth); % 1/edgewidth? 
+mask = makecircle(m-edgewidth,m,edgewidth);
+
+% number of images
+numImages = numel(params.contrasts) * params.framePeriod/(duration.stimframe_on+duration.stimframe_off) * numel(params.sf) + 1;
+
+% Loop that creates the final images
+fprintf('[%s]:Creating %d images:',mfilename,numImages);
+images=zeros(m,n,numImages,'uint8')+bk;
+imgNum = 1;
+randorientation = rand*2*pi;
+for nblocks = 1:numel(params.sf)
+    %sf = angle2pix(params.display,params.sf(nblocks)); % sf in c/pix??
+    sf = params.sf(nblocks); % sf in c/deg because x and y (see below) are defined in deg
+
+%     degperpix=2*((atan(params.display.dimensions./(2*params.display.distance))).*(180/pi))./params.display.numPixels; %visual angle for 1 pixel
+%     degperpix= max(degperpix); % visual angle for 1 pixel
+%     screen_ang = degperpix.*min(params.display.numPixels);
+%     sf = params.sf(nblocks)./degperpix; %c/pix
+%     sf = params.sf(nblocks).*screen_ang; % total sf on screen in number of cycles
+
+    if params.cd(nblocks)==1
+        contrasts = fliplr(params.contrasts);
+    else
+        contrasts = params.contrasts;
+    end
+     for ii=1:numel(params.contrasts)
+        % random rotation
+        for nim = 1:params.framePeriod/(duration.stimframe_on+duration.stimframe_off) % number of images per TR at same contrast
+            randphase = rand*2*pi;
+            % multiply x (in deg) by sf (to get cycles/deg) and 2*pi to get
+            % radians
+            randorientation = randorientation + pi/4 + rand*pi/2;
+            tmp = (x*sf*2*pi) .* sin(randorientation) + (y*sf*2*pi) .* cos(randorientation); %?????????
+            tmp = cos(tmp+randphase).*contrasts(ii).*mask;
+            images(:,:,imgNum)=bk+tmp;
+            imgNum = imgNum+1;
+        end
+    end
+end
+
+% mean luminance
+% images(:,:,end) = images(:,:,end).*0+minCmapVal+ceil((maxCmapVal-minCmapVal)./2);
+fprintf('Done.\n');drawnow;
+
+% sequence
+a = [1:size(images, 3)-1]; % all images
+b = zeros(size(a))+size(images,3); % same size as a, mean luminance image
+c = [a;b];
+seq_tmp = c(:); % order of images, renamed from sequence
+
+% number of flips per image
+onFrames = ceil(duration.stimframe_on/(1/params.display.frameRate));
+offFrames = ceil(duration.stimframe_off/(1/params.display.frameRate));
+
+% stimulus sequence
+tmp_seq1 = [];
+for iSeq = 1:length(seq_tmp)
+    if mod(iSeq,2) == 1 % odd indices
+        tmp_seq1 = [tmp_seq1 repelem(seq_tmp(iSeq), onFrames)];
+    elseif mod(iSeq,2) ==  0 % even indices
+        tmp_seq1 = [tmp_seq1 repelem(seq_tmp(iSeq), offFrames)];
+    end
+end
+
+% Should we add floor/ceil in the below division? might not return whole
+% numbers.
+
+% Calculate length of baseline in frames
+prescan_frames = ceil(params.prescanDuration/(1/params.display.frameRate));
+prescan_matrix = ones(1,prescan_frames).*size(images,3);
+nblocks = nblocks./2;
+bl_frames = ceil(params.baseline/(1/params.display.frameRate));
+bl_matrix = ones(nblocks,bl_frames).*size(images,3); % 
+seq_matrix = reshape(tmp_seq1,length(tmp_seq1)./nblocks,nblocks)';
+combined_matrix = [seq_matrix,bl_matrix]';
+sequence = combined_matrix(:)';
+sequence = [prescan_matrix, sequence];
+onebackSeq = sequence;
+
+% onebackSeq = zeros(duration.scan.stimframes+duration.prescan.stimframes,1);
+% orientation
+% orientations = (2*pi)/8*[0:3]; % degrees -> rad
+% original_x   = x;
+% original_y   = y;
+
+% %startphase = (2*pi)/numMotSteps*[0:numMotSteps-1];
+% contrasts = [1:-0.1:.1];
+% for imgNum=1:numImages
+%     y = original_x .* sin(orientations(imgNum)) + original_y .* cos(orientations(imgNum));
+%     for ii=1:numel(contrasts)
+%         %tmp = sign(2*round((cos(y*(2*pi)+startphase(ii))+1)/2)-1).*mask;
+%         tmp = cos(y*(2*pi)).*contrasts(ii).*mask;
+%         iii = (imgNum-1)*numel(contrasts)+ii;
+%         images(:,:,iii)=minCmapVal+ceil((maxCmapVal-minCmapVal) .* (tmp+1)./2);  
+%     end
+%     fprintf('.');drawnow;
+% end
+
+
+% --- old ---
+% barwidth = 3; % degrees (about?!) sf = 1/barwidth (must double check degrees)
+% numImages = 4; % number of orientations (4= horizontal, vertical and 2xdiagonal)
+% HACK: use motionsteps as contrast steps
+% numMotSteps = params.temporal.motionSteps;
+
+% % take into account barwidth
+% barwidthpixels = angle2pix(params.display,barwidth);
+% x = x./(barwidth.*2);
+% y = y./(barwidth.*2);
+% mymax = max(x(:));
+% x = x./mymax.*round(mymax);
+% mymax = max(y(:));
+% y = y./mymax.*round(mymax);
+
+% % Loop that creates the final images
+% fprintf('[%s]:Creating %d images:',mfilename,numImages);
+% images=zeros(m,n,numImages.*params.temporal.motionSteps+1,'uint8');
+% %startphase = (2*pi)/numMotSteps*[0:numMotSteps-1];
+% contrasts = [1:-0.1:.1];
+% for imgNum=1:numImages
+%     y = original_x .* sin(orientations(imgNum)) + original_y .* cos(orientations(imgNum));
+%     for ii=1:numel(contrasts)
+%         %tmp = sign(2*round((cos(y*(2*pi)+startphase(ii))+1)/2)-1).*mask;
+%         tmp = cos(y*(2*pi)).*contrasts(ii).*mask;
+%         iii = (imgNum-1)*numel(contrasts)+ii;
+%         images(:,:,iii)=minCmapVal+ceil((maxCmapVal-minCmapVal) .* (tmp+1)./2);  
+%     end
+%     fprintf('.');drawnow;
+% end
+
+% %mymotseq   = [reshape(1:32,8,4) flipud(reshape(1:32,8,4))];
+% %mymotseq   = [mymotseq;mymotseq.*0+33];
+% mymotseq   = [mymotseq;mymotseq(1:4,:); mymotseq(5:end,:).*0+33];
+% my1b       = zeros(duration.cycle.stimframes./duration.cycle.seconds,duration.cycle.seconds);
+% % one repeat
+% seq = round(rand(duration.cycle.seconds,100)*7)+1;
+% d   = sum(diff(seq)==0);
+% seq = seq(:,find(d==1));
+% while size(seq,2)<6,
+%     seq2 = round(rand(duration.cycle.seconds,100)*7)+1;
+%     d    = sum(diff(seq)==0);
+%     seq  = [seq seq2(:,find(d==1))];
+% end;
+
+% ii = duration.prescan.stimframes;
+% for n=1:params.numCycles,
+%     my1b(1,:) = [diff(seq(:,n)')==0 0];
+%     onebackSeq(ii+1:ii+duration.cycle.stimframes) = my1b(:);
+%     
+%     m = mymotseq(:,seq(:,n));
+%     sequence(ii+1:ii+duration.cycle.stimframes) = m(:);
+%     ii = ii+duration.cycle.stimframes.*2;
+% end; 
+
+% ---------------------
+% fixation dot sequence
+nn = 1./duration.stimframe*4; % on average every 4 seconds [max response time = 3 seconds]
+fixSeq = ones(nn,1)*round(rand(1,ceil(length(sequence)/nn)));
+fixSeq = fixSeq(:)+1;
+fixSeq = fixSeq(1:length(sequence));
+
+% force binary q
+fixSeq(fixSeq>2)=2; 
+fixSeq(fixSeq<1)=1;
+
+% make stimulus structure for output
+timing   = [0:length(sequence)-1]'.*duration.stimframe;
+cmap     = params.display.gammaTable;
+
+idx_change =[1 , diff(sequence)~=0];
+idx_change(end) = 1;
+idx_change = logical(idx_change);
+
+timing = timing(idx_change);
+sequence = sequence(idx_change);
+fixSeq = fixSeq(idx_change);
+
+stimulus = createStimulusStruct(images,cmap,sequence,[],timing,fixSeq);
+
+% save matrix if requested
+if ~isempty(params.saveMatrix)
+    save(params.saveMatrix,'images');
+end
+
+
+

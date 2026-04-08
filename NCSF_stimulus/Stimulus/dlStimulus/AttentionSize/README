@@ -1,0 +1,8 @@
+################################################################################################# 
+# AttentionSize Project - 9 Dec 2017
+################################################################################################# 
+
+- Drawstimulus = current working version of the experiment, outputs a datafile
+- Analysis = can read in the datafile and show some base stats (performance, rt, colortask diff)
+
+################################################################################################# 

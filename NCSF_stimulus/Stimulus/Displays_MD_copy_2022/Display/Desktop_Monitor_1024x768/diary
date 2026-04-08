@@ -1,0 +1,9929 @@
+[ret]:Using port 2.
+[deviceUMC]:Opening device 2: Opened device: '/dev/cu.Bluetooth-PDA-Sync'
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+{??? Operation terminated by user during ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/screenUtils/openScreen.m',92,0)">openScreen at 92</a>
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',128,0)">doRetinotopyScan at 128</a>
+    params.display                = openScreen(params.display);
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 11.421 degrees / 776 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port 2.
+[deviceUMC]:Opening device 2: SERIALCOMM('OPEN'): port 2 already open.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .{??? Operation terminated by user during ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',147,0)">makePsychophysicsStimulusMotion at 147</a>
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,0)">doRetinotopyScan at 76</a>
+        [stimulus] = makePsychophysicsStimulusMotion(params);
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.650 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port 2.
+[deviceUMC]:Opening device 2: SERIALCOMM('OPEN'): port 2 already open.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating ..{??? Operation terminated by user during ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',138,0)">makePsychophysicsStimulusMotion at 138</a>
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,0)">doRetinotopyScan at 76</a>
+        [stimulus] = makePsychophysicsStimulusMotion(params);
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+edit ret
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.650 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+{Warning: Could not find an exact (case-sensitive) match for 'flipLR'.
+/Applications/MATLAB_R2008b.app/toolbox/matlab/elmat/fliplr.m is a case-insensitive
+match and will be used instead.
+You can improve the performance of your code by using exact
+name matches and we therefore recommend that you update your
+usage accordingly. Alternatively, you can disable this warning using
+warning('off','MATLAB:dispatcher:InexactCaseMatch').
+This warning will become an error in future releases.} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',97,1)">showScanStimulusMotionPsychophysics at 97</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',212,1)">doRetinotopyScan at 212</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+{??? Error using ==> plus
+Matrix dimensions must agree.
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',116,0)">showScanStimulusMotionPsychophysics at 116</a>
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(frameList(frame)),
+        stimulus.srcRect, stimulus.destRect+[0; displacementsBlock(trial); 0;
+        displacementsBlock(trial)]);
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',212,0)">doRetinotopyScan at 212</a>
+                [response, timing, quitProg, params] =
+                showScanStimulusMotionPsychophysics(params.display,params, stimulus,
+                time0);
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+ opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',116,0)
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.650 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+<a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',116,1)">116 </a>        Screen('DrawTexture', display.windowPtr, stimulus.textures(frameList(frame)), stimulus.srcRect, stimulus.destRect+[0; displacementsBlock(trial); 0; displacementsBlock(trial)]);
+stimulus.destRect=stimulus.destRect(:);
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  127.1988
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  130.7978
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  131.5531
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  132.0526
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  132.4278
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  132.6903
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  133.7750
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  134.1099
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+
+waitTime =
+
+  134.4745
+
+dbquit
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+<a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',116,1)">116 </a>        Screen('DrawTexture', display.windowPtr, stimulus.textures(frameList(frame)), stimulus.srcRect, stimulus.destRect+[0; displacementsBlock(trial); 0; displacementsBlock(trial)]);
+dbquit all
+ ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Stimulus run time: 57.477392 seconds [should be: ].
+[doRetinotopyScan]:Saving in ~/Documents/MATLAB/matfiles/20120725T162933.mat.
+dbclear ('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m', '37')
+dbclear ('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m', '38')
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+<a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',47,1)">47  </a>psiMin=floor(psiMin/stimframe);
+dbquit all
+dbclear ('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m', '47')
+ ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Stimulus run time: 15.286588 seconds [should be: ].
+[doRetinotopyScan]:Saving in ~/Documents/MATLAB/matfiles/20120725T163134.mat.
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Stimulus run time: 13.347708 seconds [should be: ].
+[doRetinotopyScan]:Saving in ~/Documents/MATLAB/matfiles/20120725T163240.mat.
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+
+waitTime =
+
+  -14.9864
+
+
+waitTime =
+
+  -14.9741
+
+
+waitTime =
+
+  -14.9617
+
+
+waitTime =
+
+  -14.9498
+
+
+waitTime =
+
+  -14.9375
+
+
+waitTime =
+
+  -14.9251
+
+
+waitTime =
+
+  -14.9131
+
+
+waitTime =
+
+  -14.9012
+
+
+waitTime =
+
+  -14.8891
+
+
+waitTime =
+
+  -14.8771
+
+
+waitTime =
+
+  -14.8653
+
+
+waitTime =
+
+  -14.8535
+
+
+waitTime =
+
+  -14.8409
+
+
+waitTime =
+
+  -14.8284
+
+
+waitTime =
+
+  -14.8161
+
+
+waitTime =
+
+  -14.8039
+
+
+waitTime =
+
+  -14.7917
+
+
+waitTime =
+
+  -14.7791
+
+
+waitTime =
+
+  -14.7668
+
+
+waitTime =
+
+  -14.7547
+
+
+waitTime =
+
+  -14.7421
+
+
+waitTime =
+
+  -14.7293
+
+
+waitTime =
+
+  -14.7168
+
+
+waitTime =
+
+  -14.7040
+
+
+waitTime =
+
+  -14.6911
+
+
+waitTime =
+
+  -14.6786
+
+
+waitTime =
+
+  -14.6663
+
+
+waitTime =
+
+  -14.6538
+
+
+waitTime =
+
+  -14.6416
+
+
+waitTime =
+
+  -14.6291
+
+
+waitTime =
+
+  -14.6168
+
+
+waitTime =
+
+  -14.6047
+
+
+waitTime =
+
+  -14.5920
+
+
+waitTime =
+
+  -14.5799
+
+
+waitTime =
+
+  -14.5671
+
+
+waitTime =
+
+  -14.5550
+
+
+waitTime =
+
+  -14.5424
+
+
+waitTime =
+
+  -14.5302
+
+
+waitTime =
+
+  -14.5179
+
+
+waitTime =
+
+  -14.5056
+
+
+waitTime =
+
+  -14.4928
+
+
+waitTime =
+
+  -14.4803
+
+
+waitTime =
+
+  -14.4680
+
+
+waitTime =
+
+  -14.4559
+
+
+waitTime =
+
+  -14.4433
+
+
+waitTime =
+
+  -14.4306
+
+
+waitTime =
+
+  -14.4182
+
+
+waitTime =
+
+  -14.4057
+
+
+waitTime =
+
+  -14.3931
+
+
+waitTime =
+
+  -14.3809
+
+
+waitTime =
+
+  -14.3687
+
+
+waitTime =
+
+  -14.3565
+
+
+waitTime =
+
+  -14.3443
+
+
+waitTime =
+
+  -14.3320
+
+
+waitTime =
+
+  -14.3194
+
+
+waitTime =
+
+  -14.3071
+
+
+waitTime =
+
+  -14.2944
+
+
+waitTime =
+
+  -14.2820
+
+
+waitTime =
+
+  -14.2691
+
+
+waitTime =
+
+  -14.2566
+
+
+waitTime =
+
+  -14.2440
+
+
+waitTime =
+
+  -14.2312
+
+
+waitTime =
+
+  -14.2187
+
+
+waitTime =
+
+  -14.2061
+
+
+waitTime =
+
+  -14.1937
+
+
+waitTime =
+
+  -14.1808
+
+
+waitTime =
+
+  -14.1686
+
+
+waitTime =
+
+  -14.1560
+
+
+waitTime =
+
+  -14.1434
+
+
+waitTime =
+
+  -14.1312
+
+
+waitTime =
+
+  -14.1187
+
+
+waitTime =
+
+  -14.1065
+
+
+waitTime =
+
+  -14.0941
+
+
+waitTime =
+
+  -14.0818
+
+
+waitTime =
+
+  -14.0692
+
+
+waitTime =
+
+  -14.0567
+
+
+waitTime =
+
+  -14.0441
+
+
+waitTime =
+
+  -14.0313
+
+
+waitTime =
+
+  -14.0188
+
+
+waitTime =
+
+  -14.0067
+
+
+waitTime =
+
+  -13.9945
+
+
+waitTime =
+
+  -13.9822
+
+
+waitTime =
+
+  -13.9695
+
+
+waitTime =
+
+  -13.9570
+
+
+waitTime =
+
+  -13.9445
+
+
+waitTime =
+
+  -13.9322
+
+
+waitTime =
+
+  -13.9195
+
+
+waitTime =
+
+  -13.9072
+
+
+waitTime =
+
+  -13.8950
+
+
+waitTime =
+
+  -13.8827
+
+
+waitTime =
+
+  -13.8698
+
+
+waitTime =
+
+  -13.8576
+
+
+waitTime =
+
+  -13.8450
+
+
+waitTime =
+
+  -13.8328
+
+
+waitTime =
+
+  -13.8200
+
+
+waitTime =
+
+  -13.8079
+
+
+waitTime =
+
+  -13.7956
+
+
+waitTime =
+
+  -13.7835
+
+
+waitTime =
+
+  -13.7713
+
+
+waitTime =
+
+  -13.7588
+
+
+waitTime =
+
+  -13.7466
+
+
+waitTime =
+
+  -13.7341
+
+
+waitTime =
+
+  -13.7219
+
+
+waitTime =
+
+  -13.7093
+
+
+waitTime =
+
+  -13.6970
+
+
+waitTime =
+
+  -13.6844
+
+
+waitTime =
+
+  -13.6719
+
+
+waitTime =
+
+  -13.6590
+
+
+waitTime =
+
+  -13.6463
+
+
+waitTime =
+
+  -13.6337
+
+
+waitTime =
+
+  -13.6209
+
+
+waitTime =
+
+  -13.6081
+
+
+waitTime =
+
+  -13.5955
+
+
+waitTime =
+
+  -13.5832
+
+
+waitTime =
+
+  -13.5704
+
+
+waitTime =
+
+  -13.5577
+
+
+waitTime =
+
+  -13.5448
+
+
+waitTime =
+
+  -13.5320
+
+
+waitTime =
+
+  -13.5193
+
+
+waitTime =
+
+  -13.5065
+
+
+waitTime =
+
+  -13.4939
+
+
+waitTime =
+
+  -13.4818
+
+
+waitTime =
+
+  -13.4691
+
+
+waitTime =
+
+  -13.4569
+
+
+waitTime =
+
+  -13.4446
+
+
+waitTime =
+
+  -13.4323
+
+
+waitTime =
+
+  -13.4196
+
+
+waitTime =
+
+  -13.4071
+
+
+waitTime =
+
+  -13.3944
+
+
+waitTime =
+
+  -13.3815
+
+
+waitTime =
+
+  -13.3693
+
+
+waitTime =
+
+  -13.3567
+
+
+waitTime =
+
+  -13.3440
+
+
+waitTime =
+
+  -13.3313
+
+
+waitTime =
+
+  -13.3190
+
+
+waitTime =
+
+  -13.3062
+
+
+waitTime =
+
+  -13.2939
+
+
+waitTime =
+
+  -13.2816
+
+
+waitTime =
+
+  -13.2694
+
+
+waitTime =
+
+  -13.2568
+
+
+waitTime =
+
+  -13.2447
+
+
+waitTime =
+
+  -13.2324
+
+
+waitTime =
+
+  -13.2198
+
+
+waitTime =
+
+  -13.2072
+
+
+waitTime =
+
+  -13.1945
+
+
+waitTime =
+
+  -13.1821
+
+
+waitTime =
+
+  -13.1696
+
+
+waitTime =
+
+  -13.1574
+
+
+waitTime =
+
+  -13.1446
+
+
+waitTime =
+
+  -13.1323
+
+
+waitTime =
+
+  -13.1195
+
+
+waitTime =
+
+  -13.1075
+
+
+waitTime =
+
+  -13.0950
+
+
+waitTime =
+
+  -13.0825
+
+
+waitTime =
+
+  -13.0704
+
+
+waitTime =
+
+  -13.0575
+
+
+waitTime =
+
+  -13.0453
+
+
+waitTime =
+
+  -13.0331
+
+
+waitTime =
+
+  -13.0207
+
+
+waitTime =
+
+  -13.0081
+
+
+waitTime =
+
+  -12.9953
+
+
+waitTime =
+
+  -12.9827
+
+
+waitTime =
+
+  -12.9699
+
+
+waitTime =
+
+  -12.9573
+
+
+waitTime =
+
+  -12.9446
+
+
+waitTime =
+
+  -12.9321
+
+
+waitTime =
+
+  -12.9194
+
+
+waitTime =
+
+  -12.9073
+
+
+waitTime =
+
+  -12.8951
+
+
+waitTime =
+
+  -12.8826
+
+
+waitTime =
+
+  -12.8704
+
+
+waitTime =
+
+  -12.8582
+
+
+waitTime =
+
+  -12.8453
+
+
+waitTime =
+
+  -12.8328
+
+
+waitTime =
+
+  -12.8200
+
+
+waitTime =
+
+  -12.8075
+
+
+waitTime =
+
+  -12.7952
+
+
+waitTime =
+
+  -12.7830
+
+
+waitTime =
+
+  -12.7702
+
+
+waitTime =
+
+  -12.7575
+
+
+waitTime =
+
+  -12.7446
+
+
+waitTime =
+
+  -12.7322
+
+
+waitTime =
+
+  -12.7195
+
+
+waitTime =
+
+  -12.7074
+
+
+waitTime =
+
+  -12.6951
+
+
+waitTime =
+
+  -12.6827
+
+
+waitTime =
+
+  -12.6703
+
+
+waitTime =
+
+  -12.6577
+
+
+waitTime =
+
+  -12.6455
+
+
+waitTime =
+
+  -12.6327
+
+
+waitTime =
+
+  -12.6199
+
+
+waitTime =
+
+  -12.6071
+
+
+waitTime =
+
+  -12.5943
+
+
+waitTime =
+
+  -12.5818
+
+
+waitTime =
+
+  -12.5692
+
+
+waitTime =
+
+  -12.5569
+
+
+waitTime =
+
+  -12.5442
+
+
+waitTime =
+
+  -12.5316
+
+
+waitTime =
+
+  -12.5190
+
+
+waitTime =
+
+  -12.5064
+
+
+waitTime =
+
+  -12.4942
+
+
+waitTime =
+
+  -12.4818
+
+
+waitTime =
+
+  -12.4691
+
+
+waitTime =
+
+  -12.4566
+
+
+waitTime =
+
+  -12.4441
+
+
+waitTime =
+
+  -12.4317
+
+
+waitTime =
+
+  -12.4191
+
+
+waitTime =
+
+  -12.4065
+
+
+waitTime =
+
+  -12.3936
+
+
+waitTime =
+
+  -12.3812
+
+
+waitTime =
+
+  -12.3687
+
+
+waitTime =
+
+  -12.3565
+
+
+waitTime =
+
+  -12.3438
+
+
+waitTime =
+
+  -12.3314
+
+
+waitTime =
+
+  -12.3189
+
+
+waitTime =
+
+  -12.3063
+
+
+waitTime =
+
+  -12.2936
+
+
+waitTime =
+
+  -12.2811
+
+
+waitTime =
+
+  -12.2686
+
+
+waitTime =
+
+  -12.2561
+
+
+waitTime =
+
+  -12.2436
+
+
+waitTime =
+
+  -12.2311
+
+
+waitTime =
+
+  -12.2187
+
+
+waitTime =
+
+  -12.2061
+
+
+waitTime =
+
+  -12.1933
+
+
+waitTime =
+
+  -12.1809
+
+
+waitTime =
+
+  -12.1685
+
+
+waitTime =
+
+  -12.1563
+
+
+waitTime =
+
+  -12.1437
+
+
+waitTime =
+
+  -12.1312
+
+
+waitTime =
+
+  -12.1187
+
+
+waitTime =
+
+  -12.1065
+
+
+waitTime =
+
+  -12.0937
+
+
+waitTime =
+
+  -12.0812
+
+
+waitTime =
+
+  -12.0686
+
+
+waitTime =
+
+  -12.0561
+
+
+waitTime =
+
+  -12.0436
+
+
+waitTime =
+
+  -12.0310
+
+
+waitTime =
+
+  -12.0186
+
+
+waitTime =
+
+  -12.0064
+
+
+waitTime =
+
+  -11.9937
+
+
+waitTime =
+
+  -11.9815
+
+
+waitTime =
+
+  -11.9690
+
+
+waitTime =
+
+  -11.9568
+
+
+waitTime =
+
+  -11.9440
+
+
+waitTime =
+
+  -11.9314
+
+
+waitTime =
+
+  -11.9190
+
+
+waitTime =
+
+  -11.9067
+
+
+waitTime =
+
+  -11.8939
+
+
+waitTime =
+
+  -11.8813
+
+
+waitTime =
+
+  -11.8688
+
+
+waitTime =
+
+  -11.8567
+
+
+waitTime =
+
+  -11.8445
+
+
+waitTime =
+
+  -11.8318
+
+
+waitTime =
+
+  -11.8195
+
+
+waitTime =
+
+  -11.8068
+
+
+waitTime =
+
+  -11.7947
+
+
+waitTime =
+
+  -11.7825
+
+
+waitTime =
+
+  -11.7697
+
+
+waitTime =
+
+  -11.7570
+
+
+waitTime =
+
+  -11.7443
+
+
+waitTime =
+
+  -11.7315
+
+
+waitTime =
+
+  -11.7190
+
+
+waitTime =
+
+  -11.7068
+
+
+waitTime =
+
+  -11.6942
+
+
+waitTime =
+
+  -11.6814
+
+
+waitTime =
+
+  -11.6689
+
+
+waitTime =
+
+  -11.6565
+
+
+waitTime =
+
+  -11.6443
+
+
+waitTime =
+
+  -11.6320
+
+
+waitTime =
+
+  -11.6194
+
+
+waitTime =
+
+  -11.6067
+
+
+waitTime =
+
+  -11.5939
+
+
+waitTime =
+
+  -11.5811
+
+
+waitTime =
+
+  -11.5687
+
+
+waitTime =
+
+  -11.5564
+
+
+waitTime =
+
+  -11.5439
+
+
+waitTime =
+
+  -11.5317
+
+
+waitTime =
+
+  -11.5191
+
+
+waitTime =
+
+  -11.5066
+
+
+waitTime =
+
+  -11.4941
+
+
+waitTime =
+
+  -11.4820
+
+
+waitTime =
+
+  -11.4693
+
+
+waitTime =
+
+  -11.4568
+
+
+waitTime =
+
+  -11.4441
+
+
+waitTime =
+
+  -11.4313
+
+
+waitTime =
+
+  -11.4188
+
+
+waitTime =
+
+  -11.4063
+
+
+waitTime =
+
+  -11.3941
+
+
+waitTime =
+
+  -11.3813
+
+
+waitTime =
+
+  -11.3688
+
+
+waitTime =
+
+  -11.3566
+
+
+waitTime =
+
+  -11.3439
+
+
+waitTime =
+
+  -11.3313
+
+
+waitTime =
+
+  -11.3191
+
+
+waitTime =
+
+  -11.3067
+
+
+waitTime =
+
+  -11.2944
+
+
+waitTime =
+
+  -11.2817
+
+
+waitTime =
+
+  -11.2691
+
+
+waitTime =
+
+  -11.2565
+
+
+waitTime =
+
+  -11.2440
+
+
+waitTime =
+
+  -11.2312
+
+
+waitTime =
+
+  -11.2190
+
+
+waitTime =
+
+  -11.2065
+
+
+waitTime =
+
+  -11.1943
+
+
+waitTime =
+
+  -11.1821
+
+
+waitTime =
+
+  -11.1699
+
+
+waitTime =
+
+  -11.1574
+
+
+waitTime =
+
+  -11.1453
+
+
+waitTime =
+
+  -11.1330
+
+
+waitTime =
+
+  -11.1207
+
+
+waitTime =
+
+  -11.1080
+
+
+waitTime =
+
+  -11.0957
+
+
+waitTime =
+
+  -11.0833
+
+
+waitTime =
+
+  -11.0704
+
+
+waitTime =
+
+  -11.0576
+
+
+waitTime =
+
+  -11.0449
+
+
+waitTime =
+
+  -11.0321
+
+
+waitTime =
+
+  -11.0194
+
+
+waitTime =
+
+  -11.0066
+
+
+waitTime =
+
+  -10.9944
+
+
+waitTime =
+
+  -10.9821
+
+
+waitTime =
+
+  -10.9696
+
+
+waitTime =
+
+  -10.9571
+
+
+waitTime =
+
+  -10.9449
+
+
+waitTime =
+
+  -10.9326
+
+
+waitTime =
+
+  -10.9204
+
+
+waitTime =
+
+  -10.9079
+
+
+waitTime =
+
+  -10.8953
+
+
+waitTime =
+
+  -10.8829
+
+
+waitTime =
+
+  -10.8706
+
+
+waitTime =
+
+  -10.8585
+
+
+waitTime =
+
+  -10.8463
+
+
+waitTime =
+
+  -10.8338
+
+
+waitTime =
+
+  -10.8216
+
+
+waitTime =
+
+  -10.8091
+
+
+waitTime =
+
+  -10.7966
+
+
+waitTime =
+
+  -10.7841
+
+
+waitTime =
+
+  -10.7718
+
+
+waitTime =
+
+  -10.7593
+
+
+waitTime =
+
+  -10.7466
+
+
+waitTime =
+
+  -10.7341
+
+
+waitTime =
+
+  -10.7218
+
+
+waitTime =
+
+  -10.7090
+
+
+waitTime =
+
+  -10.6969
+
+
+waitTime =
+
+  -10.6846
+
+
+waitTime =
+
+  -10.6721
+
+
+waitTime =
+
+  -10.6594
+
+
+waitTime =
+
+  -10.6473
+
+
+waitTime =
+
+  -10.6348
+
+
+waitTime =
+
+  -10.6226
+
+
+waitTime =
+
+  -10.6098
+
+
+waitTime =
+
+  -10.5972
+
+
+waitTime =
+
+  -10.5848
+
+
+waitTime =
+
+  -10.5725
+
+
+waitTime =
+
+  -10.5596
+
+
+waitTime =
+
+  -10.5468
+
+
+waitTime =
+
+  -10.5344
+
+
+waitTime =
+
+  -10.5216
+
+
+waitTime =
+
+  -10.5089
+
+
+waitTime =
+
+  -10.4966
+
+
+waitTime =
+
+  -10.4840
+
+
+waitTime =
+
+  -10.4713
+
+
+waitTime =
+
+  -10.4586
+
+
+waitTime =
+
+  -10.4465
+
+
+waitTime =
+
+  -10.4339
+
+
+waitTime =
+
+  -10.4212
+
+
+waitTime =
+
+  -10.4084
+
+
+waitTime =
+
+  -10.3963
+
+
+waitTime =
+
+  -10.3839
+
+
+waitTime =
+
+  -10.3711
+
+
+waitTime =
+
+  -10.3590
+
+
+waitTime =
+
+  -10.3468
+
+
+waitTime =
+
+  -10.3342
+
+
+waitTime =
+
+  -10.3220
+
+
+waitTime =
+
+  -10.3092
+
+
+waitTime =
+
+  -10.2971
+
+
+waitTime =
+
+  -10.2844
+
+
+waitTime =
+
+  -10.2722
+
+
+waitTime =
+
+  -10.2593
+
+
+waitTime =
+
+  -10.2466
+
+
+waitTime =
+
+  -10.2337
+
+
+waitTime =
+
+  -10.2210
+
+
+waitTime =
+
+  -10.2089
+
+
+waitTime =
+
+  -10.1968
+
+
+waitTime =
+
+  -10.1845
+
+
+waitTime =
+
+  -10.1724
+
+
+waitTime =
+
+  -10.1596
+
+
+waitTime =
+
+  -10.1468
+
+
+waitTime =
+
+  -10.1345
+
+
+waitTime =
+
+  -10.1224
+
+
+waitTime =
+
+  -10.1096
+
+
+waitTime =
+
+  -10.0970
+
+
+waitTime =
+
+  -10.0847
+
+
+waitTime =
+
+  -10.0720
+
+
+waitTime =
+
+  -10.0594
+
+
+waitTime =
+
+  -10.0466
+
+
+waitTime =
+
+  -10.0338
+
+
+waitTime =
+
+  -10.0210
+
+
+waitTime =
+
+  -10.0087
+
+
+waitTime =
+
+   -9.9966
+
+
+waitTime =
+
+   -9.9844
+
+
+waitTime =
+
+   -9.9721
+
+
+waitTime =
+
+   -9.9594
+
+
+waitTime =
+
+   -9.9473
+
+
+waitTime =
+
+   -9.9351
+
+
+waitTime =
+
+   -9.9230
+
+
+waitTime =
+
+   -9.9105
+
+
+waitTime =
+
+   -9.8977
+
+
+waitTime =
+
+   -9.8852
+
+
+waitTime =
+
+   -9.8726
+
+
+waitTime =
+
+   -9.8602
+
+
+waitTime =
+
+   -9.8480
+
+
+waitTime =
+
+   -9.8359
+
+
+waitTime =
+
+   -9.8233
+
+
+waitTime =
+
+   -9.8108
+
+
+waitTime =
+
+   -9.7985
+
+
+waitTime =
+
+   -9.7860
+
+
+waitTime =
+
+   -9.7734
+
+
+waitTime =
+
+   -9.7608
+
+
+waitTime =
+
+   -9.7485
+
+
+waitTime =
+
+   -9.7363
+
+
+waitTime =
+
+   -9.7235
+
+
+waitTime =
+
+   -9.7109
+
+
+waitTime =
+
+   -9.6981
+
+
+waitTime =
+
+   -9.6856
+
+
+waitTime =
+
+   -9.6733
+
+
+waitTime =
+
+   -9.6607
+
+
+waitTime =
+
+   -9.6481
+
+
+waitTime =
+
+   -9.6357
+
+
+waitTime =
+
+   -9.6235
+
+
+waitTime =
+
+   -9.6109
+
+
+waitTime =
+
+   -9.5984
+
+
+waitTime =
+
+   -9.5860
+
+
+waitTime =
+
+   -9.5734
+
+
+waitTime =
+
+   -9.5612
+
+
+waitTime =
+
+   -9.5484
+
+
+waitTime =
+
+   -9.5361
+
+
+waitTime =
+
+   -9.5236
+
+
+waitTime =
+
+   -9.5108
+
+
+waitTime =
+
+   -9.4980
+
+
+waitTime =
+
+   -9.4854
+
+
+waitTime =
+
+   -9.4728
+
+
+waitTime =
+
+   -9.4602
+
+
+waitTime =
+
+   -9.4481
+
+
+waitTime =
+
+   -9.4359
+
+
+waitTime =
+
+   -9.4233
+
+
+waitTime =
+
+   -9.4111
+
+
+waitTime =
+
+   -9.3988
+
+
+waitTime =
+
+   -9.3863
+
+
+waitTime =
+
+   -9.3737
+
+
+waitTime =
+
+   -9.3610
+
+
+waitTime =
+
+   -9.3486
+
+
+waitTime =
+
+   -9.3362
+
+
+waitTime =
+
+   -9.3240
+
+
+waitTime =
+
+   -9.3114
+
+
+waitTime =
+
+   -9.2992
+
+
+waitTime =
+
+   -9.2866
+
+
+waitTime =
+
+   -9.2743
+
+
+waitTime =
+
+   -9.2617
+
+
+waitTime =
+
+   -9.2488
+
+
+waitTime =
+
+   -9.2365
+
+
+waitTime =
+
+   -9.2237
+
+
+waitTime =
+
+   -9.2109
+
+
+waitTime =
+
+   -9.1981
+
+
+waitTime =
+
+   -9.1857
+
+
+waitTime =
+
+   -9.1735
+
+
+waitTime =
+
+   -9.1606
+
+
+waitTime =
+
+   -9.1480
+
+
+waitTime =
+
+   -9.1356
+
+
+waitTime =
+
+   -9.1234
+
+
+waitTime =
+
+   -9.1109
+
+
+waitTime =
+
+   -9.0985
+
+
+waitTime =
+
+   -9.0861
+
+
+waitTime =
+
+   -9.0734
+
+
+waitTime =
+
+   -9.0606
+
+
+waitTime =
+
+   -9.0485
+
+
+waitTime =
+
+   -9.0366
+
+
+waitTime =
+
+   -9.0245
+
+
+waitTime =
+
+   -9.0125
+
+
+waitTime =
+
+   -9.0008
+
+
+waitTime =
+
+   -8.9889
+
+
+waitTime =
+
+   -8.9768
+
+
+waitTime =
+
+   -8.9650
+
+
+waitTime =
+
+   -8.9529
+
+
+waitTime =
+
+   -8.9407
+
+
+waitTime =
+
+   -8.9279
+
+
+waitTime =
+
+   -8.9156
+
+
+waitTime =
+
+   -8.9031
+
+
+waitTime =
+
+   -8.8903
+
+
+waitTime =
+
+   -8.8775
+
+
+waitTime =
+
+   -8.8652
+
+
+waitTime =
+
+   -8.8530
+
+
+waitTime =
+
+   -8.8402
+
+
+waitTime =
+
+   -8.8275
+
+
+waitTime =
+
+   -8.8152
+
+
+waitTime =
+
+   -8.8028
+
+
+waitTime =
+
+   -8.7903
+
+
+waitTime =
+
+   -8.7775
+
+
+waitTime =
+
+   -8.7652
+
+
+waitTime =
+
+   -8.7529
+
+
+waitTime =
+
+   -8.7402
+
+
+waitTime =
+
+   -8.7274
+
+
+waitTime =
+
+   -8.7152
+
+
+waitTime =
+
+   -8.7026
+
+
+waitTime =
+
+   -8.6899
+
+
+waitTime =
+
+   -8.6772
+
+
+waitTime =
+
+   -8.6644
+
+
+waitTime =
+
+   -8.6520
+
+
+waitTime =
+
+   -8.6395
+
+
+waitTime =
+
+   -8.6268
+
+
+waitTime =
+
+   -8.6145
+
+
+waitTime =
+
+   -8.6021
+
+
+waitTime =
+
+   -8.5896
+
+
+waitTime =
+
+   -8.5768
+
+
+waitTime =
+
+   -8.5645
+
+
+waitTime =
+
+   -8.5521
+
+
+waitTime =
+
+   -8.5396
+
+
+waitTime =
+
+   -8.5271
+
+
+waitTime =
+
+   -8.5143
+
+
+waitTime =
+
+   -8.5019
+
+
+waitTime =
+
+   -8.4893
+
+
+waitTime =
+
+   -8.4770
+
+
+waitTime =
+
+   -8.4648
+
+
+waitTime =
+
+   -8.4523
+
+
+waitTime =
+
+   -8.4397
+
+
+waitTime =
+
+   -8.4276
+
+
+waitTime =
+
+   -8.4153
+
+
+waitTime =
+
+   -8.4029
+
+
+waitTime =
+
+   -8.3900
+
+
+waitTime =
+
+   -8.3773
+
+
+waitTime =
+
+   -8.3651
+
+
+waitTime =
+
+   -8.3528
+
+
+waitTime =
+
+   -8.3405
+
+
+waitTime =
+
+   -8.3279
+
+
+waitTime =
+
+   -8.3156
+
+
+waitTime =
+
+   -8.3032
+
+
+waitTime =
+
+   -8.2906
+
+
+waitTime =
+
+   -8.2778
+
+
+waitTime =
+
+   -8.2655
+
+
+waitTime =
+
+   -8.2530
+
+
+waitTime =
+
+   -8.2403
+
+
+waitTime =
+
+   -8.2276
+
+
+waitTime =
+
+   -8.2148
+
+
+waitTime =
+
+   -8.2025
+
+
+waitTime =
+
+   -8.1899
+
+
+waitTime =
+
+   -8.1772
+
+
+waitTime =
+
+   -8.1645
+
+
+waitTime =
+
+   -8.1520
+
+
+waitTime =
+
+   -8.1395
+
+
+waitTime =
+
+   -8.1273
+
+
+waitTime =
+
+   -8.1151
+
+
+waitTime =
+
+   -8.1027
+
+
+waitTime =
+
+   -8.0900
+
+
+waitTime =
+
+   -8.0774
+
+
+waitTime =
+
+   -8.0651
+
+
+waitTime =
+
+   -8.0527
+
+
+waitTime =
+
+   -8.0401
+
+
+waitTime =
+
+   -8.0276
+
+
+waitTime =
+
+   -8.0153
+
+
+waitTime =
+
+   -8.0029
+
+
+waitTime =
+
+   -7.9907
+
+
+waitTime =
+
+   -7.9785
+
+
+waitTime =
+
+   -7.9662
+
+
+waitTime =
+
+   -7.9537
+
+
+waitTime =
+
+   -7.9412
+
+
+waitTime =
+
+   -7.9290
+
+
+waitTime =
+
+   -7.9166
+
+
+waitTime =
+
+   -7.9041
+
+
+waitTime =
+
+   -7.8915
+
+
+waitTime =
+
+   -7.8794
+
+
+waitTime =
+
+   -7.8670
+
+
+waitTime =
+
+   -7.8546
+
+
+waitTime =
+
+   -7.8418
+
+
+waitTime =
+
+   -7.8293
+
+
+waitTime =
+
+   -7.8170
+
+
+waitTime =
+
+   -7.8045
+
+
+waitTime =
+
+   -7.7920
+
+
+waitTime =
+
+   -7.7799
+
+
+waitTime =
+
+   -7.7674
+
+
+waitTime =
+
+   -7.7551
+
+
+waitTime =
+
+   -7.7423
+
+
+waitTime =
+
+   -7.7297
+
+
+waitTime =
+
+   -7.7173
+
+
+waitTime =
+
+   -7.7047
+
+
+waitTime =
+
+   -7.6925
+
+
+waitTime =
+
+   -7.6802
+
+
+waitTime =
+
+   -7.6677
+
+
+waitTime =
+
+   -7.6555
+
+
+waitTime =
+
+   -7.6428
+
+
+waitTime =
+
+   -7.6300
+
+
+waitTime =
+
+   -7.6177
+
+
+waitTime =
+
+   -7.6049
+
+
+waitTime =
+
+   -7.5921
+
+
+waitTime =
+
+   -7.5797
+
+
+waitTime =
+
+   -7.5669
+
+
+waitTime =
+
+   -7.5543
+
+
+waitTime =
+
+   -7.5419
+
+
+waitTime =
+
+   -7.5292
+
+
+waitTime =
+
+   -7.5168
+
+
+waitTime =
+
+   -7.5043
+
+
+waitTime =
+
+   -7.4920
+
+
+waitTime =
+
+   -7.4799
+
+
+waitTime =
+
+   -7.4677
+
+
+waitTime =
+
+   -7.4555
+
+
+waitTime =
+
+   -7.4428
+
+
+waitTime =
+
+   -7.4300
+
+
+waitTime =
+
+   -7.4175
+
+
+waitTime =
+
+   -7.4047
+
+
+waitTime =
+
+   -7.3919
+
+
+waitTime =
+
+   -7.3791
+
+
+waitTime =
+
+   -7.3668
+
+
+waitTime =
+
+   -7.3546
+
+
+waitTime =
+
+   -7.3422
+
+
+waitTime =
+
+   -7.3297
+
+
+waitTime =
+
+   -7.3173
+
+
+waitTime =
+
+   -7.3052
+
+
+waitTime =
+
+   -7.2927
+
+
+waitTime =
+
+   -7.2805
+
+
+waitTime =
+
+   -7.2683
+
+
+waitTime =
+
+   -7.2561
+
+
+waitTime =
+
+   -7.2435
+
+
+waitTime =
+
+   -7.2307
+
+
+waitTime =
+
+   -7.2184
+
+
+waitTime =
+
+   -7.2058
+
+
+waitTime =
+
+   -7.1930
+
+
+waitTime =
+
+   -7.1802
+
+
+waitTime =
+
+   -7.1682
+
+
+waitTime =
+
+   -7.1556
+
+
+waitTime =
+
+   -7.1430
+
+
+waitTime =
+
+   -7.1307
+
+
+waitTime =
+
+   -7.1186
+
+
+waitTime =
+
+   -7.1061
+
+
+waitTime =
+
+   -7.0935
+
+
+waitTime =
+
+   -7.0812
+
+
+waitTime =
+
+   -7.0687
+
+
+waitTime =
+
+   -7.0562
+
+
+waitTime =
+
+   -7.0434
+
+
+waitTime =
+
+   -7.0306
+
+
+waitTime =
+
+   -7.0185
+
+
+waitTime =
+
+   -7.0063
+
+
+waitTime =
+
+   -6.9941
+
+
+waitTime =
+
+   -6.9818
+
+
+waitTime =
+
+   -6.9694
+
+
+waitTime =
+
+   -6.9569
+
+
+waitTime =
+
+   -6.9448
+
+
+waitTime =
+
+   -6.9325
+
+
+waitTime =
+
+   -6.9197
+
+
+waitTime =
+
+   -6.9069
+
+
+waitTime =
+
+   -6.8946
+
+
+waitTime =
+
+   -6.8824
+
+
+waitTime =
+
+   -6.8697
+
+
+waitTime =
+
+   -6.8574
+
+
+waitTime =
+
+   -6.8449
+
+
+waitTime =
+
+   -6.8325
+
+
+waitTime =
+
+   -6.8197
+
+
+waitTime =
+
+   -6.8074
+
+
+waitTime =
+
+   -6.7947
+
+
+waitTime =
+
+   -6.7825
+
+
+waitTime =
+
+   -6.7697
+
+
+waitTime =
+
+   -6.7575
+
+
+waitTime =
+
+   -6.7451
+
+
+waitTime =
+
+   -6.7329
+
+
+waitTime =
+
+   -6.7201
+
+
+waitTime =
+
+   -6.7075
+
+
+waitTime =
+
+   -6.6949
+
+
+waitTime =
+
+   -6.6825
+
+
+waitTime =
+
+   -6.6701
+
+
+waitTime =
+
+   -6.6574
+
+
+waitTime =
+
+   -6.6448
+
+
+waitTime =
+
+   -6.6326
+
+
+waitTime =
+
+   -6.6198
+
+
+waitTime =
+
+   -6.6072
+
+
+waitTime =
+
+   -6.5944
+
+
+waitTime =
+
+   -6.5819
+
+
+waitTime =
+
+   -6.5697
+
+
+waitTime =
+
+   -6.5574
+
+
+waitTime =
+
+   -6.5448
+
+
+waitTime =
+
+   -6.5320
+
+
+waitTime =
+
+   -6.5193
+
+
+waitTime =
+
+   -6.5069
+
+
+waitTime =
+
+   -6.4944
+
+
+waitTime =
+
+   -6.4821
+
+
+waitTime =
+
+   -6.4697
+
+
+waitTime =
+
+   -6.4572
+
+
+waitTime =
+
+   -6.4449
+
+
+waitTime =
+
+   -6.4325
+
+
+waitTime =
+
+   -6.4198
+
+
+waitTime =
+
+   -6.4071
+
+
+waitTime =
+
+   -6.3950
+
+
+waitTime =
+
+   -6.3829
+
+
+waitTime =
+
+   -6.3701
+
+
+waitTime =
+
+   -6.3573
+
+
+waitTime =
+
+   -6.3447
+
+
+waitTime =
+
+   -6.3318
+
+
+waitTime =
+
+   -6.3192
+
+
+waitTime =
+
+   -6.3070
+
+
+waitTime =
+
+   -6.2942
+
+
+waitTime =
+
+   -6.2816
+
+
+waitTime =
+
+   -6.2690
+
+
+waitTime =
+
+   -6.2564
+
+
+waitTime =
+
+   -6.2440
+
+
+waitTime =
+
+   -6.2316
+
+
+waitTime =
+
+   -6.2190
+
+
+waitTime =
+
+   -6.2065
+
+
+waitTime =
+
+   -6.1936
+
+
+waitTime =
+
+   -6.1812
+
+
+waitTime =
+
+   -6.1687
+
+
+waitTime =
+
+   -6.1561
+
+
+waitTime =
+
+   -6.1438
+
+
+waitTime =
+
+   -6.1309
+
+
+waitTime =
+
+   -6.1185
+
+
+waitTime =
+
+   -6.1059
+
+
+waitTime =
+
+   -6.0934
+
+
+waitTime =
+
+   -6.0810
+
+
+waitTime =
+
+   -6.0685
+
+
+waitTime =
+
+   -6.0558
+
+
+waitTime =
+
+   -6.0432
+
+
+waitTime =
+
+   -6.0309
+
+
+waitTime =
+
+   -6.0185
+
+
+waitTime =
+
+   -6.0059
+
+
+waitTime =
+
+   -5.9938
+
+
+waitTime =
+
+   -5.9815
+
+
+waitTime =
+
+   -5.9690
+
+
+waitTime =
+
+   -5.9568
+
+
+waitTime =
+
+   -5.9445
+
+
+waitTime =
+
+   -5.9322
+
+
+waitTime =
+
+   -5.9198
+
+
+waitTime =
+
+   -5.9072
+
+
+waitTime =
+
+   -5.8945
+
+
+waitTime =
+
+   -5.8822
+
+
+waitTime =
+
+   -5.8695
+
+
+waitTime =
+
+   -5.8573
+
+
+waitTime =
+
+   -5.8447
+
+
+waitTime =
+
+   -5.8319
+
+
+waitTime =
+
+   -5.8193
+
+
+waitTime =
+
+   -5.8067
+
+
+waitTime =
+
+   -5.7939
+
+
+waitTime =
+
+   -5.7813
+
+
+waitTime =
+
+   -5.7688
+
+
+waitTime =
+
+   -5.7561
+
+
+waitTime =
+
+   -5.7437
+
+
+waitTime =
+
+   -5.7315
+
+
+waitTime =
+
+   -5.7188
+
+
+waitTime =
+
+   -5.7062
+
+
+waitTime =
+
+   -5.6933
+
+
+waitTime =
+
+   -5.6809
+
+
+waitTime =
+
+   -5.6684
+
+
+waitTime =
+
+   -5.6561
+
+
+waitTime =
+
+   -5.6436
+
+
+waitTime =
+
+   -5.6308
+
+
+waitTime =
+
+   -5.6183
+
+
+waitTime =
+
+   -5.6059
+
+
+waitTime =
+
+   -5.5933
+
+
+waitTime =
+
+   -5.5808
+
+
+waitTime =
+
+   -5.5684
+
+
+waitTime =
+
+   -5.5559
+
+
+waitTime =
+
+   -5.5435
+
+
+waitTime =
+
+   -5.5313
+
+
+waitTime =
+
+   -5.5191
+
+
+waitTime =
+
+   -5.5063
+
+
+waitTime =
+
+   -5.4938
+
+
+waitTime =
+
+   -5.4815
+
+
+waitTime =
+
+   -5.4689
+
+
+waitTime =
+
+   -5.4562
+
+
+waitTime =
+
+   -5.4440
+
+
+waitTime =
+
+   -5.4317
+
+
+waitTime =
+
+   -5.4191
+
+
+waitTime =
+
+   -5.4064
+
+
+waitTime =
+
+   -5.3936
+
+
+waitTime =
+
+   -5.3811
+
+
+waitTime =
+
+   -5.3689
+
+
+waitTime =
+
+   -5.3564
+
+
+waitTime =
+
+   -5.3438
+
+
+waitTime =
+
+   -5.3316
+
+
+waitTime =
+
+   -5.3189
+
+
+waitTime =
+
+   -5.3063
+
+
+waitTime =
+
+   -5.2935
+
+
+waitTime =
+
+   -5.2810
+
+
+waitTime =
+
+   -5.2685
+
+
+waitTime =
+
+   -5.2563
+
+
+waitTime =
+
+   -5.2435
+
+
+waitTime =
+
+   -5.2308
+
+
+waitTime =
+
+   -5.2185
+
+
+waitTime =
+
+   -5.2059
+
+
+waitTime =
+
+   -5.1935
+
+
+waitTime =
+
+   -5.1813
+
+
+waitTime =
+
+   -5.1688
+
+
+waitTime =
+
+   -5.1563
+
+
+waitTime =
+
+   -5.1440
+
+
+waitTime =
+
+   -5.1317
+
+
+waitTime =
+
+   -5.1193
+
+
+waitTime =
+
+   -5.1071
+
+
+waitTime =
+
+   -5.0948
+
+
+waitTime =
+
+   -5.0826
+
+
+waitTime =
+
+   -5.0702
+
+
+waitTime =
+
+   -5.0574
+
+
+waitTime =
+
+   -5.0452
+
+
+waitTime =
+
+   -5.0330
+
+
+waitTime =
+
+   -5.0208
+
+
+waitTime =
+
+   -5.0083
+
+
+waitTime =
+
+   -4.9960
+
+
+waitTime =
+
+   -4.9836
+
+
+waitTime =
+
+   -4.9711
+
+
+waitTime =
+
+   -4.9584
+
+
+waitTime =
+
+   -4.9463
+
+
+waitTime =
+
+   -4.9341
+
+
+waitTime =
+
+   -4.9220
+
+
+waitTime =
+
+   -4.9095
+
+
+waitTime =
+
+   -4.8971
+
+
+waitTime =
+
+   -4.8849
+
+
+waitTime =
+
+   -4.8725
+
+
+waitTime =
+
+   -4.8600
+
+
+waitTime =
+
+   -4.8478
+
+
+waitTime =
+
+   -4.8354
+
+
+waitTime =
+
+   -4.8228
+
+
+waitTime =
+
+   -4.8100
+
+
+waitTime =
+
+   -4.7979
+
+
+waitTime =
+
+   -4.7855
+
+
+waitTime =
+
+   -4.7733
+
+
+waitTime =
+
+   -4.7609
+
+
+waitTime =
+
+   -4.7482
+
+
+waitTime =
+
+   -4.7358
+
+
+waitTime =
+
+   -4.7233
+
+
+waitTime =
+
+   -4.7110
+
+
+waitTime =
+
+   -4.6982
+
+
+waitTime =
+
+   -4.6857
+
+
+waitTime =
+
+   -4.6731
+
+
+waitTime =
+
+   -4.6608
+
+
+waitTime =
+
+   -4.6483
+
+
+waitTime =
+
+   -4.6359
+
+
+waitTime =
+
+   -4.6233
+
+
+waitTime =
+
+   -4.6106
+
+
+waitTime =
+
+   -4.5984
+
+
+waitTime =
+
+   -4.5858
+
+
+waitTime =
+
+   -4.5732
+
+
+waitTime =
+
+   -4.5604
+
+
+waitTime =
+
+   -4.5481
+
+
+waitTime =
+
+   -4.5357
+
+
+waitTime =
+
+   -4.5231
+
+
+waitTime =
+
+   -4.5103
+
+
+waitTime =
+
+   -4.4977
+
+
+waitTime =
+
+   -4.4855
+
+
+waitTime =
+
+   -4.4729
+
+
+waitTime =
+
+   -4.4602
+
+
+waitTime =
+
+   -4.4476
+
+
+waitTime =
+
+   -4.4354
+
+
+waitTime =
+
+   -4.4229
+
+
+waitTime =
+
+   -4.4100
+
+
+waitTime =
+
+   -4.3978
+
+
+waitTime =
+
+   -4.3857
+
+
+waitTime =
+
+   -4.3730
+
+
+waitTime =
+
+   -4.3605
+
+
+waitTime =
+
+   -4.3481
+
+
+waitTime =
+
+   -4.3356
+
+
+waitTime =
+
+   -4.3231
+
+
+waitTime =
+
+   -4.3103
+
+
+waitTime =
+
+   -4.2975
+
+
+waitTime =
+
+   -4.2850
+
+
+waitTime =
+
+   -4.2725
+
+
+waitTime =
+
+   -4.2598
+
+
+waitTime =
+
+   -4.2472
+
+
+waitTime =
+
+   -4.2348
+
+
+waitTime =
+
+   -4.2226
+
+
+waitTime =
+
+   -4.2098
+
+
+waitTime =
+
+   -4.1971
+
+
+waitTime =
+
+   -4.1848
+
+
+waitTime =
+
+   -4.1726
+
+
+waitTime =
+
+   -4.1597
+
+
+waitTime =
+
+   -4.1473
+
+
+waitTime =
+
+   -4.1352
+
+
+waitTime =
+
+   -4.1226
+
+
+waitTime =
+
+   -4.1100
+
+
+waitTime =
+
+   -4.0978
+
+
+waitTime =
+
+   -4.0855
+
+
+waitTime =
+
+   -4.0726
+
+
+waitTime =
+
+   -4.0600
+
+
+waitTime =
+
+   -4.0478
+
+
+waitTime =
+
+   -4.0353
+
+
+waitTime =
+
+   -4.0227
+
+
+waitTime =
+
+   -4.0099
+
+
+waitTime =
+
+   -3.9972
+
+
+waitTime =
+
+   -3.9848
+
+
+waitTime =
+
+   -3.9724
+
+
+waitTime =
+
+   -3.9596
+
+
+waitTime =
+
+   -3.9473
+
+
+waitTime =
+
+   -3.9349
+
+
+waitTime =
+
+   -3.9228
+
+
+waitTime =
+
+   -3.9104
+
+
+waitTime =
+
+   -3.8977
+
+
+waitTime =
+
+   -3.8852
+
+
+waitTime =
+
+   -3.8728
+
+
+waitTime =
+
+   -3.8605
+
+
+waitTime =
+
+   -3.8482
+
+
+waitTime =
+
+   -3.8357
+
+
+waitTime =
+
+   -3.8229
+
+
+waitTime =
+
+   -3.8101
+
+
+waitTime =
+
+   -3.7973
+
+
+waitTime =
+
+   -3.7851
+
+
+waitTime =
+
+   -3.7729
+
+
+waitTime =
+
+   -3.7603
+
+
+waitTime =
+
+   -3.7476
+
+
+waitTime =
+
+   -3.7355
+
+
+waitTime =
+
+   -3.7229
+
+
+waitTime =
+
+   -3.7101
+
+
+waitTime =
+
+   -3.6973
+
+
+waitTime =
+
+   -3.6849
+
+
+waitTime =
+
+   -3.6727
+
+
+waitTime =
+
+   -3.6598
+
+
+waitTime =
+
+   -3.6470
+
+
+waitTime =
+
+   -3.6345
+
+
+waitTime =
+
+   -3.6223
+
+
+waitTime =
+
+   -3.6094
+
+
+waitTime =
+
+   -3.5968
+
+
+waitTime =
+
+   -3.5842
+
+
+waitTime =
+
+   -3.5719
+
+
+waitTime =
+
+   -3.5591
+
+
+waitTime =
+
+   -3.5465
+
+
+waitTime =
+
+   -3.5339
+
+
+waitTime =
+
+   -3.5211
+
+
+waitTime =
+
+   -3.5085
+
+
+waitTime =
+
+   -3.4960
+
+
+waitTime =
+
+   -3.4835
+
+
+waitTime =
+
+   -3.4708
+
+
+waitTime =
+
+   -3.4580
+
+
+waitTime =
+
+   -3.4455
+
+
+waitTime =
+
+   -3.4331
+
+
+waitTime =
+
+   -3.4203
+
+
+waitTime =
+
+   -3.4081
+
+
+waitTime =
+
+   -3.3956
+
+
+waitTime =
+
+   -3.3830
+
+
+waitTime =
+
+   -3.3704
+
+
+waitTime =
+
+   -3.3576
+
+
+waitTime =
+
+   -3.3452
+
+
+waitTime =
+
+   -3.3330
+
+
+waitTime =
+
+   -3.3205
+
+
+waitTime =
+
+   -3.3079
+
+
+waitTime =
+
+   -3.2957
+
+
+waitTime =
+
+   -3.2835
+
+
+waitTime =
+
+   -3.2709
+
+
+waitTime =
+
+   -3.2581
+
+
+waitTime =
+
+   -3.2456
+
+
+waitTime =
+
+   -3.2333
+
+
+waitTime =
+
+   -3.2210
+
+
+waitTime =
+
+   -3.2082
+
+
+waitTime =
+
+   -3.1961
+
+
+waitTime =
+
+   -3.1838
+
+
+waitTime =
+
+   -3.1709
+
+
+waitTime =
+
+   -3.1583
+
+
+waitTime =
+
+   -3.1458
+
+
+waitTime =
+
+   -3.1335
+
+
+waitTime =
+
+   -3.1212
+
+
+waitTime =
+
+   -3.1084
+
+
+waitTime =
+
+   -3.0961
+
+
+waitTime =
+
+   -3.0835
+
+
+waitTime =
+
+   -3.0715
+
+
+waitTime =
+
+   -3.0589
+
+
+waitTime =
+
+   -3.0465
+
+
+waitTime =
+
+   -3.0348
+
+
+waitTime =
+
+   -3.0229
+
+
+waitTime =
+
+   -3.0106
+
+
+waitTime =
+
+   -2.9989
+
+
+waitTime =
+
+   -2.9870
+
+
+waitTime =
+
+   -2.9743
+
+
+waitTime =
+
+   -2.9619
+
+
+waitTime =
+
+   -2.9496
+
+
+waitTime =
+
+   -2.9369
+
+
+waitTime =
+
+   -2.9242
+
+
+waitTime =
+
+   -2.9114
+
+
+waitTime =
+
+   -2.8991
+
+
+waitTime =
+
+   -2.8866
+
+
+waitTime =
+
+   -2.8742
+
+
+waitTime =
+
+   -2.8618
+
+
+waitTime =
+
+   -2.8492
+
+
+waitTime =
+
+   -2.8366
+
+
+waitTime =
+
+   -2.8240
+
+
+waitTime =
+
+   -2.8112
+
+
+waitTime =
+
+   -2.7987
+
+
+waitTime =
+
+   -2.7860
+
+
+waitTime =
+
+   -2.7737
+
+
+waitTime =
+
+   -2.7609
+
+
+waitTime =
+
+   -2.7485
+
+
+waitTime =
+
+   -2.7361
+
+
+waitTime =
+
+   -2.7235
+
+
+waitTime =
+
+   -2.7106
+
+
+waitTime =
+
+   -2.6978
+
+
+waitTime =
+
+   -2.6853
+
+
+waitTime =
+
+   -2.6728
+
+
+waitTime =
+
+   -2.6603
+
+
+waitTime =
+
+   -2.6476
+
+
+waitTime =
+
+   -2.6353
+
+
+waitTime =
+
+   -2.6228
+
+
+waitTime =
+
+   -2.6100
+
+
+waitTime =
+
+   -2.5972
+
+
+waitTime =
+
+   -2.5850
+
+
+waitTime =
+
+   -2.5727
+
+
+waitTime =
+
+   -2.5605
+
+
+waitTime =
+
+   -2.5481
+
+
+waitTime =
+
+   -2.5357
+
+
+waitTime =
+
+   -2.5231
+
+
+waitTime =
+
+   -2.5103
+
+
+waitTime =
+
+   -2.4977
+
+
+waitTime =
+
+   -2.4852
+
+
+waitTime =
+
+   -2.4730
+
+
+waitTime =
+
+   -2.4602
+
+
+waitTime =
+
+   -2.4480
+
+
+waitTime =
+
+   -2.4356
+
+
+waitTime =
+
+   -2.4234
+
+
+waitTime =
+
+   -2.4112
+
+
+waitTime =
+
+   -2.3988
+
+
+waitTime =
+
+   -2.3860
+
+
+waitTime =
+
+   -2.3734
+
+
+waitTime =
+
+   -2.3606
+
+
+waitTime =
+
+   -2.3481
+
+
+waitTime =
+
+   -2.3357
+
+
+waitTime =
+
+   -2.3231
+
+
+waitTime =
+
+   -2.3102
+
+
+waitTime =
+
+   -2.2978
+
+
+waitTime =
+
+   -2.2850
+
+
+waitTime =
+
+   -2.2728
+
+
+waitTime =
+
+   -2.2599
+
+
+waitTime =
+
+   -2.2477
+
+
+waitTime =
+
+   -2.2353
+
+
+waitTime =
+
+   -2.2227
+
+
+waitTime =
+
+   -2.2099
+
+
+waitTime =
+
+   -2.1977
+
+
+waitTime =
+
+   -2.1852
+
+
+waitTime =
+
+   -2.1729
+
+
+waitTime =
+
+   -2.1606
+
+
+waitTime =
+
+   -2.1482
+
+
+waitTime =
+
+   -2.1358
+
+
+waitTime =
+
+   -2.1235
+
+
+waitTime =
+
+   -2.1107
+
+
+waitTime =
+
+   -2.0984
+
+
+waitTime =
+
+   -2.0858
+
+
+waitTime =
+
+   -2.0732
+
+
+waitTime =
+
+   -2.0603
+
+
+waitTime =
+
+   -2.0478
+
+
+waitTime =
+
+   -2.0355
+
+
+waitTime =
+
+   -2.0229
+
+
+waitTime =
+
+   -2.0101
+
+
+waitTime =
+
+   -1.9979
+
+
+waitTime =
+
+   -1.9853
+
+
+waitTime =
+
+   -1.9728
+
+
+waitTime =
+
+   -1.9600
+
+
+waitTime =
+
+   -1.9478
+
+
+waitTime =
+
+   -1.9354
+
+
+waitTime =
+
+   -1.9228
+
+
+waitTime =
+
+   -1.9101
+
+
+waitTime =
+
+   -1.8976
+
+
+waitTime =
+
+   -1.8850
+
+
+waitTime =
+
+   -1.8726
+
+
+waitTime =
+
+   -1.8598
+
+
+waitTime =
+
+   -1.8476
+
+
+waitTime =
+
+   -1.8352
+
+
+waitTime =
+
+   -1.8231
+
+
+waitTime =
+
+   -1.8102
+
+
+waitTime =
+
+   -1.7980
+
+
+waitTime =
+
+   -1.7857
+
+
+waitTime =
+
+   -1.7736
+
+
+waitTime =
+
+   -1.7610
+
+
+waitTime =
+
+   -1.7483
+
+
+waitTime =
+
+   -1.7362
+
+
+waitTime =
+
+   -1.7235
+
+
+waitTime =
+
+   -1.7109
+
+
+waitTime =
+
+   -1.6987
+
+
+waitTime =
+
+   -1.6865
+
+
+waitTime =
+
+   -1.6738
+
+
+waitTime =
+
+   -1.6615
+
+
+waitTime =
+
+   -1.6492
+
+
+waitTime =
+
+   -1.6368
+
+
+waitTime =
+
+   -1.6242
+
+
+waitTime =
+
+   -1.6113
+
+
+waitTime =
+
+   -1.5986
+
+
+waitTime =
+
+   -1.5859
+
+
+waitTime =
+
+   -1.5734
+
+
+waitTime =
+
+   -1.5608
+
+
+waitTime =
+
+   -1.5484
+
+
+waitTime =
+
+   -1.5362
+
+
+waitTime =
+
+   -1.5233
+
+
+waitTime =
+
+   -1.5105
+
+
+waitTime =
+
+   -1.4978
+
+
+waitTime =
+
+   -1.4856
+
+
+waitTime =
+
+   -1.4730
+
+
+waitTime =
+
+   -1.4603
+
+
+waitTime =
+
+   -1.4476
+
+
+waitTime =
+
+   -1.4351
+
+
+waitTime =
+
+   -1.4223
+
+
+waitTime =
+
+   -1.4101
+
+
+waitTime =
+
+   -1.3979
+
+
+waitTime =
+
+   -1.3854
+
+
+waitTime =
+
+   -1.3729
+
+
+waitTime =
+
+   -1.3602
+
+
+waitTime =
+
+   -1.3480
+
+
+waitTime =
+
+   -1.3358
+
+
+waitTime =
+
+   -1.3230
+
+
+waitTime =
+
+   -1.3102
+
+
+waitTime =
+
+   -1.2974
+
+
+waitTime =
+
+   -1.2850
+
+
+waitTime =
+
+   -1.2729
+
+
+waitTime =
+
+   -1.2603
+
+
+waitTime =
+
+   -1.2476
+
+
+waitTime =
+
+   -1.2353
+
+
+waitTime =
+
+   -1.2225
+
+
+waitTime =
+
+   -1.2097
+
+
+waitTime =
+
+   -1.1972
+
+
+waitTime =
+
+   -1.1848
+
+
+waitTime =
+
+   -1.1723
+
+
+waitTime =
+
+   -1.1594
+
+
+waitTime =
+
+   -1.1472
+
+
+waitTime =
+
+   -1.1348
+
+
+waitTime =
+
+   -1.1225
+
+
+waitTime =
+
+   -1.1097
+
+
+waitTime =
+
+   -1.0975
+
+
+waitTime =
+
+   -1.0850
+
+
+waitTime =
+
+   -1.0725
+
+
+waitTime =
+
+   -1.0597
+
+
+waitTime =
+
+   -1.0469
+
+
+waitTime =
+
+   -1.0343
+
+
+waitTime =
+
+   -1.0216
+
+
+waitTime =
+
+   -1.0094
+
+
+waitTime =
+
+   -0.9972
+
+
+waitTime =
+
+   -0.9848
+
+
+waitTime =
+
+   -0.9722
+
+
+waitTime =
+
+   -0.9597
+
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Stimulus run time: 14.847329 seconds [should be: ].
+[doRetinotopyScan]:Saving in ~/Documents/MATLAB/matfiles/20120725T163426.mat.
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+
+waitTime =
+
+   -0.4864
+
+
+waitTime =
+
+   -0.4743
+
+
+waitTime =
+
+   -0.4626
+
+
+waitTime =
+
+   -0.4500
+
+
+waitTime =
+
+   -0.4377
+
+
+waitTime =
+
+   -0.4254
+
+
+waitTime =
+
+   -0.4126
+
+
+waitTime =
+
+   -0.4002
+
+
+waitTime =
+
+   -0.3876
+
+
+waitTime =
+
+   -0.3752
+
+
+waitTime =
+
+   -0.3630
+
+
+waitTime =
+
+   -0.3508
+
+
+waitTime =
+
+   -0.3387
+
+
+waitTime =
+
+   -0.3261
+
+
+waitTime =
+
+   -0.3136
+
+
+waitTime =
+
+   -0.3013
+
+
+waitTime =
+
+   -0.2888
+
+
+waitTime =
+
+   -0.2762
+
+
+waitTime =
+
+   -0.2640
+
+
+waitTime =
+
+   -0.2513
+
+
+waitTime =
+
+   -0.2389
+
+
+waitTime =
+
+   -0.2262
+
+
+waitTime =
+
+   -0.2138
+
+
+waitTime =
+
+   -0.2010
+
+
+waitTime =
+
+   -0.1887
+
+
+waitTime =
+
+   -0.1762
+
+
+waitTime =
+
+   -0.1639
+
+
+waitTime =
+
+   -0.1511
+
+
+waitTime =
+
+   -0.1387
+
+
+waitTime =
+
+   -0.1259
+
+
+waitTime =
+
+   -0.1131
+
+
+waitTime =
+
+   -0.1004
+
+
+waitTime =
+
+   -0.0877
+
+
+waitTime =
+
+   -0.0755
+
+
+waitTime =
+
+   -0.0627
+
+
+waitTime =
+
+   -0.0503
+
+
+waitTime =
+
+   -0.0378
+
+
+waitTime =
+
+   -0.0251
+
+
+waitTime =
+
+   -0.0122
+
+
+waitTime =
+
+   -0.0099
+
+
+waitTime =
+
+   -0.0080
+
+
+waitTime =
+
+   -0.0063
+
+
+waitTime =
+
+   -0.0045
+
+
+waitTime =
+
+   -0.0030
+
+
+waitTime =
+
+   -0.0015
+
+
+waitTime =
+
+  -6.5786e-05
+
+
+waitTime =
+
+    0.0013
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4757
+
+
+waitTime =
+
+   -0.4635
+
+
+waitTime =
+
+   -0.4507
+
+
+waitTime =
+
+   -0.4385
+
+
+waitTime =
+
+   -0.4260
+
+
+waitTime =
+
+   -0.4134
+
+
+waitTime =
+
+   -0.4006
+
+
+waitTime =
+
+   -0.3885
+
+
+waitTime =
+
+   -0.3756
+
+
+waitTime =
+
+   -0.3633
+
+
+waitTime =
+
+   -0.3506
+
+
+waitTime =
+
+   -0.3385
+
+
+waitTime =
+
+   -0.3259
+
+
+waitTime =
+
+   -0.3137
+
+
+waitTime =
+
+   -0.3009
+
+
+waitTime =
+
+   -0.2888
+
+
+waitTime =
+
+   -0.2766
+
+
+waitTime =
+
+   -0.2637
+
+
+waitTime =
+
+   -0.2510
+
+
+waitTime =
+
+   -0.2388
+
+
+waitTime =
+
+   -0.2261
+
+
+waitTime =
+
+   -0.2135
+
+
+waitTime =
+
+   -0.2011
+
+
+waitTime =
+
+   -0.1887
+
+
+waitTime =
+
+   -0.1764
+
+
+waitTime =
+
+   -0.1635
+
+
+waitTime =
+
+   -0.1513
+
+
+waitTime =
+
+   -0.1390
+
+
+waitTime =
+
+   -0.1266
+
+
+waitTime =
+
+   -0.1140
+
+
+waitTime =
+
+   -0.1016
+
+
+waitTime =
+
+   -0.0895
+
+
+waitTime =
+
+   -0.0774
+
+
+waitTime =
+
+   -0.0648
+
+
+waitTime =
+
+   -0.0521
+
+
+waitTime =
+
+   -0.0396
+
+
+waitTime =
+
+   -0.0271
+
+
+waitTime =
+
+   -0.0148
+
+
+waitTime =
+
+   -0.0122
+
+
+waitTime =
+
+   -0.0094
+
+
+waitTime =
+
+   -0.0074
+
+
+waitTime =
+
+   -0.0058
+
+
+waitTime =
+
+   -0.0043
+
+
+waitTime =
+
+   -0.0029
+
+
+waitTime =
+
+   -0.0015
+
+
+waitTime =
+
+  -1.0098e-04
+
+
+waitTime =
+
+    0.0012
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4757
+
+
+waitTime =
+
+   -0.4634
+
+
+waitTime =
+
+   -0.4506
+
+
+waitTime =
+
+   -0.4385
+
+
+waitTime =
+
+   -0.4258
+
+
+waitTime =
+
+   -0.4130
+
+
+waitTime =
+
+   -0.4001
+
+
+waitTime =
+
+   -0.3874
+
+
+waitTime =
+
+   -0.3753
+
+
+waitTime =
+
+   -0.3627
+
+
+waitTime =
+
+   -0.3504
+
+
+waitTime =
+
+   -0.3383
+
+
+waitTime =
+
+   -0.3258
+
+
+waitTime =
+
+   -0.3131
+
+
+waitTime =
+
+   -0.3002
+
+
+waitTime =
+
+   -0.2881
+
+
+waitTime =
+
+   -0.2753
+
+
+waitTime =
+
+   -0.2632
+
+
+waitTime =
+
+   -0.2504
+
+
+waitTime =
+
+   -0.2382
+
+
+waitTime =
+
+   -0.2253
+
+
+waitTime =
+
+   -0.2125
+
+
+waitTime =
+
+   -0.1998
+
+
+waitTime =
+
+   -0.1874
+
+
+waitTime =
+
+   -0.1749
+
+
+waitTime =
+
+   -0.1623
+
+
+waitTime =
+
+   -0.1499
+
+
+waitTime =
+
+   -0.1372
+
+
+waitTime =
+
+   -0.1247
+
+
+waitTime =
+
+   -0.1119
+
+
+waitTime =
+
+   -0.0993
+
+
+waitTime =
+
+   -0.0865
+
+
+waitTime =
+
+   -0.0741
+
+
+waitTime =
+
+   -0.0612
+
+
+waitTime =
+
+   -0.0488
+
+
+waitTime =
+
+   -0.0363
+
+
+waitTime =
+
+   -0.0240
+
+
+waitTime =
+
+   -0.0115
+
+
+waitTime =
+
+   -0.0095
+
+
+waitTime =
+
+   -0.0076
+
+
+waitTime =
+
+   -0.0059
+
+
+waitTime =
+
+   -0.0041
+
+
+waitTime =
+
+   -0.0024
+
+
+waitTime =
+
+  -9.4838e-04
+
+
+waitTime =
+
+   7.0090e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4755
+
+
+waitTime =
+
+   -0.4627
+
+
+waitTime =
+
+   -0.4500
+
+
+waitTime =
+
+   -0.4374
+
+
+waitTime =
+
+   -0.4245
+
+
+waitTime =
+
+   -0.4120
+
+
+waitTime =
+
+   -0.3991
+
+
+waitTime =
+
+   -0.3869
+
+
+waitTime =
+
+   -0.3747
+
+
+waitTime =
+
+   -0.3625
+
+
+waitTime =
+
+   -0.3498
+
+
+waitTime =
+
+   -0.3376
+
+
+waitTime =
+
+   -0.3252
+
+
+waitTime =
+
+   -0.3125
+
+
+waitTime =
+
+   -0.2997
+
+
+waitTime =
+
+   -0.2872
+
+
+waitTime =
+
+   -0.2748
+
+
+waitTime =
+
+   -0.2627
+
+
+waitTime =
+
+   -0.2505
+
+
+waitTime =
+
+   -0.2383
+
+
+waitTime =
+
+   -0.2258
+
+
+waitTime =
+
+   -0.2136
+
+
+waitTime =
+
+   -0.2008
+
+
+waitTime =
+
+   -0.1886
+
+
+waitTime =
+
+   -0.1761
+
+
+waitTime =
+
+   -0.1639
+
+
+waitTime =
+
+   -0.1511
+
+
+waitTime =
+
+   -0.1388
+
+
+waitTime =
+
+   -0.1268
+
+
+waitTime =
+
+   -0.1151
+
+
+waitTime =
+
+   -0.1031
+
+
+waitTime =
+
+   -0.0908
+
+
+waitTime =
+
+   -0.0789
+
+
+waitTime =
+
+   -0.0671
+
+
+waitTime =
+
+   -0.0545
+
+
+waitTime =
+
+   -0.0422
+
+
+waitTime =
+
+   -0.0296
+
+
+waitTime =
+
+   -0.0170
+
+
+waitTime =
+
+   -0.0150
+
+
+waitTime =
+
+   -0.0132
+
+
+waitTime =
+
+   -0.0114
+
+
+waitTime =
+
+   -0.0096
+
+
+waitTime =
+
+   -0.0080
+
+
+waitTime =
+
+   -0.0065
+
+
+waitTime =
+
+   -0.0051
+
+
+waitTime =
+
+   -0.0036
+
+
+waitTime =
+
+   -0.0023
+
+
+waitTime =
+
+  -9.1208e-04
+
+
+waitTime =
+
+   4.5382e-04
+
+
+waitTime =
+
+   -0.4881
+
+
+waitTime =
+
+   -0.4753
+
+
+waitTime =
+
+   -0.4631
+
+
+waitTime =
+
+   -0.4502
+
+
+waitTime =
+
+   -0.4377
+
+
+waitTime =
+
+   -0.4252
+
+
+waitTime =
+
+   -0.4128
+
+
+waitTime =
+
+   -0.4001
+
+
+waitTime =
+
+   -0.3876
+
+
+waitTime =
+
+   -0.3751
+
+
+waitTime =
+
+   -0.3629
+
+
+waitTime =
+
+   -0.3501
+
+
+waitTime =
+
+   -0.3380
+
+
+waitTime =
+
+   -0.3257
+
+
+waitTime =
+
+   -0.3130
+
+
+waitTime =
+
+   -0.3002
+
+
+waitTime =
+
+   -0.2881
+
+
+waitTime =
+
+   -0.2755
+
+
+waitTime =
+
+   -0.2631
+
+
+waitTime =
+
+   -0.2507
+
+
+waitTime =
+
+   -0.2385
+
+
+waitTime =
+
+   -0.2257
+
+
+waitTime =
+
+   -0.2128
+
+
+waitTime =
+
+   -0.2004
+
+
+waitTime =
+
+   -0.1880
+
+
+waitTime =
+
+   -0.1757
+
+
+waitTime =
+
+   -0.1634
+
+
+waitTime =
+
+   -0.1506
+
+
+waitTime =
+
+   -0.1380
+
+
+waitTime =
+
+   -0.1249
+
+
+waitTime =
+
+   -0.1124
+
+
+waitTime =
+
+   -0.1001
+
+
+waitTime =
+
+   -0.0880
+
+
+waitTime =
+
+   -0.0758
+
+
+waitTime =
+
+   -0.0635
+
+
+waitTime =
+
+   -0.0507
+
+
+waitTime =
+
+   -0.0385
+
+
+waitTime =
+
+   -0.0259
+
+
+waitTime =
+
+   -0.0131
+
+
+waitTime =
+
+   -0.0109
+
+
+waitTime =
+
+   -0.0090
+
+
+waitTime =
+
+   -0.0072
+
+
+waitTime =
+
+   -0.0055
+
+
+waitTime =
+
+   -0.0039
+
+
+waitTime =
+
+   -0.0024
+
+
+waitTime =
+
+  -9.9176e-04
+
+
+waitTime =
+
+   4.5281e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4757
+
+
+waitTime =
+
+   -0.4635
+
+
+waitTime =
+
+   -0.4511
+
+
+waitTime =
+
+   -0.4389
+
+
+waitTime =
+
+   -0.4264
+
+
+waitTime =
+
+   -0.4143
+
+
+waitTime =
+
+   -0.4015
+
+
+waitTime =
+
+   -0.3893
+
+
+waitTime =
+
+   -0.3767
+
+
+waitTime =
+
+   -0.3639
+
+
+waitTime =
+
+   -0.3510
+
+
+waitTime =
+
+   -0.3386
+
+
+waitTime =
+
+   -0.3263
+
+
+waitTime =
+
+   -0.3138
+
+
+waitTime =
+
+   -0.3010
+
+
+waitTime =
+
+   -0.2886
+
+
+waitTime =
+
+   -0.2762
+
+
+waitTime =
+
+   -0.2634
+
+
+waitTime =
+
+   -0.2509
+
+
+waitTime =
+
+   -0.2386
+
+
+waitTime =
+
+   -0.2262
+
+
+waitTime =
+
+   -0.2140
+
+
+waitTime =
+
+   -0.2016
+
+
+waitTime =
+
+   -0.1894
+
+
+waitTime =
+
+   -0.1768
+
+
+waitTime =
+
+   -0.1641
+
+
+waitTime =
+
+   -0.1516
+
+
+waitTime =
+
+   -0.1394
+
+
+waitTime =
+
+   -0.1269
+
+
+waitTime =
+
+   -0.1142
+
+
+waitTime =
+
+   -0.1020
+
+
+waitTime =
+
+   -0.0896
+
+
+waitTime =
+
+   -0.0767
+
+
+waitTime =
+
+   -0.0639
+
+
+waitTime =
+
+   -0.0510
+
+
+waitTime =
+
+   -0.0386
+
+
+waitTime =
+
+   -0.0262
+
+
+waitTime =
+
+   -0.0134
+
+
+waitTime =
+
+   -0.0115
+
+
+waitTime =
+
+   -0.0096
+
+
+waitTime =
+
+   -0.0079
+
+
+waitTime =
+
+   -0.0061
+
+
+waitTime =
+
+   -0.0045
+
+
+waitTime =
+
+   -0.0025
+
+
+waitTime =
+
+   -0.0010
+
+
+waitTime =
+
+   3.6439e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4754
+
+
+waitTime =
+
+   -0.4632
+
+
+waitTime =
+
+   -0.4504
+
+
+waitTime =
+
+   -0.4377
+
+
+waitTime =
+
+   -0.4252
+
+
+waitTime =
+
+   -0.4126
+
+
+waitTime =
+
+   -0.3998
+
+
+waitTime =
+
+   -0.3873
+
+
+waitTime =
+
+   -0.3747
+
+
+waitTime =
+
+   -0.3625
+
+
+waitTime =
+
+   -0.3496
+
+
+waitTime =
+
+   -0.3369
+
+
+waitTime =
+
+   -0.3246
+
+
+waitTime =
+
+   -0.3121
+
+
+waitTime =
+
+   -0.2998
+
+
+waitTime =
+
+   -0.2870
+
+
+waitTime =
+
+   -0.2741
+
+
+waitTime =
+
+   -0.2616
+
+
+waitTime =
+
+   -0.2495
+
+
+waitTime =
+
+   -0.2374
+
+
+waitTime =
+
+   -0.2253
+
+
+waitTime =
+
+   -0.2128
+
+
+waitTime =
+
+   -0.2001
+
+
+waitTime =
+
+   -0.1874
+
+
+waitTime =
+
+   -0.1749
+
+
+waitTime =
+
+   -0.1623
+
+
+waitTime =
+
+   -0.1497
+
+
+waitTime =
+
+   -0.1369
+
+
+waitTime =
+
+   -0.1244
+
+
+waitTime =
+
+   -0.1115
+
+
+waitTime =
+
+   -0.0988
+
+
+waitTime =
+
+   -0.0861
+
+
+waitTime =
+
+   -0.0739
+
+
+waitTime =
+
+   -0.0611
+
+
+waitTime =
+
+   -0.0485
+
+
+waitTime =
+
+   -0.0362
+
+
+waitTime =
+
+   -0.0234
+
+
+waitTime =
+
+   -0.0108
+
+
+waitTime =
+
+   -0.0082
+
+
+waitTime =
+
+   -0.0056
+
+
+waitTime =
+
+   -0.0033
+
+
+waitTime =
+
+   -0.0017
+
+
+waitTime =
+
+  -2.1077e-04
+
+
+waitTime =
+
+    0.0012
+
+
+waitTime =
+
+   -0.4880
+
+
+waitTime =
+
+   -0.4758
+
+
+waitTime =
+
+   -0.4632
+
+
+waitTime =
+
+   -0.4508
+
+
+waitTime =
+
+   -0.4385
+
+
+waitTime =
+
+   -0.4259
+
+
+waitTime =
+
+   -0.4135
+
+
+waitTime =
+
+   -0.4010
+
+
+waitTime =
+
+   -0.3884
+
+
+waitTime =
+
+   -0.3760
+
+
+waitTime =
+
+   -0.3632
+
+
+waitTime =
+
+   -0.3503
+
+
+waitTime =
+
+   -0.3376
+
+
+waitTime =
+
+   -0.3250
+
+
+waitTime =
+
+   -0.3128
+
+
+waitTime =
+
+   -0.3004
+
+
+waitTime =
+
+   -0.2876
+
+
+waitTime =
+
+   -0.2747
+
+
+waitTime =
+
+   -0.2626
+
+
+waitTime =
+
+   -0.2501
+
+
+waitTime =
+
+   -0.2378
+
+
+waitTime =
+
+   -0.2253
+
+
+waitTime =
+
+   -0.2131
+
+
+waitTime =
+
+   -0.2007
+
+
+waitTime =
+
+   -0.1885
+
+
+waitTime =
+
+   -0.1761
+
+
+waitTime =
+
+   -0.1639
+
+
+waitTime =
+
+   -0.1514
+
+
+waitTime =
+
+   -0.1389
+
+
+waitTime =
+
+   -0.1265
+
+
+waitTime =
+
+   -0.1137
+
+
+waitTime =
+
+   -0.1015
+
+
+waitTime =
+
+   -0.0887
+
+
+waitTime =
+
+   -0.0765
+
+
+waitTime =
+
+   -0.0637
+
+
+waitTime =
+
+   -0.0515
+
+
+waitTime =
+
+   -0.0390
+
+
+waitTime =
+
+   -0.0268
+
+
+waitTime =
+
+   -0.0140
+
+
+waitTime =
+
+   -0.0118
+
+
+waitTime =
+
+   -0.0100
+
+
+waitTime =
+
+   -0.0082
+
+
+waitTime =
+
+   -0.0065
+
+
+waitTime =
+
+   -0.0048
+
+
+waitTime =
+
+   -0.0033
+
+
+waitTime =
+
+   -0.0019
+
+
+waitTime =
+
+  -5.3659e-04
+
+
+waitTime =
+
+   8.1896e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4763
+
+
+waitTime =
+
+   -0.4637
+
+
+waitTime =
+
+   -0.4514
+
+
+waitTime =
+
+   -0.4389
+
+
+waitTime =
+
+   -0.4263
+
+
+waitTime =
+
+   -0.4139
+
+
+waitTime =
+
+   -0.4014
+
+
+waitTime =
+
+   -0.3891
+
+
+waitTime =
+
+   -0.3764
+
+
+waitTime =
+
+   -0.3641
+
+
+waitTime =
+
+   -0.3516
+
+
+waitTime =
+
+   -0.3395
+
+
+waitTime =
+
+   -0.3273
+
+
+waitTime =
+
+   -0.3151
+
+
+waitTime =
+
+   -0.3026
+
+
+waitTime =
+
+   -0.2899
+
+
+waitTime =
+
+   -0.2775
+
+
+waitTime =
+
+   -0.2649
+
+
+waitTime =
+
+   -0.2522
+
+
+waitTime =
+
+   -0.2400
+
+
+waitTime =
+
+   -0.2272
+
+
+waitTime =
+
+   -0.2146
+
+
+waitTime =
+
+   -0.2019
+
+
+waitTime =
+
+   -0.1898
+
+
+waitTime =
+
+   -0.1775
+
+
+waitTime =
+
+   -0.1649
+
+
+waitTime =
+
+   -0.1526
+
+
+waitTime =
+
+   -0.1404
+
+
+waitTime =
+
+   -0.1278
+
+
+waitTime =
+
+   -0.1153
+
+
+waitTime =
+
+   -0.1027
+
+
+waitTime =
+
+   -0.0901
+
+
+waitTime =
+
+   -0.0775
+
+
+waitTime =
+
+   -0.0649
+
+
+waitTime =
+
+   -0.0525
+
+
+waitTime =
+
+   -0.0402
+
+
+waitTime =
+
+   -0.0276
+
+
+waitTime =
+
+   -0.0154
+
+
+waitTime =
+
+   -0.0128
+
+
+waitTime =
+
+   -0.0106
+
+
+waitTime =
+
+   -0.0087
+
+
+waitTime =
+
+   -0.0070
+
+
+waitTime =
+
+   -0.0054
+
+
+waitTime =
+
+   -0.0040
+
+
+waitTime =
+
+   -0.0026
+
+
+waitTime =
+
+   -0.0012
+
+
+waitTime =
+
+   1.5271e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4755
+
+
+waitTime =
+
+   -0.4633
+
+
+waitTime =
+
+   -0.4507
+
+
+waitTime =
+
+   -0.4384
+
+
+waitTime =
+
+   -0.4262
+
+
+waitTime =
+
+   -0.4138
+
+
+waitTime =
+
+   -0.4014
+
+
+waitTime =
+
+   -0.3889
+
+
+waitTime =
+
+   -0.3763
+
+
+waitTime =
+
+   -0.3639
+
+
+waitTime =
+
+   -0.3511
+
+
+waitTime =
+
+   -0.3389
+
+
+waitTime =
+
+   -0.3267
+
+
+waitTime =
+
+   -0.3142
+
+
+waitTime =
+
+   -0.3020
+
+
+waitTime =
+
+   -0.2898
+
+
+waitTime =
+
+   -0.2772
+
+
+waitTime =
+
+   -0.2644
+
+
+waitTime =
+
+   -0.2518
+
+
+waitTime =
+
+   -0.2395
+
+
+waitTime =
+
+   -0.2271
+
+
+waitTime =
+
+   -0.2145
+
+
+waitTime =
+
+   -0.2021
+
+
+waitTime =
+
+   -0.1898
+
+
+waitTime =
+
+   -0.1772
+
+
+waitTime =
+
+   -0.1648
+
+
+waitTime =
+
+   -0.1520
+
+
+waitTime =
+
+   -0.1396
+
+
+waitTime =
+
+   -0.1271
+
+
+waitTime =
+
+   -0.1144
+
+
+waitTime =
+
+   -0.1017
+
+
+waitTime =
+
+   -0.0891
+
+
+waitTime =
+
+   -0.0765
+
+
+waitTime =
+
+   -0.0637
+
+
+waitTime =
+
+   -0.0509
+
+
+waitTime =
+
+   -0.0385
+
+
+waitTime =
+
+   -0.0261
+
+
+waitTime =
+
+   -0.0134
+
+
+waitTime =
+
+   -0.0114
+
+
+waitTime =
+
+   -0.0096
+
+
+waitTime =
+
+   -0.0078
+
+
+waitTime =
+
+   -0.0060
+
+
+waitTime =
+
+   -0.0044
+
+
+waitTime =
+
+   -0.0029
+
+
+waitTime =
+
+   -0.0014
+
+
+waitTime =
+
+  -3.7890e-06
+
+
+waitTime =
+
+    0.0014
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4763
+
+
+waitTime =
+
+   -0.4637
+
+
+waitTime =
+
+   -0.4511
+
+
+waitTime =
+
+   -0.4389
+
+
+waitTime =
+
+   -0.4262
+
+
+waitTime =
+
+   -0.4134
+
+
+waitTime =
+
+   -0.4009
+
+
+waitTime =
+
+   -0.3885
+
+
+waitTime =
+
+   -0.3760
+
+
+waitTime =
+
+   -0.3634
+
+
+waitTime =
+
+   -0.3510
+
+
+waitTime =
+
+   -0.3386
+
+
+waitTime =
+
+   -0.3261
+
+
+waitTime =
+
+   -0.3138
+
+
+waitTime =
+
+   -0.3013
+
+
+waitTime =
+
+   -0.2890
+
+
+waitTime =
+
+   -0.2764
+
+
+waitTime =
+
+   -0.2638
+
+
+waitTime =
+
+   -0.2515
+
+
+waitTime =
+
+   -0.2392
+
+
+waitTime =
+
+   -0.2268
+
+
+waitTime =
+
+   -0.2139
+
+
+waitTime =
+
+   -0.2013
+
+
+waitTime =
+
+   -0.1887
+
+
+waitTime =
+
+   -0.1762
+
+
+waitTime =
+
+   -0.1636
+
+
+waitTime =
+
+   -0.1512
+
+
+waitTime =
+
+   -0.1384
+
+
+waitTime =
+
+   -0.1262
+
+
+waitTime =
+
+   -0.1134
+
+
+waitTime =
+
+   -0.1009
+
+
+waitTime =
+
+   -0.0887
+
+
+waitTime =
+
+   -0.0761
+
+
+waitTime =
+
+   -0.0633
+
+
+waitTime =
+
+   -0.0511
+
+
+waitTime =
+
+   -0.0383
+
+
+waitTime =
+
+   -0.0258
+
+
+waitTime =
+
+   -0.0130
+
+
+waitTime =
+
+   -0.0111
+
+
+waitTime =
+
+   -0.0093
+
+
+waitTime =
+
+   -0.0073
+
+
+waitTime =
+
+   -0.0056
+
+
+waitTime =
+
+   -0.0040
+
+
+waitTime =
+
+   -0.0025
+
+
+waitTime =
+
+   -0.0010
+
+
+waitTime =
+
+   3.7945e-04
+
+
+waitTime =
+
+   -0.4883
+
+
+waitTime =
+
+   -0.4762
+
+
+waitTime =
+
+   -0.4643
+
+
+waitTime =
+
+   -0.4521
+
+
+waitTime =
+
+   -0.4401
+
+
+waitTime =
+
+   -0.4281
+
+
+waitTime =
+
+   -0.4159
+
+
+waitTime =
+
+   -0.4041
+
+
+waitTime =
+
+   -0.3914
+
+
+waitTime =
+
+   -0.3790
+
+
+waitTime =
+
+   -0.3662
+
+
+waitTime =
+
+   -0.3537
+
+
+waitTime =
+
+   -0.3408
+
+
+waitTime =
+
+   -0.3285
+
+
+waitTime =
+
+   -0.3163
+
+
+waitTime =
+
+   -0.3040
+
+
+waitTime =
+
+   -0.2911
+
+
+waitTime =
+
+   -0.2783
+
+
+waitTime =
+
+   -0.2656
+
+
+waitTime =
+
+   -0.2528
+
+
+waitTime =
+
+   -0.2400
+
+
+waitTime =
+
+   -0.2275
+
+
+waitTime =
+
+   -0.2149
+
+
+waitTime =
+
+   -0.2021
+
+
+waitTime =
+
+   -0.1894
+
+
+waitTime =
+
+   -0.1769
+
+
+waitTime =
+
+   -0.1643
+
+
+waitTime =
+
+   -0.1521
+
+
+waitTime =
+
+   -0.1394
+
+
+waitTime =
+
+   -0.1269
+
+
+waitTime =
+
+   -0.1147
+
+
+waitTime =
+
+   -0.1019
+
+
+waitTime =
+
+   -0.0892
+
+
+waitTime =
+
+   -0.0764
+
+
+waitTime =
+
+   -0.0641
+
+
+waitTime =
+
+   -0.0519
+
+
+waitTime =
+
+   -0.0392
+
+
+waitTime =
+
+   -0.0267
+
+
+waitTime =
+
+   -0.0144
+
+
+waitTime =
+
+   -0.0121
+
+
+waitTime =
+
+   -0.0102
+
+
+waitTime =
+
+   -0.0084
+
+
+waitTime =
+
+   -0.0067
+
+
+waitTime =
+
+   -0.0051
+
+
+waitTime =
+
+   -0.0036
+
+
+waitTime =
+
+   -0.0022
+
+
+waitTime =
+
+  -8.1699e-04
+
+
+waitTime =
+
+   5.4544e-04
+
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Stimulus run time: 33.050693 seconds [should be: ].
+[doRetinotopyScan]:Saving in ~/Documents/MATLAB/matfiles/20120725T163554.mat.
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+[showScanStimulusMotionPsychophysics]:Quit signal recieved.
+<a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',276,1)">276 </a>response(index)=response;
+response
+
+response =
+
+     2
+     1
+     1
+     1
+     1
+     1
+     2
+     1
+     1
+     2
+     1
+     2
+     2
+     1
+     2
+     1
+     1
+     1
+     1
+     1
+     2
+     2
+     1
+     1
+     2
+     2
+     1
+     1
+     2
+     2
+     2
+     2
+     2
+     1
+     2
+     2
+     1
+     2
+     2
+     1
+     2
+     2
+     2
+     1
+     2
+     2
+     2
+     1
+     2
+     1
+     1
+     2
+     1
+     1
+     1
+     2
+     2
+     1
+     2
+     1
+     2
+     1
+     1
+     1
+     2
+     1
+     1
+     2
+     1
+     2
+     2
+     1
+     2
+     1
+     2
+     2
+     2
+     1
+     1
+     2
+     2
+     2
+     2
+     1
+     2
+     1
+     2
+     2
+     1
+     2
+     2
+     1
+     2
+     1
+     2
+     1
+     1
+     1
+     1
+     1
+     2
+     1
+     1
+     2
+     1
+     1
+     2
+     2
+     2
+     1
+     2
+     1
+     1
+     1
+     1
+     2
+     2
+     1
+     2
+     2
+     2
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+
+trial
+
+trial =
+
+   123
+
+trial(index)=trial
+
+trial =
+
+  Columns 1 through 14
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 15 through 28
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 29 through 42
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 43 through 56
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 57 through 70
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 71 through 84
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 85 through 98
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 99 through 112
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 113 through 126
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 127 through 140
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 141 through 154
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 155 through 168
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 169 through 182
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 183 through 196
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 197 through 210
+
+   123   123   123   123   123   123   123   123   123   123   123   123   123   123
+
+  Columns 211 through 220
+
+   123   123   123   123   123   123   123   123   123   123
+
+response(index)=response
+
+response =
+
+     1
+     1
+     0
+     0
+     1
+     1
+     2
+     2
+     2
+     1
+     0
+     1
+     0
+     1
+     1
+     2
+     1
+     1
+     0
+     1
+     0
+     0
+     0
+     2
+     2
+     1
+     1
+     0
+     2
+     2
+     0
+     0
+     2
+     0
+     0
+     1
+     0
+     2
+     2
+     0
+     0
+     2
+     0
+     0
+     0
+     1
+     1
+     1
+     0
+     2
+     2
+     0
+     1
+     2
+     2
+     1
+     0
+     2
+     1
+     0
+     1
+     0
+     0
+     1
+     1
+     0
+     0
+     0
+     0
+     2
+     0
+     1
+     2
+     2
+     0
+     0
+     0
+     0
+     1
+     0
+     2
+     0
+     0
+     0
+     2
+     1
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     1
+     0
+     1
+     2
+     0
+     2
+     1
+     0
+     1
+     1
+     2
+     2
+     1
+     0
+     1
+     1
+     1
+     1
+     0
+     1
+     0
+     0
+     0
+     0
+     1
+     1
+     2
+     2
+     0
+     0
+     2
+     2
+     0
+     2
+     1
+     2
+     1
+     0
+     0
+     0
+     1
+     1
+     1
+     0
+     0
+     0
+     0
+     0
+     2
+     2
+     1
+     1
+     1
+     1
+     1
+     0
+     0
+     2
+     2
+     0
+     2
+     0
+     0
+     2
+     2
+     2
+     0
+     0
+     0
+     1
+     0
+     2
+     1
+     0
+     0
+     2
+     0
+     0
+     2
+     2
+     2
+     2
+     2
+     0
+     2
+     0
+     2
+     0
+     2
+     1
+     0
+     1
+     2
+     2
+     1
+     1
+     2
+     0
+     0
+     0
+     1
+     0
+     1
+     0
+     0
+     1
+     0
+     0
+     0
+     2
+     0
+     2
+     2
+     2
+     0
+     0
+     1
+     1
+     0
+     0
+     0
+     2
+     0
+     0
+     2
+     2
+     2
+
+dbquit all
+dbclear ('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m', '277')
+[ret]:Using port 2.
+[deviceUMC]:Opening device 2: Opened device: '/dev/cu.Bluetooth-PDA-Sync'
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+{??? Operation terminated by user during ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Tools/UMCdevice/deviceUMC.m',108,0)">deviceUMC at 108</a>
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',180,0)">doRetinotopyScan at 180</a>
+         [dummyonold, time0]=deviceUMC('wait for trigger',params.devices.UMCport);
+
+In ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+edit ret
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+{Warning: Could not find an exact (case-sensitive) match for 'flipLR'.
+/Applications/MATLAB_R2008b.app/toolbox/matlab/elmat/fliplr.m is a case-insensitive
+match and will be used instead.
+You can improve the performance of your code by using exact
+name matches and we therefore recommend that you update your
+usage accordingly. Alternatively, you can disable this warning using
+warning('off','MATLAB:dispatcher:InexactCaseMatch').
+This warning will become an error in future releases.} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',98,1)">showScanStimulusMotionPsychophysics at 98</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',212,1)">doRetinotopyScan at 212</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+
+waitTime =
+
+   2.0591e-05
+
+
+waitTime =
+
+    0.1668
+
+
+waitTime =
+
+    0.1502
+
+
+waitTime =
+
+    0.1335
+
+
+waitTime =
+
+    0.1169
+
+
+waitTime =
+
+   3.5229e-04
+
+
+waitTime =
+
+   7.5823e-05
+
+
+waitTime =
+
+   5.3705e-04
+
+
+waitTime =
+
+   4.0758e-04
+
+
+waitTime =
+
+   3.3537e-04
+
+
+waitTime =
+
+   4.3009e-04
+
+
+waitTime =
+
+   6.1799e-04
+
+
+waitTime =
+
+   2.8880e-04
+
+
+waitTime =
+
+   2.8540e-04
+
+
+waitTime =
+
+   3.5915e-04
+
+
+waitTime =
+
+   3.0232e-04
+
+
+waitTime =
+
+   3.2139e-04
+
+
+waitTime =
+
+   3.3413e-04
+
+{??? Error using ==> save
+Argument must contain a string.
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',282,0)">showScanStimulusMotionPsychophysics at 282</a>
+    save(datestr(now, 30), response, index, displacementsBlock, directionsBlock,
+    speedsBlock)
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',212,0)">doRetinotopyScan at 212</a>
+                [response, timing, quitProg, params] =
+                showScanStimulusMotionPsychophysics(params.display,params, stimulus,
+                time0);
+
+Error in ==> <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,0)">ret at 51</a>
+doRetinotopyScan(params);
+} 
+ opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',282,0)
+ edit presentCalImages.m
+edit process_20090616_scanner.m
+process_20120725_scanner
+ret
+[retMenu]:WARNING: when setting experiment to Sine motion psychophysics(90), num Cycles (1) and period (360) and others have been changed as well!
+[setRetinotopyParams]:Setting stimulus parameters for Sine motion psychophysics(90).
+Loading display params from /Users/lab/Documents/MATLAB/mrStim/trunk/Displays...
+Initializing lab laptop computer with projector display.
+[loadDisplayParams]:Loaded gamma table.
+[loadDisplayParams]:Spectra table not found (only important for LMS-specified stimuli).
+[setRetinotopyParams]:loading calibration from: Desktop_Monitor_1024x768.
+[setRetinotopyParams]: Stimulus size: 5.576 degrees / 770 pixels.
+[retParamsCheck]:Scan time and MR time frames:
+Duration without stimulus (junk frames 1):   0.0 sec [  0 MRtf]
+Duration of prescan (junk frames 2):        12.0 sec [  8 MRtf]
+Duration of data to be collected:          360.0 sec [240 MRtf]
+Total stimulus duration:                   372.0 sec [248 MRtf]
+Total scan duration:                       372.0 sec [248 MRtf] (6.2 minutes).
+[ret]:Using port -1.
+[makePsychophysicsStimulusMotion]:size stimulus: 768x768 pixels.
+[{Warning: The argument for the %s format specifier must be of type char (a string).} 
+> In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/makePsychophysicsStimulusMotion.m',99,1)">makePsychophysicsStimulusMotion at 99</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/doRetinotopyScan.m',76,1)">doRetinotopyScan at 76</a>
+  In <a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/Retinotopy/standard/ret.m',51,1)">ret at 51</a>
+]:Creating .....Done.
+[dispStringInCenter]:Waiting for scanner to start
+[showScanStimulusMotionPsychophysics]:Running. Hit q to quit.
+<a href="matlab: opentoline('/Users/lab/Documents/MATLAB/mrStim/trunk/exptTools/experimentControl/showScanStimulusMotionPsychophysics.m',277,1)">277 </a>    response(index)=response;
+response(index)=response;
+    displacementsBlock(index)=displacementsBlock;
+    directionsBlock(index)=directionsBlock;
+    speedsBlock(index)=speedsBlock;
+    filename = ['~/Documents/MATLAB/matfiles/MotionPsychophysics' datestr(now,30) '.mat'];
+    save(datestr(now, 30), 'response', 'index', 'displacementsBlock', 'directionsBlock', 'speedsBlock')
+filename
+
+filename =
+
+~/Documents/MATLAB/matfiles/MotionPsychophysics20120806T164426.mat
+
+    save(filename, 'response', 'index', 'displacementsBlock', 'directionsBlock', 'speedsBlock')
+[response displacementsBlock directionsBlock speedsBlock]
+
+ans =
+
+    1.0000  -27.5449    1.0000    1.0000
+    1.0000  -13.7724    1.0000    1.0000
+    1.0000   -6.8862    1.0000    1.0000
+    1.0000   -3.4431    1.0000    1.0000
+    2.0000   -1.7216    1.0000    1.0000
+    1.0000         0    1.0000    1.0000
+    1.0000    1.7216    1.0000    1.0000
+    1.0000    3.4431    1.0000    1.0000
+    2.0000    6.8862    1.0000    1.0000
+    2.0000   13.7724    1.0000    1.0000
+    2.0000   27.5449    1.0000    1.0000
+    1.0000  -27.5449    2.0000    1.0000
+    1.0000  -13.7724    2.0000    1.0000
+    1.0000   -6.8862    2.0000    1.0000
+    1.0000   -3.4431    2.0000    1.0000
+    1.0000   -1.7216    2.0000    1.0000
+    2.0000         0    2.0000    1.0000
+    1.0000    1.7216    2.0000    1.0000
+    1.0000    3.4431    2.0000    1.0000
+    1.0000    6.8862    2.0000    1.0000
+    1.0000   13.7724    2.0000    1.0000
+    1.0000   27.5449    2.0000    1.0000
+    1.0000  -27.5449    3.0000    1.0000
+    1.0000  -13.7724    3.0000    1.0000
+    1.0000   -6.8862    3.0000    1.0000
+    2.0000   -3.4431    3.0000    1.0000
+    2.0000   -1.7216    3.0000    1.0000
+    1.0000         0    3.0000    1.0000
+    2.0000    1.7216    3.0000    1.0000
+    2.0000    3.4431    3.0000    1.0000
+    2.0000    6.8862    3.0000    1.0000
+    2.0000   13.7724    3.0000    1.0000
+    2.0000   27.5449    3.0000    1.0000
+    1.0000  -27.5449    4.0000    1.0000
+    1.0000  -13.7724    4.0000    1.0000
+    1.0000   -6.8862    4.0000    1.0000
+    2.0000   -3.4431    4.0000    1.0000
+    2.0000   -1.7216    4.0000    1.0000
+    2.0000         0    4.0000    1.0000
+    1.0000    1.7216    4.0000    1.0000
+    1.0000    3.4431    4.0000    1.0000
+    1.0000    6.8862    4.0000    1.0000
+    2.0000   13.7724    4.0000    1.0000
+    2.0000   27.5449    4.0000    1.0000
+    1.0000  -27.5449    1.0000    2.0000
+    1.0000  -13.7724    1.0000    2.0000
+    1.0000   -6.8862    1.0000    2.0000
+    2.0000   -3.4431    1.0000    2.0000
+    1.0000   -1.7216    1.0000    2.0000
+    1.0000         0    1.0000    2.0000
+    1.0000    1.7216    1.0000    2.0000
+    1.0000    3.4431    1.0000    2.0000
+    2.0000    6.8862    1.0000    2.0000
+    2.0000   13.7724    1.0000    2.0000
+    2.0000   27.5449    1.0000    2.0000
+    1.0000  -27.5449    2.0000    2.0000
+    1.0000  -13.7724    2.0000    2.0000
+    1.0000   -6.8862    2.0000    2.0000
+    1.0000   -3.4431    2.0000    2.0000
+    1.0000   -1.7216    2.0000    2.0000
+    2.0000         0    2.0000    2.0000
+    1.0000    1.7216    2.0000    2.0000
+    2.0000    3.4431    2.0000    2.0000
+    2.0000    6.8862    2.0000    2.0000
+    2.0000   13.7724    2.0000    2.0000
+    2.0000   27.5449    2.0000    2.0000
+    1.0000  -27.5449    3.0000    2.0000
+    1.0000  -13.7724    3.0000    2.0000
+    1.0000   -6.8862    3.0000    2.0000
+    1.0000   -3.4431    3.0000    2.0000
+    1.0000   -1.7216    3.0000    2.0000
+    2.0000         0    3.0000    2.0000
+    1.0000    1.7216    3.0000    2.0000
+    2.0000    3.4431    3.0000    2.0000
+    2.0000    6.8862    3.0000    2.0000
+    2.0000   13.7724    3.0000    2.0000
+    2.0000   27.5449    3.0000    2.0000
+    1.0000  -27.5449    4.0000    2.0000
+    1.0000  -13.7724    4.0000    2.0000
+    2.0000   -6.8862    4.0000    2.0000
+    2.0000   -3.4431    4.0000    2.0000
+    2.0000   -1.7216    4.0000    2.0000
+    2.0000         0    4.0000    2.0000
+    2.0000    1.7216    4.0000    2.0000
+    2.0000    3.4431    4.0000    2.0000
+    2.0000    6.8862    4.0000    2.0000
+    2.0000   13.7724    4.0000    2.0000
+    2.0000   27.5449    4.0000    2.0000
+    1.0000  -27.5449    1.0000    3.0000
+    1.0000  -13.7724    1.0000    3.0000
+    1.0000   -6.8862    1.0000    3.0000
+    1.0000   -3.4431    1.0000    3.0000
+    2.0000   -1.7216    1.0000    3.0000
+    2.0000         0    1.0000    3.0000
+    2.0000    1.7216    1.0000    3.0000
+    1.0000    3.4431    1.0000    3.0000
+    2.0000    6.8862    1.0000    3.0000
+    2.0000   13.7724    1.0000    3.0000
+    1.0000   27.5449    1.0000    3.0000
+    1.0000  -27.5449    2.0000    3.0000
+    1.0000  -13.7724    2.0000    3.0000
+    2.0000   -6.8862    2.0000    3.0000
+    1.0000   -3.4431    2.0000    3.0000
+    1.0000   -1.7216    2.0000    3.0000
+    1.0000         0    2.0000    3.0000
+    1.0000    1.7216    2.0000    3.0000
+    1.0000    3.4431    2.0000    3.0000
+    2.0000    6.8862    2.0000    3.0000
+    2.0000   13.7724    2.0000    3.0000
+    1.0000   27.5449    2.0000    3.0000
+    1.0000  -27.5449    3.0000    3.0000
+    1.0000  -13.7724    3.0000    3.0000
+    1.0000   -6.8862    3.0000    3.0000
+    1.0000   -3.4431    3.0000    3.0000
+    1.0000   -1.7216    3.0000    3.0000
+    1.0000         0    3.0000    3.0000
+    2.0000    1.7216    3.0000    3.0000
+    2.0000    3.4431    3.0000    3.0000
+    2.0000    6.8862    3.0000    3.0000
+    1.0000   13.7724    3.0000    3.0000
+    2.0000   27.5449    3.0000    3.0000
+    1.0000  -27.5449    4.0000    3.0000
+    2.0000  -13.7724    4.0000    3.0000
+    1.0000   -6.8862    4.0000    3.0000
+    2.0000   -3.4431    4.0000    3.0000
+    1.0000   -1.7216    4.0000    3.0000
+    2.0000         0    4.0000    3.0000
+    2.0000    1.7216    4.0000    3.0000
+    2.0000    3.4431    4.0000    3.0000
+    2.0000    6.8862    4.0000    3.0000
+    2.0000   13.7724    4.0000    3.0000
+    2.0000   27.5449    4.0000    3.0000
+    2.0000  -27.5449    1.0000    4.0000
+    2.0000  -13.7724    1.0000    4.0000
+    1.0000   -6.8862    1.0000    4.0000
+    1.0000   -3.4431    1.0000    4.0000
+    1.0000   -1.7216    1.0000    4.0000
+    1.0000         0    1.0000    4.0000
+    1.0000    1.7216    1.0000    4.0000
+    2.0000    3.4431    1.0000    4.0000
+    2.0000    6.8862    1.0000    4.0000
+    1.0000   13.7724    1.0000    4.0000
+    2.0000   27.5449    1.0000    4.0000
+    1.0000  -27.5449    2.0000    4.0000
+    1.0000  -13.7724    2.0000    4.0000
+    2.0000   -6.8862    2.0000    4.0000
+    1.0000   -3.4431    2.0000    4.0000
+    2.0000   -1.7216    2.0000    4.0000
+    1.0000         0    2.0000    4.0000
+    2.0000    1.7216    2.0000    4.0000
+    2.0000    3.4431    2.0000    4.0000
+    1.0000    6.8862    2.0000    4.0000
+    2.0000   13.7724    2.0000    4.0000
+    2.0000   27.5449    2.0000    4.0000
+    1.0000  -27.5449    3.0000    4.0000
+    2.0000  -13.7724    3.0000    4.0000
+    2.0000   -6.8862    3.0000    4.0000
+    2.0000   -3.4431    3.0000    4.0000
+    1.0000   -1.7216    3.0000    4.0000
+    1.0000         0    3.0000    4.0000
+    2.0000    1.7216    3.0000    4.0000
+    2.0000    3.4431    3.0000    4.0000
+    2.0000    6.8862    3.0000    4.0000
+    2.0000   13.7724    3.0000    4.0000
+    2.0000   27.5449    3.0000    4.0000
+    1.0000  -27.5449    4.0000    4.0000
+    1.0000  -13.7724    4.0000    4.0000
+    1.0000   -6.8862    4.0000    4.0000
+    2.0000   -3.4431    4.0000    4.0000
+    1.0000   -1.7216    4.0000    4.0000
+    2.0000         0    4.0000    4.0000
+    2.0000    1.7216    4.0000    4.0000
+    2.0000    3.4431    4.0000    4.0000
+    2.0000    6.8862    4.0000    4.0000
+    2.0000   13.7724    4.0000    4.0000
+    2.0000   27.5449    4.0000    4.0000
+    1.0000  -27.5449    1.0000    5.0000
+    1.0000  -13.7724    1.0000    5.0000
+    2.0000   -6.8862    1.0000    5.0000
+    2.0000   -3.4431    1.0000    5.0000
+    2.0000   -1.7216    1.0000    5.0000
+    2.0000         0    1.0000    5.0000
+    2.0000    1.7216    1.0000    5.0000
+    2.0000    3.4431    1.0000    5.0000
+    2.0000    6.8862    1.0000    5.0000
+    2.0000   13.7724    1.0000    5.0000
+    2.0000   27.5449    1.0000    5.0000
+    1.0000  -27.5449    2.0000    5.0000
+    1.0000  -13.7724    2.0000    5.0000
+    1.0000   -6.8862    2.0000    5.0000
+    1.0000   -3.4431    2.0000    5.0000
+    1.0000   -1.7216    2.0000    5.0000
+    2.0000         0    2.0000    5.0000
+    1.0000    1.7216    2.0000    5.0000
+    2.0000    3.4431    2.0000    5.0000
+    1.0000    6.8862    2.0000    5.0000
+    2.0000   13.7724    2.0000    5.0000
+    2.0000   27.5449    2.0000    5.0000
+    2.0000  -27.5449    3.0000    5.0000
+    1.0000  -13.7724    3.0000    5.0000
+    2.0000   -6.8862    3.0000    5.0000
+    2.0000   -3.4431    3.0000    5.0000
+    2.0000   -1.7216    3.0000    5.0000
+    1.0000         0    3.0000    5.0000
+    1.0000    1.7216    3.0000    5.0000
+    1.0000    3.4431    3.0000    5.0000
+    1.0000    6.8862    3.0000    5.0000
+    2.0000   13.7724    3.0000    5.0000
+    2.0000   27.5449    3.0000    5.0000
+    2.0000  -27.5449    4.0000    5.0000
+    2.0000  -13.7724    4.0000    5.0000
+    1.0000   -6.8862    4.0000    5.0000
+    2.0000   -3.4431    4.0000    5.0000
+    2.0000   -1.7216    4.0000    5.0000
+    2.0000         0    4.0000    5.0000
+    2.0000    1.7216    4.0000    5.0000
+    2.0000    3.4431    4.0000    5.0000
+    2.0000    6.8862    4.0000    5.0000
+    2.0000   13.7724    4.0000    5.0000
+    2.0000   27.5449    4.0000    5.0000
+
+figure; plot(response, displacementsBlock, '.')
+mean(response(displacementsBlock>0))
+
+ans =
+
+    1.7200
+
+mean(response(displacementsBlock<0))
+
+ans =
+
+    1.3200
+
+mean(response(displacementsBlock<-6))
+
+ans =
+
+    1.2167
+
+mean(response(displacementsBlock>6))
+
+ans =
+
+    1.8167
+
+dbquit all
+load('/Users/lab/Documents/MATLAB/mrStim/trunk/Displays/7T_UMC_1024x768/20120806T164426.mat')
+mean(response(directionsBlock>1))
+
+ans =
+
+    1.5333
+
+mean(response(directionsBlock>2))
+
+ans =
+
+    1.6273
+
+mean(response(directionsBlock>3))
+
+ans =
+
+    1.7091
+
+mean(response(directionsBlock>4))
+
+ans =
+
+   NaN
+
+mean(response(directionsBlock==4))
+
+ans =
+
+    1.7091
+
+mean(response(directionsBlock==3))
+
+ans =
+
+    1.5455
+
+mean(response(directionsBlock==2))
+
+ans =
+
+    1.3455
+
+mean(response(directionsBlock==1))
+
+ans =
+
+    1.4909
+

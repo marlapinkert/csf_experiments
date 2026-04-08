@@ -1,0 +1,444 @@
+function [response, timing, quitProg, params] = showScanStimulusAttention(display,params,stimulus, t0, subject, n, typeExp, tValues)
+% [response, timing] = showStimulus(display,stimulus, time0)
+%
+% t0 is the time the scan started and the stimulus timing should be
+% relative to t0. If t0 does not exist it is created at the start of
+% this program.
+%  
+% HISTORY:
+% 2005.02.23 RFD: ported from showStimulus.
+% 2005.06.15 SOD: modified for OSX. Use internal clock for timing rather
+% than framesyncing because getting framerate does not always work. Using
+% the internal clock will also allow some "catching up" if stimulus is
+% delayed for whatever reason. Loading mex functions is slow, so this 
+% should be done before callling this program.
+
+% input checks
+
+
+% you can savely remove the inputs subject, n typeExp and tValues, set the
+% contrast levels manually below (variables called alphaLevel... at line 102 - 106), and
+% comment out the save command at line 365.
+
+
+
+
+
+
+if nargin < 2,
+	help(mfilename);
+    return;
+end;
+if nargin < 3 || isempty(t0),
+    t0 = GetSecs; % "time 0" to keep timing going
+end;
+
+% some more checks
+if ~isfield(stimulus,'textures')
+	% Generate textures for each image
+	disp('WARNING: Creating textures before stimulus presentation.');
+	disp(['         This should be done before calling ' mfilename ' for']);
+	disp('         accurate timing.  See "makeTextures" for help.');
+	stimulus = makeTextures(display,stimulus);
+end;
+
+% quit key
+try 
+    quitProgKey = display.quitProgKey;
+catch ME
+    quitProgKey = KbName('q'); %#ok<NASGU>
+    rethrow(ME);
+end;
+
+firstKey=KbName('z');
+secondKey=KbName('x');
+
+% some variables
+
+nFrames = length(stimulus.seq);
+HideCursor;
+nGamma = size(stimulus.cmap,3);
+nImages = length(stimulus.textures);
+response.keyCode = zeros(length(stimulus.seq),2); % get 1 buttons max
+response.secs = zeros(size(stimulus.seq));        % timing
+quitProg = 0;
+fullTR = params.tr./(1./(params.temporal.frequency*params.temporal.motionSteps));
+realTR = ((length(stimulus.seq)./1./(params.temporal.frequency*params.temporal.motionSteps))./params.tr);
+
+if isfield(stimulus, 'pictures')
+    pictureCounter=0;
+    nImages=nImages-length(stimulus.pictures).*2;
+end
+
+stimulus.makeMovie=1;
+recordingStartFrame=0; %Where to start recording the movie. Set to zero for movie start
+recordingFrames=nFrames; %Set to nFrames for whole stimulus, or frameRate*30 for first 30 seconds sample (better for presentations)
+% if isfield(stimulus, 'makeMovie') && stimulus.makeMovie==1 && recordingFrames==nFrames; %If recording a movie of the whole stimulus, split the movie into 4 parts to avoid filling memory
+%     aviobjA = avifile('checkMovieA.avi', 'FPS', 20);
+%     aviobjB = avifile('checkMovieB.avi', 'FPS', 20);
+%     aviobjC = avifile('checkMovieC.avi', 'FPS', 20);
+%     aviobjD = avifile('checkMovieD.avi', 'FPS', 20);
+     recordingFrames=nFrames/4;
+if isfield(stimulus, 'makeMovie') && stimulus.makeMovie==1; %If recording a movie of a short part of the stimulus, keep it as one file
+    aviobj = avifile('CheckMovie.avi', 'FPS', 20);
+end
+
+params.randomIntervalBar=Shuffle(repmat([1 2]',(ceil(realTR/2)), 1));
+params.randomIntervalFixationC=Shuffle(repmat([1 2]', (ceil(realTR/2)), 1));
+params.randomIntervalFixationL=Shuffle(repmat([1 2]', (ceil(realTR/2)), 1));
+params.randomIntervalFixationR=Shuffle(repmat([1 2]', (ceil(realTR/2)), 1));
+params.psychResponse=zeros(realTR, 1);
+barPeriods=[1:28 49:88 109:148 169:208 229:248];
+
+rotationAngles=rand(6, realTR).*360;
+
+% maxContrastFixation=0.5;
+% maxContrastBar = 0.5;
+% meanContrastFixation=maxContrastFixation/2;
+% meanContrastBar=maxContrastBar/2;
+
+%maxContrast: Bar  Fix  Left Right
+maxContrast= [0.5 0.5 0.5 0.5];%Normal
+%maxContrast= [0.5 0.9 0.7 0.7];%Martijn
+
+meanContrast=maxContrast./2;
+%meanContrast= [0.12 0.25 1 1];%SD, bar only
+
+%tValues: Bar  Fix  Left Right
+%tValues=[0.12 0.14 0 0]; %SD, bar only  tValues=[0.12 0.14 0 0];
+%tValues=[0.11, 0.14 0.19 0.17]; %BOT/SD
+%tValues=[0.09, 0.15, 0.14, 0.14]; %BK 
+tValues=[0.22, 0.43 0.34 0.34]; %MB
+%tValues=[0.09 0.11 0.11 0.11]; %JB
+
+alphaLevelFixationC= tValues(2); %Change these variables to set the contrast level of the center fixation, left fixation, right fixation and bar patterns respectively.
+alphaLevelFixationL= tValues(3);
+alphaLevelFixationR= tValues(4);
+alphaLevelBar=tValues(1);
+
+% alpha.bar.lower = maxContrast(1)/2 - alphaLevelBar;
+% alpha.bar.upper = maxContrast(1)/2 + alphaLevelBar;
+% alpha.fixationC.lower = maxContrastFixation - alphaLevelFixationC;
+% alpha.fixationL.lower = maxContrastFixation - alphaLevelFixationL;
+% alpha.fixationR.lower = maxContrastFixation - alphaLevelFixationR;
+% alpha.fixationC.upper = maxContrastFixation + alphaLevelFixationC;
+% alpha.fixationL.upper = maxContrastFixation + alphaLevelFixationL;
+% alpha.fixationR.upper = maxContrastFixation + alphaLevelFixationR;
+
+blendBar = 1;
+blendFix = 1;
+eyeTracker=0;
+success='';
+
+
+
+% go
+fprintf('[%s]:Running. Hit %s to quit.\n',mfilename,KbName(quitProgKey));
+for frame = 1:nFrames
+    
+    whichTR=ceil(frame/fullTR);
+    whichFrame=mod(frame, fullTR);
+    if whichFrame==0
+        whichFrame=fullTR;
+    end
+    %--- update display
+    % If the sequence number is positive, draw the stimulus and the
+    % fixation.  If the sequence number is negative, draw only the
+    % fixation.
+    
+    if stimulus.seq(frame)>0
+        % put in an image
+        imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
+        
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.destRect);
+        
+        if blendBar ==1;
+            if params.randomIntervalBar(whichTR) == 1
+                if whichFrame <= params.StimOnFrames;
+                    Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect, stimulus.destRect, [], [], meanContrast(1)+alphaLevelBar);
+                elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                    Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect, stimulus.destRect, [], [], meanContrast(1)-alphaLevelBar);
+                end
+            elseif params.randomIntervalBar(whichTR)==2
+                if whichFrame <= params.StimOnFrames;
+                    Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect, stimulus.destRect, [], [], meanContrast(1)-alphaLevelBar);
+                elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                    Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect, stimulus.destRect, [], [], meanContrast(1)+alphaLevelBar);
+                end
+            end
+        end
+        
+        if ismember(whichTR,barPeriods)
+            if whichFrame <= params.StimOnFrames || (whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes));
+                
+                Screen('gluDisk', display.windowPtr, [128 128 128], display.fixX,display.fixY, angle2pix(params.display, stimulus.sizeGludiskC));
+                Screen('gluDisk', display.windowPtr, [128 128 128], display.fixX+stimulus.distFromCenter, display.fixY, angle2pix(params.display, stimulus.sizeGludiskLR));
+                Screen('gluDisk', display.windowPtr, [128 128 128], display.fixX-stimulus.distFromCenter, display.fixY, angle2pix(params.display, stimulus.sizeGludiskLR));
+                drawFixation(display,stimulus.fixSeq(frame));
+                if whichFrame <= params.StimOnFrames
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,1), stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(1,whichTR));
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,2), stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(3,whichTR));
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,3), stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(5,whichTR));
+                elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,1), stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(2,whichTR));
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,2), stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(4,whichTR));
+                    Screen('DrawTexture', display.windowPtr, stimulus.fixationTexture(mod(whichTR,10)+1,3), stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(6,whichTR));
+                end
+                
+                
+                if blendFix ==1;
+                    
+                    %                 if params.randomIntervalFixation(whichTR) == 1&& whichFrame <= params.StimOnFrames;
+                    %                     Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect,[display.fixX-horSize display.fixY-verSize display.fixX+horSize display.fixY+verSize], [], [], alphaLevel);
+                    %                 elseif params.randomIntervalFixation(whichTR)==2 && whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes);
+                    %                     Screen('DrawTexture', display.windowPtr, stimulus.textures(length(stimulus.textures)), stimulus.srcRect,[display.fixX-horSize display.fixY-verSize display.fixX+horSize display.fixY+verSize], [], [], alphaLevel);
+                    %                 end
+                    if params.randomIntervalFixationC(whichTR) == 1
+                        if whichFrame <= params.StimOnFrames;
+                            Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture, stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(1,whichTR), [], meanContrast(2)+alphaLevelFixationC);
+                        elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                            Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture, stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(2,whichTR), [], meanContrast(2)-alphaLevelFixationC);
+                        end
+                    elseif params.randomIntervalFixationC(whichTR)==2
+                        if whichFrame <= params.StimOnFrames;
+                            Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture, stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(1,whichTR), [], meanContrast(2)-alphaLevelFixationC);
+                        elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                            Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture, stimulus.srcFixRect,stimulus.destFixRect1, rotationAngles(2,whichTR), [], meanContrast(2)+alphaLevelFixationC);
+                            
+                        end
+                    end
+
+                        if params.randomIntervalFixationL(whichTR) == 1
+                            if whichFrame <= params.StimOnFrames;
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(3,whichTR), [], meanContrast(3)+alphaLevelFixationL);
+                            elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(4,whichTR), [], meanContrast(3)-alphaLevelFixationL);
+                            end
+                        elseif params.randomIntervalFixationL(whichTR)==2
+                            if whichFrame <= params.StimOnFrames;
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(3,whichTR), [], meanContrast(3)-alphaLevelFixationL);
+                            elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect2, rotationAngles(4,whichTR), [], meanContrast(3)+alphaLevelFixationL);
+                                
+                            end
+                        end
+
+                        
+                        if params.randomIntervalFixationR(whichTR) == 1
+                            if whichFrame <= params.StimOnFrames;
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(5,whichTR), [], meanContrast(4)+alphaLevelFixationR);
+                            elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(6,whichTR), [], meanContrast(4)-alphaLevelFixationR);
+                            end
+                        elseif params.randomIntervalFixationR(whichTR)==2
+                            if whichFrame <= params.StimOnFrames;
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(5,whichTR), [], meanContrast(4)-alphaLevelFixationR);
+                            elseif whichFrame > (params.StimOnFrames + params.ISIframes) && whichFrame <= (2*params.StimOnFrames + params.ISIframes)
+                                Screen('DrawTexture', display.windowPtr, stimulus.alphaTexture2, stimulus.srcFixRect,stimulus.destFixRect3, rotationAngles(6,whichTR), [], meanContrast(4)+alphaLevelFixationR);
+                                
+                            end
+                  
+                    end
+                end
+            else
+                drawFixation(display,stimulus.fixSeq(frame));
+            end
+        else
+            drawFixation(display,stimulus.fixSeq(frame));
+        end
+        
+    elseif stimulus.seq(frame)<0
+        % put in a color table
+		gammaNum = mod(-stimulus.seq(frame)-1,nGamma)+1;
+        % The second argument is the color index.  This apparently changed
+        % in recent times (07.14.2008). So, for now we set it to 1.  It may
+        % be that this hsould be 
+        drawFixation(display,stimulus.fixSeq(frame));
+		Screen('LoadNormalizedGammaTable', display.windowPtr, stimulus.cmap(:,:,gammaNum));
+    end;
+    
+    %--- timing
+    waitTime = (GetSecs-t0)-stimulus.seqtiming(frame);
+    
+    %%USEFUL FOR CHECKING FOR DROPPED FRAMES
+    if waitTime>0
+        waitTime;
+    end
+    
+    if eyeTracker==1;
+        error=EYELINK('checkrecording');
+        if(error~=0)
+            success='EYL_RECORDING_INTERRUPT';
+            return;
+        end
+    end
+    %--- get inputs (subject or experimentor)
+    while(waitTime<0),
+        % Scan the UMC device for subject response
+        if display.devices.UMCport==2
+            [ssKeyCode,ssSecs] = deviceUMC('response_and_trigger',display.devices.UMCport);
+            
+            if ssKeyCode(1)==66 || ssKeyCode(1)==68
+                params.psychResponse(whichTR)=1;
+            elseif ssKeyCode(1)==65 || ssKeyCode(1)==67
+                params.psychResponse(whichTR)=2;
+            elseif any(ssKeyCode)
+                response.keyCode(frame,:) = ssKeyCode;
+                response.secs(frame)    = ssSecs - t0;
+            end
+        end
+        % scan the keyboard for experimentor input
+        [exKeyIsDown,tmp,exKeyCode] = KbCheck();
+        if(exKeyIsDown)
+            if(exKeyCode(quitProgKey)),
+                quitProg = 1;
+                break; % out of while loop
+            elseif (exKeyCode(firstKey)) && (whichFrame>=params.StimOnFrames+params.ISIframes)
+                params.psychResponse(whichTR)=2;
+          
+            elseif (exKeyCode(secondKey)) && (whichFrame>=params.StimOnFrames+params.ISIframes)
+                params.psychResponse(whichTR)=1;
+
+            end;
+        end;
+        
+        
+        
+        % if there is time release cpu
+        if(waitTime<-0.02),
+            WaitSecs(0.01);
+        end;
+        
+        % timing
+        waitTime = (GetSecs-t0)-stimulus.seqtiming(frame);
+    end;
+    
+    
+   
+    %--- stop?
+    if quitProg,
+        fprintf('[%s]:Quit signal recieved.\n',mfilename);
+        break;
+    end;
+
+    %--- update screen
+    Screen('Flip',display.windowPtr);
+    
+%     if isfield(stimulus, 'makeMovie') && stimulus.makeMovie==1 && recordingFrames==nFrames/4
+%         if frame<=recordingFrames;
+%             if isfield(display, 'Rect')
+%                 imageArray=Screen('GetImage', display.windowPtr, display.Rect);
+%             else
+%                 imageArray=Screen('GetImage', display.windowPtr);%, [256 192 768 576]);
+%             end
+%             aviobjA = addframe(aviobjA,imageArray);
+%             
+%             if frame==recordingFrames;
+%                 aviobjA = close(aviobjA);
+%                 clear aviobjA;
+%             end
+%          elseif frame<=recordingFrames*2;
+%             if isfield(display, 'Rect')
+%                 imageArray=Screen('GetImage', display.windowPtr, display.Rect);
+%             else
+%                 imageArray=Screen('GetImage', display.windowPtr);%, [256 192 768 576]);
+%             end
+%             aviobjB = addframe(aviobjB,imageArray);
+%             
+%             if frame==recordingFrames*2;
+%                 aviobjB = close(aviobjB);
+%                 clear aviobjB;
+%             end    
+%          elseif frame<=recordingFrames*3;
+%             if isfield(display, 'Rect')
+%                 imageArray=Screen('GetImage', display.windowPtr, display.Rect);
+%             else
+%                 imageArray=Screen('GetImage', display.windowPtr);%, [256 192 768 576]);
+%             end
+%             aviobjC = addframe(aviobjC,imageArray);
+%             
+%             if frame==recordingFrames*3;
+%                 aviobjC = close(aviobjC);
+%                 clear aviobjC;
+%             end 
+%          elseif frame<=recordingFrames*4;
+%             if isfield(display, 'Rect')
+%                 imageArray=Screen('GetImage', display.windowPtr, display.Rect);
+%             else
+%                 imageArray=Screen('GetImage', display.windowPtr);%, [256 192 768 576]);
+%             end
+%             aviobjD = addframe(aviobjD,imageArray);
+%             
+%             if frame==recordingFrames*4;
+%                 aviobjD = close(aviobjD);
+%                 clear aviobjD;
+%             end  
+%         end
+    if isfield(stimulus, 'makeMovie') && stimulus.makeMovie==1
+        if frame>recordingStartFrame && frame<=recordingStartFrame+recordingFrames
+            if isfield(display, 'Rect')
+                imageArray=Screen('GetImage', display.windowPtr, display.Rect);
+            else
+                imageArray=Screen('GetImage', display.windowPtr);%, [256 192 768 576]);
+            end
+            aviobj = addframe(aviobj,imageArray);
+            
+            if frame==recordingStartFrame+recordingFrames;
+                aviobj = close(aviobj);
+                clear aviobj;
+            end  
+        end
+        
+    end
+    
+end
+
+
+correctResponsesBar=100*(sum(params.randomIntervalBar(barPeriods)==params.psychResponse(barPeriods))./length(barPeriods));
+correctResponsesFixationC=100*(sum(params.randomIntervalFixationC(barPeriods)==params.psychResponse(barPeriods))./length(barPeriods));
+correctResponsesFixationL=100*(sum(params.randomIntervalFixationL(barPeriods)==params.psychResponse(barPeriods))./length(barPeriods));
+correctResponsesFixationR=100*(sum(params.randomIntervalFixationR(barPeriods)==params.psychResponse(barPeriods))./length(barPeriods));
+nonResponse = sum(params.psychResponse(barPeriods)==0);
+disp(sprintf('[%s]:Bar psychophysics task percentage correct: %f' ,mfilename, correctResponsesBar));
+disp(sprintf('[%s]:Center Fixation psychophysics task percentage correct: %f' ,mfilename, correctResponsesFixationC));
+disp(sprintf('[%s]:Left Fixation psychophysics task percentage correct: %f' ,mfilename, correctResponsesFixationL));
+disp(sprintf('[%s]:Right Fixation psychophysics task percentage correct: %f' ,mfilename, correctResponsesFixationR));
+disp(sprintf('[%s]:TRs no response given: %f' ,mfilename, nonResponse));
+params.correctResponsesBar=correctResponsesBar;
+params.correctResponsesFixationC=correctResponsesFixationC;
+params.correctResponsesFixationL=correctResponsesFixationL;
+params.correctResponsesFixationR=correctResponsesFixationR;
+params.nonResponse=nonResponse;
+
+respGiven=find(params.psychResponse);
+barPeriods2=intersect(barPeriods, respGiven);
+correctResponsesBar=100*(sum(params.randomIntervalBar(barPeriods2)==params.psychResponse(barPeriods2))./length(barPeriods2));
+correctResponsesFixationC=100*(sum(params.randomIntervalFixationC(barPeriods2)==params.psychResponse(barPeriods2))./length(barPeriods2));
+correctResponsesFixationL=100*(sum(params.randomIntervalFixationL(barPeriods2)==params.psychResponse(barPeriods2))./length(barPeriods2));
+correctResponsesFixationR=100*(sum(params.randomIntervalFixationR(barPeriods2)==params.psychResponse(barPeriods2))./length(barPeriods2));
+disp(sprintf('[%s]:Bar psychophysics task percentage correct of given responses: %f' ,mfilename, correctResponsesBar));
+disp(sprintf('[%s]:Center Fixation psychophysics task percentage correct of given responses: %f' ,mfilename, correctResponsesFixationC));
+disp(sprintf('[%s]:Left Fixation psychophysics task percentage correct of given responses: %f' ,mfilename, correctResponsesFixationL));
+disp(sprintf('[%s]:Right Fixation psychophysics task percentage correct of given responses: %f' ,mfilename, correctResponsesFixationR));
+params.correctGivenResponsesBar=correctResponsesBar;
+params.correctGivenResponsesFixationC=correctResponsesFixationC;
+params.correctGivenResponsesFixationL=correctResponsesFixationL;
+params.correctGivenResponsesFixationR=correctResponsesFixationR;
+
+
+
+% that's it
+ShowCursor;
+timing = GetSecs-t0;
+fprintf('[%s]:Stimulus run time: %f seconds [should be: %f].\n',mfilename,timing,max(stimulus.seqtiming));
+
+
+
+if eyeTracker==1;
+    success = 'EYL_RECORDING_COMPLETE';
+    EYELINK('message', 'Stimulus Started');
+    Eyelink('StopRecording');
+end
+%save([subject typeExp num2str(n) datestr(now)],'correctResponsesBar','correctResponsesFixationC','correctResponsesFixationL','correctResponsesFixationR','tValues','alpha');
+
+return;

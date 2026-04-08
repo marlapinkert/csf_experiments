@@ -1,0 +1,1 @@
+function y = simpstim(stimsize, startpos, width);%% SIMPSTIM makes a simple stimulus of 1's and 0's% usage: %   Y = SIMPSTIM(N, X, N);% returns a row vector of length N that contains a% region of 1's N elements long beginning at % element X.y = zeros(1, stimsize);y(startpos : startpos+width) = 1; 
