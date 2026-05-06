@@ -315,20 +315,19 @@ try
     % Fixed psychometric function parameters
     gamma  = 0.25;  % Guess rate (1/4 for 4AFC)
     lambda = 0.05;  % Lapse rate, should tolerate occasional misclicks
+    beta   = 3.5;   % Fixed slope of psychometric function (Weibull beta)
     pThreshold = gamma^gamma; % Threshold performance level (~70.7%)
 
     % Stimulus domain in dB units: qpPFWeibull expects 20*log10(contrast)
     % Covers 0.0001 to 1 (dB: -80 to 0), 5000 steps
     contrastDomainLog = linspace(-80, 0, 5000);
 
-    % Full parameter grids — threshold also in dB
+    % Threshold grid in dB — slope is fixed so only threshold is estimated
     thresholdGridFull = linspace(-80, 0, 100); % possible threshold values in dB
-    slopeGridFull     = 1:0.5:8;               % possible slope (beta) values
 
-    % Prior over thresholds: Gaussian centred at 20*log10(0.5) ~ -6 dB
-    % Keeps Quest+ from exploring implausibly low contrasts on early trials
+    % Default prior: Gaussian centred at 20*log10(0.5) ~ -6 dB, SD = 20 dB
     thresholdPriorMu = 20*log10(0.5);  % ~ -6 dB — start around 50% contrast
-    thresholdPriorSD = 20;             % 20 dB SD ~ 1 decade
+    thresholdPriorSD = 10;             % 10 dB SD ~ half a decade
 
     fprintf('\n============= QUEST+ INITIALISATION =============\n')
 
@@ -339,28 +338,27 @@ try
         for iLoc = 1:size(Gabor.x_ycoords,2)
             questHandles(iLoc).q = qpInitialize( ...
                 'stimParamsDomainList', {contrastDomainLog}, ...
-                'psiParamsDomainList',  {thresholdGridFull, slopeGridFull, gamma, lambda}, ...
+                'psiParamsDomainList',  {thresholdGridFull, beta, gamma, lambda}, ...
                 'qpPF', @qpPFWeibull, ...
                 'nOutcomes', 2);
             % Overwrite uniform posterior with Gaussian prior over threshold
-            % (marginalised over slope: same prior applied to each slope value)
             nPsi = questHandles(iLoc).q.nPsiParamsDomain;
             gaussPrior = zeros(nPsi, 1);
             for iPsi = 1:nPsi
-                tLog = questHandles(iLoc).q.psiParamsDomain(iPsi, 1); % log10(threshold)
-                gaussPrior(iPsi) = normpdf(tLog, thresholdPriorMu, thresholdPriorSD);
+                tDb = questHandles(iLoc).q.psiParamsDomain(iPsi, 1); % threshold in dB
+                gaussPrior(iPsi) = normpdf(tDb, thresholdPriorMu, thresholdPriorSD);
             end
             questHandles(iLoc).q.posterior = qpUnitizeArray(gaussPrior);
             questHandles(iLoc).q.expectedNextEntropiesByStim = ...
                 qpUpdateExpectedNextEntropiesByStim(questHandles(iLoc).q);
         end
 
-        fprintf('Using Gaussian prior: log10(threshold) centred at %.2f (SD=%.1f), slope [1, 8]\n\n', ...
-            thresholdPriorMu, thresholdPriorSD)
+        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope fixed at %.1f\n\n', ...
+            thresholdPriorMu, thresholdPriorSD, beta)
 
     else % Run > 1 with prior restriction enabled
 
-        % Load the questHandles structure from previous runs
+        % Load previous run file(s) to inform the prior
         [filenames, pathname] = uigetfile('*.mat', 'Select previous run file(s)', '../data', 'MultiSelect', 'on');
         if isequal(filenames, 0)
             error('No file selected — aborting.');
@@ -368,60 +366,47 @@ try
         if ischar(filenames)
             filenames = {filenames}; % wrap single selection in cell
         end
-        prevData = struct(); % Initialise previous data structure
+        prevData = struct();
         for run = 1:length(filenames)
-            PrevHandles = load(fullfile(pathname, filenames{run}),'questHandles','RawData','thresholds','slopes','ResponseProp');
+            PrevHandles = load(fullfile(pathname, filenames{run}),'thresholds','ResponseProp');
             for iLoc = 1:size(Gabor.x_ycoords,2)
-                prevData(iLoc).Thresholds(run) = PrevHandles.thresholds(iLoc);
-                prevData(iLoc).Slopes(run)     = PrevHandles.slopes(iLoc);
-                prevData(iLoc).ResponseProp(run) = PrevHandles.ResponseProp(iLoc);
+                prevData(iLoc).Thresholds(run)   = PrevHandles.thresholds(iLoc);
+                prevData(iLoc).ResponseProp(run)  = PrevHandles.ResponseProp(iLoc);
             end
         end
 
-        for iLoc = 1:size(Gabor.x_ycoords,2) % For each tested location
+        for iLoc = 1:size(Gabor.x_ycoords,2)
 
             % Find runs where performance was above chance
             idxRunToKeep = find([prevData(iLoc).ResponseProp] >= pThreshold*100);
 
             if ~isempty(idxRunToKeep)
-                % Use the most recent good run's estimates as the prior centre
-                prevThresh = prevData(iLoc).Thresholds(max(idxRunToKeep));
-                prevSlope  = mean(prevData(iLoc).Slopes(idxRunToKeep));
+                % Centre prior on most recent good run's threshold (convert linear -> dB)
+                prevThreshDb = 20*log10(prevData(iLoc).Thresholds(max(idxRunToKeep)));
             else
-                % No good run: use conservative defaults (high contrast, typical slope)
-                prevThresh = 0.5;
-                prevSlope  = 3.5;
+                % No good run: conservative default (~50% contrast)
+                prevThreshDb = 20*log10(0.5);
             end
 
-            % prevThresh from previous run is linear — convert to dB for grid
-            prevThreshDb = 20*log10(prevThresh);
-
-            % Restrict threshold grid: +-20 dB around previous estimate (1 decade)
-            threshLowDb  = max(thresholdGridFull(1),   prevThreshDb - 20);
-            threshHighDb = min(thresholdGridFull(end),  prevThreshDb + 20);
-            thresholdGridRestricted = thresholdGridFull( ...
-                thresholdGridFull >= threshLowDb & thresholdGridFull <= threshHighDb);
-            if isempty(thresholdGridRestricted)
-                thresholdGridRestricted = thresholdGridFull; % fallback to full grid
-            end
-
-            % Restrict slope grid to +-2 around previous estimate
-            slopeLow  = max(slopeGridFull(1),   prevSlope - 2);
-            slopeHigh = min(slopeGridFull(end),  prevSlope + 2);
-            slopeGridRestricted = slopeGridFull( ...
-                slopeGridFull >= slopeLow & slopeGridFull <= slopeHigh);
-            if isempty(slopeGridRestricted)
-                slopeGridRestricted = slopeGridFull; % fallback to full grid
-            end
-
+            % Keep the full threshold grid but use a narrower Gaussian prior
+            % centred on the previous estimate (10 dB SD ~ half a decade)
             questHandles(iLoc).q = qpInitialize( ...
                 'stimParamsDomainList', {contrastDomainLog}, ...
-                'psiParamsDomainList',  {thresholdGridRestricted, slopeGridRestricted, gamma, lambda}, ...
+                'psiParamsDomainList',  {thresholdGridFull, beta, gamma, lambda}, ...
                 'qpPF', @qpPFWeibull, ...
                 'nOutcomes', 2);
+            nPsi = questHandles(iLoc).q.nPsiParamsDomain;
+            gaussPrior = zeros(nPsi, 1);
+            for iPsi = 1:nPsi
+                tDb = questHandles(iLoc).q.psiParamsDomain(iPsi, 1);
+                gaussPrior(iPsi) = normpdf(tDb, prevThreshDb, 10); % 10 dB SD
+            end
+            questHandles(iLoc).q.posterior = qpUnitizeArray(gaussPrior);
+            questHandles(iLoc).q.expectedNextEntropiesByStim = ...
+                qpUpdateExpectedNextEntropiesByStim(questHandles(iLoc).q);
 
-            fprintf('Location %d: dB threshold prior [%.1f, %.1f], slope prior [%.1f, %.1f]\n', ...
-                iLoc, threshLowDb, threshHighDb, slopeLow, slopeHigh)
+            fprintf('Location %d: Gaussian prior centred at %.1f dB (SD=10 dB), slope fixed at %.1f\n', ...
+                iLoc, prevThreshDb, beta)
         end
     end
 
@@ -691,59 +676,52 @@ try
     Screen('Flip', w);
 
     %% FOR EACH LOCATION: ESTIMATE THRESHOLD, EXTRACT QUEST+ DATA & PLOT PSYCHOMETRIC FUNCTION ===============================
-    thresholds   = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
-    slopes       = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
-    ResponseProp = zeros(1,size(Gabor.x_ycoords,2)); % To store proportions of correct responses
+    thresholds   = zeros(1,size(Gabor.x_ycoords,2)); % MAP threshold estimates (linear contrast)
+    slopes       = repmat(beta, 1, size(Gabor.x_ycoords,2)); % fixed slope, stored for compatibility
+    ResponseProp = zeros(1,size(Gabor.x_ycoords,2)); % proportion correct (%)
     contrasts    = logspace(-4, 0, 1000); % log-spaced for plotting
-    proportions  = zeros(size(Gabor.x_ycoords,2), length(contrasts));  % To store predicted proportions for each location
+    proportions  = zeros(size(Gabor.x_ycoords,2), length(contrasts));
 
     for iLoc = 1:size(Gabor.x_ycoords,2)
         % Percentage of correct responses at each location
-        trialOutcomes = questHandles(iLoc).q.trialData; % each row: [stim, outcome]
+        trialOutcomes = questHandles(iLoc).q.trialData;
         ResponseProp(iLoc) = sum([trialOutcomes.outcome] == 2) / Gabor.nTrials * 100;
 
-        % Maximum likelihood fit to get threshold and slope
-        % psiParamsDomain stores threshold in dB — convert back to linear
+        % MAP threshold estimate — slope is fixed so posterior is 1D over threshold
         psiParamsIndex = qpListMaxArg(questHandles(iLoc).q.posterior);
         psiParamsQuest = questHandles(iLoc).q.psiParamsDomain(psiParamsIndex,:);
-        thresholds(iLoc) = 10^(psiParamsQuest(1)/20); % threshold (linear)
-        slopes(iLoc)     = psiParamsQuest(2);          % slope (beta)
+        thresholds(iLoc) = 10^(psiParamsQuest(1)/20); % convert dB -> linear
 
-        % Choose threshold/slope to plot (fall back to previous run if this one is bad)
+        % Fall back to previous run's threshold if this run is below chance
         if ResponseProp(iLoc) >= pThreshold*100
             thresholdsPlot(iLoc) = thresholds(iLoc);
-            slopesPlot(iLoc)     = slopes(iLoc);
         else
             if Gabor.RunNumber ~= 1 && exist('prevData','var')
                 idxRunToKeep = find([prevData(iLoc).ResponseProp] >= pThreshold*100);
                 if ~isempty(idxRunToKeep)
                     thresholdsPlot(iLoc) = prevData(iLoc).Thresholds(max(idxRunToKeep));
-                    slopesPlot(iLoc)     = prevData(iLoc).Slopes(max(idxRunToKeep));
                 else
                     thresholdsPlot(iLoc) = thresholds(iLoc);
-                    slopesPlot(iLoc)     = slopes(iLoc);
                 end
             else
                 thresholdsPlot(iLoc) = thresholds(iLoc);
-                slopesPlot(iLoc)     = slopes(iLoc);
             end
         end
 
-        % Weibull Psychometric Function for plotting
-        % Uses log10(contrast) internally, matching qpPFWeibull convention
+        % Weibull Psychometric Function for plotting (fixed slope = beta)
         for c = 1:length(contrasts)
-            proportions(iLoc,c) = lambda*gamma + (1-lambda)*(1-(1-gamma)*exp(-10.^(slopesPlot(iLoc)*(log10(contrasts(c))-log10(thresholdsPlot(iLoc))))));
+            proportions(iLoc,c) = lambda*gamma + (1-lambda)*(1-(1-gamma)*exp(-10.^(beta*(log10(contrasts(c))-log10(thresholdsPlot(iLoc))))));
         end
 
-        % Define the contrast needed for pThreshold performance
+        % Contrast at pThreshold performance
         [~, idx] = min(abs(proportions(iLoc,:) - pThreshold));
         contrastsPerf(iLoc) = contrasts(idx);
     end
 
     clc;
     for iLoc = 1:size(Gabor.x_ycoords,2)
-        fprintf('Location %d: Estimated threshold at %.1f%% performance = %.4f (%.1f%%), Slope = %.3f\n', ...
-            iLoc, pThreshold*100, contrastsPerf(iLoc), contrastsPerf(iLoc)*100, slopesPlot(iLoc));
+        fprintf('Location %d: Estimated threshold at %.1f%% performance = %.4f (%.1f%%), Slope fixed at %.1f\n', ...
+            iLoc, pThreshold*100, contrastsPerf(iLoc), contrastsPerf(iLoc)*100, beta);
     end
 
     %% PLOT DATA ========================================================
@@ -790,12 +768,18 @@ try
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
     set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
 
-    % Heat plot for Slopes
+    % Heat plot for posterior entropy (lower = Quest+ is more certain)
+    posteriorEntropy = zeros(1, size(Gabor.x_ycoords,2));
+    for iLoc = 1:size(Gabor.x_ycoords,2)
+        p = questHandles(iLoc).q.posterior;
+        p = p(p > 0);
+        posteriorEntropy(iLoc) = -sum(p .* log2(p));
+    end
     subplot(2,3,4); hold on;
-    scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, slopesPlot, ...
+    scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, posteriorEntropy, ...
         'filled', 'MarkerEdgeColor','k');
-    colormap(parula);colorbar; caxis([1 8]); ylabel(colorbar,'Slope');
-    title('Slopes');
+    colormap(parula);colorbar; ylabel(colorbar,'Entropy (bits)');
+    title(sprintf('Posterior Entropy (slope fixed = %.1f)', beta));
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
     set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
 
