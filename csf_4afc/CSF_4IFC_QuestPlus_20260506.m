@@ -1,12 +1,12 @@
-%% Behavioural CSF task - 4 alternative forced choice (4IFC) - Quest algorithm
-% This script will display a 6� diameter Grating patch, at one of the
+%% Behavioural CSF task - 4 alternative forced choice (4IFC) - Quest+ algorithm
+% This script will display a 6deg diameter Grating patch, at one of the
 % pre-defined locations across the visual field. These locations are spaced
-% 6��from each other. The contrast of the Gabor in the patch is defined
-% using a Quest algorithm. Participants have to judge the orientation of
+% 6deg from each other. The contrast of the Gabor in the patch is defined
+% using a Quest+ algorithm. Participants have to judge the orientation of
 % the Gabor displayed in the patch out of 4 options (4AFC: horizontal,
 % vertical, positive and negative diagonals.
 
-% Tested: 20 presentations per locations = 23.33 minutes
+% Tested: 1 run, 20 presentations per locations = 12.15 minutes
 
 %% INITIALISATION AND PATH DEFINITION ================================
 clc; clear all; close all;
@@ -15,14 +15,15 @@ commandwindow;
 format longG % Display numbers in full digits, not with scientific notation
 
 % Get initial start time for the integrality of the script
-time1 = clock; 
+time1 = clock;
 
 % Get the paths
 RootDirectory = pwd;
-[pathstr, ~, ~] = fileparts(which('CSF_4IFC_Quest_20260402'));
+[pathstr, ~, ~] = fileparts(which('CSF_4IFC_QuestPlus_20260506'));
 cd(pathstr)
 addpath(genpath('resources_SC'));
 addpath(genpath('Common_functions_SC'));
+addpath(genpath('mQuestPlus')); % Quest+ (Brainard lab)
 
 disp('%%%%%%%%% Welcome to Contrast Sensivity Task: Quest+ algorithm %%%%%%%%%')
 
@@ -60,7 +61,7 @@ if Parameters.EyeTrack
    answer = input('WHICH EYE TO TRACK (1=LE, 2=RE)? ','s');
    Parameters.EyeToTrack = single(str2num(answer));
 end
-    
+
 clear answer prompt definput DateToday
 
 % Create participant's folder
@@ -87,8 +88,9 @@ clear inCorrected_Spline;
 prompt = {'RUN NUMBER','SPATIAL FREQ. TO TEST (cpd)','NUMBER OF TRIALS PER LOCATION', ...
     'SD GAUSSIAN HULL (deg - NaN = no Gaussian Hull)',...
     'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)', ...
-    'LOCATION SUBSET (all / meridians / center)'};
-definput = {'1','1','5','NaN','2','6','all'};
+    'LOCATION SUBSET (all / meridians / center)',...
+    'RESTRICT PRIOR ON RUNS > 1 (0/1)?'};
+definput = {'1','1','5','NaN','2','6','all','1'};
 answer = inputdlg(prompt,'Experimental parameters',[1 100],definput);
 
 Gabor.RunNumber = single(str2num(answer{1}));
@@ -98,6 +100,7 @@ Gabor.SpacialConstant_Deg = single(str2num(answer{4}));
 Gabor.TF = single(str2num(answer{5}));
 Gabor.PatchSize = single(str2num(answer{6}));
 Gabor.LocationSubset = lower(strtrim(answer{7})); % 'all' or 'meridians' (horizontal/vertical axes + center)
+Parameters.RestrictPrior = single(str2double(answer{8})); % Restrict prior on runs > 1
 Gabor.AllowedOri = [-45 0 45 90]; % 6 7 8 9
 
 clear answer prompt definput
@@ -148,22 +151,22 @@ clear rSeed
 
 %% Create a list of tested Gabor centres
 % Define number of degree in pixel between 2 point centres
-degdiff = round(6*Parameters.pixperdeg); 
+degdiff = round(6*Parameters.pixperdeg);
 
 % Define x-y positions for patch centres
 rangex = [-18:6:18]*Parameters.pixperdeg;
 rangey = rangex;
 
 % Replicate each y coordinate for existing rangex values
-ypos = []; 
+ypos = [];
 for i = 1:length(rangey)
    ypos = [ypos, repmat(rangey(i),1,length(rangex))];
 end
 
 % Combine x-y coordinates for full range of testing locations
-Gabor.x_ycoords = [repmat([rangex],1,length(rangey));ypos]; 
-               
-% Convert x-y positions to polar and eccentricity 
+Gabor.x_ycoords = [repmat([rangex],1,length(rangey));ypos];
+
+% Convert x-y positions to polar and eccentricity
 [Gabor.Polar,Gabor.ECC] = cart2pol(Gabor.x_ycoords(1,:),Gabor.x_ycoords(2,:)); % Polar = rad, ECC = pixel
 
 % Get rid of the four corner positions
@@ -194,9 +197,9 @@ fprintf('\nNUMBER OF POINTS TESTED: %s\n',num2str(size(Gabor.x_ycoords,2)))
 % Set up filename for saving
 TIMESTAMP = strrep(strrep(datestr(now),' ','_'),':','');
 if Parameters.Practice == 1
-    SaveName = sprintf('%s/Practice_%s_%s_Quest_%scpd_%s',FolderName,Parameters.Subj_ID,EyeTestedLabels{Parameters.Subj_EyeTested},num2str(Gabor.SFcpd),num2str(TIMESTAMP));
+    SaveName = sprintf('%s/Practice_%s_%s_QuestPlus_%scpd_%s',FolderName,Parameters.Subj_ID,EyeTestedLabels{Parameters.Subj_EyeTested},num2str(Gabor.SFcpd),num2str(TIMESTAMP));
 elseif Parameters.Practice == 0
-    SaveName = sprintf('%s/%s_%s_Quest_%scpd_%s_R%s',FolderName,Parameters.Subj_ID,EyeTestedLabels{Parameters.Subj_EyeTested},num2str(Gabor.SFcpd),num2str(TIMESTAMP),num2str(Gabor.RunNumber));
+    SaveName = sprintf('%s/%s_%s_QuestPlus_%scpd_%s_R%s',FolderName,Parameters.Subj_ID,EyeTestedLabels{Parameters.Subj_EyeTested},num2str(Gabor.SFcpd),num2str(TIMESTAMP),num2str(Gabor.RunNumber));
 end
 
 %% GABOR PATCH INITIALISATION =============================================
@@ -210,20 +213,20 @@ Freq = Gabor.SFcpd; % Frequency(ies) to test
 
 %% EYELINK PARAMETERS SET-UP & INITIALISATION =============================
 if Parameters.EyeTrack
-    
-    elparam.expName      = '4AFC_CSF_Quest';            % experiment name.
+
+    elparam.expName      = '4AFC_CSF_QuestPlus';        % experiment name.
     elparam.eyeMvt       = 1;                           % control eye movement,                             0 = NO   , 1 = YES
     elparam.TEST         = 0;                           % Dummy/test mode or not,                           0 = NO   , 1 = YES
     elparam.viewEL       = 0;                           % View eye position                                 0 = NO   , 1 = YES
     elparam.expStart     = 1;                           % Start of a recording exp                          0 = NO   , 1 = YES
-    
+
     elparam.calibFlag    = 0;                           % Luminance gamma linearisation calibration         0 = NO   , 1 = YES
     elparam.calibType    = 2;                           % There are 2 types of gamma calibration            1 = Gray linearized;    2 = RGB linearized
     elparam.mkVideo      = 0;                           % Make a video of one trial                         0 = NO   , 1 = YES
     elparam.expTraining  = 0;                           % Training of the current experiment                0 = NO   , 1 = YES
     elparam.feedbackTask = 0;                           % Training of the current experiment                0 = NO   , 1 = YES
     elparam.EyeTest      = Parameters.EyeToTrack;       % Need to pass this to CheckEyePos (1 = LE, 2 = RE)
-    
+
     if Parameters.Subj_Patient == 1
         elparam.CalTarRadVal   = Parameters.FixationSize_Deg;%VAToPix(sp.ViewDist, sp.PixelScale, elparam.CalTarRadDeg);
         elparam.CalTarWidthVal = 0.375; %VAToPix(sp.ViewDist, sp.PixelScale, elparam.CalTarWidthDeg);
@@ -231,11 +234,11 @@ if Parameters.EyeTrack
         elparam.CalTarRadVal   = Parameters.FixationSize_Deg;%VAToPix(sp.ViewDist, sp.PixelScale, elparam.CalTarRadDeg);
         elparam.CalTarWidthVal = 0.25; %VAToPix(sp.ViewDist, sp.PixelScale, elparam.CalTarWidthDeg);
     end
-    
+
     elparam.timeCalibMin = 10; %every 10 mins it will initialise re-calibration
     elparam.timeCalib    = elparam.timeCalibMin*60; %converts to secs (system requirement)
     elparam.timeFixSec   = 5; %maximum time allowed for non-fixation during trial (in seconds)
-    
+
     if Parameters.Subj_Patient == 1
         elparam.FixRadDeg = 5;%2; %radius of the zone around fixation where we tolerate eye positions (degrees)
     elseif Parameters.Subj_Patient == 0
@@ -243,10 +246,10 @@ if Parameters.EyeTrack
     end
     elparam.FixRadPix = elparam.FixRadDeg*Parameters.pixperdeg; %convert to pixels
     elparam.MaxInvTrials = 20; % maximum invalid trials allowed
-    
+
     % Initialise Eyelink
     InitialiseEyeLink_2IFC;
-    
+
 else %no eye tracking - set up blank arrays
     el = [];
     elparam = [];
@@ -254,13 +257,13 @@ end
 
 %% EXPERIMENT =========================================================
 close all
-try    
+try
     %% EYE TRACKER CALIBRATION
     if Parameters.EyeTrack
         disp('.............. Calibration Time ..............')
         % First EyeLink Calibration
         eyeLinkClearScreen(0); %clear to grey screen
-       
+
         % First calibration :
         if ~elparam.TEST
             eyeLinkClearScreen(0);
@@ -271,14 +274,14 @@ try
             end
         end
     end
-    
+
     % Draw a blank screen
     pause(0.5); %just a brief pause to wait for the key press above to be cleared
     Screen('Flip', w);
 
     %% INITIALISE TIMING PARAMETERS
     timeStamp = [GetSecs 0];
-    
+
     % Presentation timings
     if Parameters.Practice == 1
         Gabor.stimDuration_secs = single(1);
@@ -288,13 +291,13 @@ try
         Parameters.ISILim = single([0.3 0.5]); % Inter-Trial Stimulus interval in seconds
     end
     Gabor.stimDuration_Frame = single(Gabor.stimDuration_secs/ifi);  % Number of corresponding frames
-    
+
     % Ramp vector generation
     Gabor.nFramesRamp = single(3);
     Gabor.stimDurationWithRamp_secs = single(Gabor.stimDuration_secs); % +(2*Gabor.nFramesRamp*ifi);
     Gabor.stimDurationWithRamp_Frame = single(Gabor.stimDurationWithRamp_secs/ifi);
     Gabor.RampVector = getSquaredCosineWindow(Parameters.FrameRate_hz, Gabor.stimDurationWithRamp_secs+0.1, ifi*Gabor.nFramesRamp);
-    
+
     % Phase-reversing flipping generation
     Gabor.FlipReversalIndex = single([ones(1,Gabor.stimDurationWithRamp_Frame/2),repmat(2,1,Gabor.stimDurationWithRamp_Frame/2)]);
     Gabor.FlipReversalRate = single(1/Gabor.TF/size(Stimulus,5)); % in s: 1 cycle = 2 reversals (if there are 2 reversals)
@@ -302,102 +305,133 @@ try
         Gabor.nFlips = Gabor.nFramesRamp:Gabor.FlipReversalRate*Parameters.FrameRate_hz:(Gabor.nFramesRamp+Gabor.stimDuration_secs*Parameters.FrameRate_hz);
         Gabor.nFlips(1) = 1;
     end
-    
+
     % Define the stimulus texture at full contrast and centre of screen
     [gaborid,dstRect] = MakeGaborContrast(double(Stimulus),1,XYLoc_px_gabor,Parameters,w,ScreenRect,idxFreq,1,idxSCSize,1); %Gabor patch presentation
-    
+
     clear i j
-    
-    %% QUEST INITIALISATION FOR EACH TESTED LOCATION
-    questHandles = struct();
-    tGuess = 0.5; % Initial guess for threshold (1%)
-    tGuessSd = 0.2; % Standard deviation of guess (5%)
-    gamma = 0.25; % Guess rate (1/4 for 4AFC)
+
+    %% QUEST+ INITIALISATION FOR EACH TESTED LOCATION
+    % Fixed psychometric function parameters
+    gamma  = 0.25;  % Guess rate (1/4 for 4AFC)
+    lambda = 0.05;  % Lapse rate, should tolerate occasional misclicks
     pThreshold = gamma^gamma; % Threshold performance level (~70.7%)
-    beta = 3.5; % Slope of psychometric function
-    lambda = 0.01; % Lapse rate (1%)
-    minSd = 0.005; % Minimum standard deviation (0.5%)
-    decayRate = 0.25; % Decay rate per run
-    fprintf('\n============= INITIAL GUESS =============\n')
 
-    if Gabor.RunNumber == 1
+    % Stimulus domain in dB units: qpPFWeibull expects 20*log10(contrast)
+    % Covers 0.0001 to 1 (dB: -80 to 0), 5000 steps
+    contrastDomainLog = linspace(-80, 0, 5000);
 
-        for iLoc = 1:size(Gabor.x_ycoords,2) % For each tested location
-            questHandles(iLoc).q = QuestCreate(tGuess,tGuessSd,pThreshold,beta,lambda,gamma);
+    % Full parameter grids — threshold also in dB
+    thresholdGridFull = linspace(-80, 0, 100); % possible threshold values in dB
+    slopeGridFull     = 1:0.5:8;               % possible slope (beta) values
+
+    % Prior over thresholds: Gaussian centred at 20*log10(0.5) ~ -6 dB
+    % Keeps Quest+ from exploring implausibly low contrasts on early trials
+    thresholdPriorMu = 20*log10(0.5);  % ~ -6 dB — start around 50% contrast
+    thresholdPriorSD = 20;             % 20 dB SD ~ 1 decade
+
+    fprintf('\n============= QUEST+ INITIALISATION =============\n')
+
+    questHandles = struct();
+
+    if Gabor.RunNumber == 1 || ~Parameters.RestrictPrior
+
+        for iLoc = 1:size(Gabor.x_ycoords,2)
+            questHandles(iLoc).q = qpInitialize( ...
+                'stimParamsDomainList', {contrastDomainLog}, ...
+                'psiParamsDomainList',  {thresholdGridFull, slopeGridFull, gamma, lambda}, ...
+                'qpPF', @qpPFWeibull, ...
+                'nOutcomes', 2);
+            % Overwrite uniform posterior with Gaussian prior over threshold
+            % (marginalised over slope: same prior applied to each slope value)
+            nPsi = questHandles(iLoc).q.nPsiParamsDomain;
+            gaussPrior = zeros(nPsi, 1);
+            for iPsi = 1:nPsi
+                tLog = questHandles(iLoc).q.psiParamsDomain(iPsi, 1); % log10(threshold)
+                gaussPrior(iPsi) = normpdf(tLog, thresholdPriorMu, thresholdPriorSD);
+            end
+            questHandles(iLoc).q.posterior = qpUnitizeArray(gaussPrior);
+            questHandles(iLoc).q.expectedNextEntropiesByStim = ...
+                qpUpdateExpectedNextEntropiesByStim(questHandles(iLoc).q);
         end
 
-        % Display in command window
-        fprintf('Threshold = %s�%s%%, Slope = %s\n\n', ...
-            num2str(tGuess*100),num2str(tGuessSd*100),num2str(beta))
-    else % Run > 1
+        fprintf('Using Gaussian prior: log10(threshold) centred at %.2f (SD=%.1f), slope [1, 8]\n\n', ...
+            thresholdPriorMu, thresholdPriorSD)
+
+    else % Run > 1 with prior restriction enabled
+
         % Load the questHandles structure from previous runs
-        pathname = uigetdir();
-        d = dir(pathname); 
-        filename = {d.name};
-        idxFile = listdlg('PromptString','Select a file:',...
-            'SelectionMode','multiple',...
-            'ListString',filename);
+        [filenames, pathname] = uigetfile('*.mat', 'Select previous run file(s)', '../data', 'MultiSelect', 'on');
+        if isequal(filenames, 0)
+            error('No file selected — aborting.');
+        end
+        if ischar(filenames)
+            filenames = {filenames}; % wrap single selection in cell
+        end
         prevData = struct(); % Initialise previous data structure
-        for run = 1:length(idxFile)
-            PrevHandles = load([pathname filesep filename{idxFile(run)}],'questHandles','RawData','thresholds','slopes','ResponseProp','tGuessSd');
-            % Retrive tested contrast levels from previous run
-            for iLoc = 1:size(Gabor.x_ycoords,2) % For each tested location
-                prevData(iLoc).Intensity(:,run) = PrevHandles.questHandles(iLoc).q.intensity(1:PrevHandles.questHandles(iLoc).q.trialCount);
-                prevData(iLoc).Slopes(run) = PrevHandles.slopes(iLoc);
+        for run = 1:length(filenames)
+            PrevHandles = load(fullfile(pathname, filenames{run}),'questHandles','RawData','thresholds','slopes','ResponseProp');
+            for iLoc = 1:size(Gabor.x_ycoords,2)
                 prevData(iLoc).Thresholds(run) = PrevHandles.thresholds(iLoc);
+                prevData(iLoc).Slopes(run)     = PrevHandles.slopes(iLoc);
                 prevData(iLoc).ResponseProp(run) = PrevHandles.ResponseProp(iLoc);
-                prevData(iLoc).tGuessSd(run) = PrevHandles.questHandles(iLoc).q.tGuessSd;
             end
         end
 
         for iLoc = 1:size(Gabor.x_ycoords,2) % For each tested location
 
-            % Find the last run with proportion of response higher or equal
-            % to performance threshold (pThreshold)
+            % Find runs where performance was above chance
             idxRunToKeep = find([prevData(iLoc).ResponseProp] >= pThreshold*100);
 
-            % If the previous run has more than 25% response correct,
-            % the threshold and slope will be reduced. If
-            % not, it will take the values from the last run with more than
-            % 25% response correct. In the case of the first run being bad,
-            % tGuess will be increased by 50% with a max tGuess of 100%
-            % contrast.
             if ~isempty(idxRunToKeep)
-                % Estimate standard deviation of thresholds and slope as
-                % average of slopes from previous runs at this location
-                % prevThresholdStd = std([prevData(iLoc).Thresholds]);
-                if max(idxRunToKeep) == Gabor.RunNumber-1
-                    tGuess = prevData(iLoc).Thresholds(end)*0.5; % Half the threshold from LAST run
-                    beta = mean([prevData(iLoc).Slopes]); % mean of slopes from ALL PREVIOUS runs
-                    tGuessSd = max(minSd, tGuess * decayRate); % Narrower threshold
-                else
-                    tGuess = prevData(iLoc).Thresholds(max(idxRunToKeep)); % From the last run with more or equal to 25% correct responses
-                    beta = mean(prevData(iLoc).Slopes(min(idxRunToKeep):max(idxRunToKeep))); % From all previous runs with more or equal to 25% correct responses
-                    tGuessSd = max(minSd, tGuess * decayRate/(Gabor.RunNumber-max(idxRunToKeep))); % Narrower threshold
-                end
-            else % This is for the case that the first run is bad (less than 25% correct response)
-                % Increase the tGuess by 50%, keep the rest to default
-                % (tGuessSd = 0.2, beta = 3.5)
-                tGuess = min(tGuess * 1.5,1); % limited to 100% contrast
-                tGuessStd = 0.2;
+                % Use the most recent good run's estimates as the prior centre
+                prevThresh = prevData(iLoc).Thresholds(max(idxRunToKeep));
+                prevSlope  = mean(prevData(iLoc).Slopes(idxRunToKeep));
+            else
+                % No good run: use conservative defaults (high contrast, typical slope)
+                prevThresh = 0.5;
+                prevSlope  = 3.5;
             end
 
-            % Estimate 
-            questHandles(iLoc).q = QuestCreate(tGuess,tGuessSd,pThreshold,beta,lambda,gamma);
+            % prevThresh from previous run is linear — convert to dB for grid
+            prevThreshDb = 20*log10(prevThresh);
 
-            % Display in command window
-            fprintf('Location: %s, Threshold = %s�%s%%, Slope = %s\n', ...
-                num2str(iLoc), num2str(tGuess*100),num2str(tGuessSd*100),num2str(beta))
+            % Restrict threshold grid: +-20 dB around previous estimate (1 decade)
+            threshLowDb  = max(thresholdGridFull(1),   prevThreshDb - 20);
+            threshHighDb = min(thresholdGridFull(end),  prevThreshDb + 20);
+            thresholdGridRestricted = thresholdGridFull( ...
+                thresholdGridFull >= threshLowDb & thresholdGridFull <= threshHighDb);
+            if isempty(thresholdGridRestricted)
+                thresholdGridRestricted = thresholdGridFull; % fallback to full grid
+            end
+
+            % Restrict slope grid to +-2 around previous estimate
+            slopeLow  = max(slopeGridFull(1),   prevSlope - 2);
+            slopeHigh = min(slopeGridFull(end),  prevSlope + 2);
+            slopeGridRestricted = slopeGridFull( ...
+                slopeGridFull >= slopeLow & slopeGridFull <= slopeHigh);
+            if isempty(slopeGridRestricted)
+                slopeGridRestricted = slopeGridFull; % fallback to full grid
+            end
+
+            questHandles(iLoc).q = qpInitialize( ...
+                'stimParamsDomainList', {contrastDomainLog}, ...
+                'psiParamsDomainList',  {thresholdGridRestricted, slopeGridRestricted, gamma, lambda}, ...
+                'qpPF', @qpPFWeibull, ...
+                'nOutcomes', 2);
+
+            fprintf('Location %d: dB threshold prior [%.1f, %.1f], slope prior [%.1f, %.1f]\n', ...
+                iLoc, threshLowDb, threshHighDb, slopeLow, slopeHigh)
         end
     end
-    
+
     numTrialsPerLocation = Gabor.nTrials;
-    
+
     %% WELCOME SCREEN
     % Load the instruction image
     if length(KeyBoardIdx)  < 2
         instructionImage = imread('resources_SC/Instructions_single_keyboard.png');
-    else 
+    else
         instructionImage = imread('resources_SC/Instructions.png');
     end
 
@@ -420,7 +454,7 @@ try
     % Wait for a key press to continue
     pause(0.5);
     KbWait(); close all; clear Stimulus;
-        
+
     %% Display all locations (tagged with X-Y coords) with an circle outline of 20deg radius
     Screen('TextSize', w, 16);   % set font size
 
@@ -442,13 +476,13 @@ try
     double([ScreenRect(3)/2 - 20*Parameters.pixperdeg, ScreenRect(4)/2 - 20*Parameters.pixperdeg, ...
      ScreenRect(3)/2 + 20*Parameters.pixperdeg, ScreenRect(4)/2 + 20*Parameters.pixperdeg]),2);
     Screen('Flip', w);
-    KbWait(); 
+    KbWait();
     clear xpos ypos coordText
 
     %% DECOUNT BEFORE STARTING THE MAIN TASK
     Screen('TextSize', w, 64);   % set font size
     DecountStart = 5;
-    
+
     while DecountStart >=0
         text = sprintf('Starting in ...\n\n%s',num2str(DecountStart));
         DrawFormattedText(w, text, 'center', 'center', [0 0 0]);
@@ -456,41 +490,42 @@ try
         WaitSecs(1);
         DecountStart = DecountStart-1;
     end
-    clear DecountStart     
-    
+    clear DecountStart
+
     %% ACTUAL EXPERIMENT MODULE
     TrialCounter = 0;
     tmpData = single(NaN(size(Gabor.x_ycoords,2)*numTrialsPerLocation,7)); % Trial Number, X-Coord, Y-Coord, Contrast, Orientation, Response, isTrial
     ResponseFbk = {'Incorrect','Correct'};
 
     for trial = 1:numTrialsPerLocation
-        %% TASK 
+        %% TASK
             % Randomize location
             locIdx = Shuffle(1:size(Gabor.x_ycoords,2));
         for i = locIdx
             %% Update parameters
             TrialCounter = TrialCounter + 1;
-            
+
             % Randomize orientation
             oriIdx = randi(numel(Gabor.AllowedOri));
             targetOri = Gabor.AllowedOri(oriIdx);
             correctResponse = oriIdx;
-            
-            % Get contrast from QUEST for this location
-            targContrast = QuestQuantile(questHandles(i).q);
-            if targContrast > 1 % Cap it to 100% contrast
-                targContrast = 1;
-            end
+
+            % Get contrast from Quest+ for this location
+            % qpQuery returns dB (20*log10(contrast)); convert back to linear
+            stimValDb = qpQuery(questHandles(i).q);
+            targContrast = 10^(stimValDb(1)/20);
+            % Clamp to [0.0001, 1] (should already be within domain, but safety net)
+            targContrast = min(max(targContrast, 0.0001), 1);
 
             % Populate tmpData
             tmpData(TrialCounter,1:5) = [TrialCounter,Gabor.x_ycoords(1,i),Gabor.x_ycoords(2,i),targContrast,targetOri];
-            
+
             %% ISI presentation
             if Parameters.EyeTrack
                 Eyelink('message', 'ISI_START');
             end
             % Draw fixation point
-            Screen('FillOval', w, [0.4 0.4 0.4], Parameters.FixationPos); 
+            Screen('FillOval', w, [0.4 0.4 0.4], Parameters.FixationPos);
             % Calculate ISI
             ISITime = Parameters.ISILim(1) + (Parameters.ISILim(2)-Parameters.ISILim(1)).*rand(1,1);
             % ISI timestamp
@@ -509,24 +544,24 @@ try
                     Eyelink('message', 'VALID_TRIAL %d', ValidTrialCounter);
                 end
             end
-            
+
             %% Stimulus presentation with phase flicker
             validTrial = 1; %assume the trial is valid to begin with
             fprintf('Trial: %s; Contrast: %s%% \n' ,num2str(TrialCounter), num2str(targContrast*100))
-            
+
             % Gabor presentation ~ 500ms - Initialise
             CurrentFrame = 1; revs = 1;
             frm = 1;
             % Calculate when to flip
             FlipReversalTime = 0:Gabor.FlipReversalRate:Gabor.stimDurationWithRamp_secs;
             FlipReversalIndex = repmat([1,2],1,length(FlipReversalTime));
-            
+
             timeStamp(end+1,1) = GetSecs;
             GratingOn = timeStamp(end,1);
             while GratingOn-timeStamp(end,1) <= Gabor.stimDurationWithRamp_secs
                 % Check the closest FlipReversalTime in order to get the FlipReversalIndex
                 [~,closestIndex] = min(abs(FlipReversalTime-(GratingOn-timeStamp(end,1))));
-                
+
                 % Draw fixation point only if not presented at centre
                 Screen('FillOval', w, [0.4 0 0], Parameters.FixationPos);
                 % Draw the Gabor
@@ -536,7 +571,7 @@ try
                     ScreenRect(4)/2 + Gabor.x_ycoords(2,i))), ...
                     0+targetOri, [], abs(targContrast), [], [], []);
                 GratingOn = Screen('Flip', w);
-                
+
                 if Parameters.EyeTrack && validTrial
                     if frm==1
                         Eyelink('message', 'STIMULUS_START');
@@ -552,7 +587,6 @@ try
                         PsychPortAudio('Stop', pahandle,1);
                         Screen('FillRect', w, [1,0,0], Parameters.FixationPos); %fixation point
                         Screen('Flip',w);
-                        %             break;
                     end
                 elseif Parameters.EyeTrack && ~validTrial
                     Screen('FillRect', w, [1,0,0], Parameters.FixationPos); %fixation point
@@ -560,7 +594,7 @@ try
                 end
                 frm = frm+1;
             end
-            
+
             if validTrial==1
                 if Parameters.EyeTrack
                     Eyelink('message', 'TRIAL_END %d',TrialCounter);
@@ -570,7 +604,7 @@ try
                     Eyelink('message', 'TRIAL_END_BROKEN %d',TrialCounter);
                 end
             end
-            
+
             % If there are more than elparam.MaxInvTrials then you will
             % re-calibrate before the next trial
             if Parameters.EyeTrack
@@ -578,12 +612,12 @@ try
                     calibReq = 1;
                 end
             end
-            
+
             % Display fixation point
             Screen('FillOval', w, [0.6 0.6 0.6], Parameters.FixationPos);
             Screen('Flip', w);
-            
-            %% RESPONSE & QUEST UPDATE
+
+            %% RESPONSE & QUEST+ UPDATE
             if validTrial==1
                 if Parameters.EyeTrack
                     Eyelink('message', 'RESP_START');
@@ -595,6 +629,7 @@ try
                 while ~keyIsDown
                     [keyIsDown, secs, keyCode] = KbCheck(double(ResponsePad));
                     reply = KbName(keyCode);
+                    if iscell(reply), reply = reply{1}; end % guard against simultaneous keypresses
                     if keyIsDown
                         if ismember(reply,AllowedKey)
                             switch reply
@@ -616,14 +651,15 @@ try
                 end
                 timeStamp(end+1,1) = respTimeEnd;
                 respDuration(TrialCounter) = single(respTimeEnd - respTimeStart);
-                
+
                 % Participant's response in tmpData matrix
                 tmpData(TrialCounter,6) = Gabor.AllowedOri(single(response));
-                
-                %% Check correctness and update QUEST
+
+                %% Check correctness and update Quest+
                 isCorrect = (response == correctResponse);
-                questHandles(i).q = QuestUpdate(questHandles(i).q,targContrast,isCorrect);
-                
+                % qpUpdate expects dB (20*log10(contrast)) and outcome: 1 = incorrect, 2 = correct
+                questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
+
 %                 % Give audio & visual feedbacks
 %                 if isCorrect
 %                     % Play sound for correct answer
@@ -632,9 +668,9 @@ try
 %                     % Play sound for wrong answer
 %                     sound(yWrong,FsWrong);
 %                 end
-                
+
                 % Display feedback for experimenter
-                fprintf('Target Contrast: %s%%, Target Ori: %s�, Response: %s� (%ss) - %s\n\n', ...
+                fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s\n\n', ...
                     num2str(targContrast*100),...
                     num2str(targetOri),...
                     num2str(tmpData(TrialCounter,6)),...
@@ -642,7 +678,7 @@ try
             end
         end
     end
- 
+
     %% THANK YOU SCREEN
     Screen('FillOval', w, [1 1 1], Parameters.FixationPos);
     Screen('Flip', w);
@@ -654,60 +690,62 @@ try
     DrawFormattedText(w, text, 'center', 'center', [0 0 0]);
     Screen('Flip', w);
 
-    %% FOR EACH LOCATION: ESTIMATE THRESHOLD, EXTRACT QUEST DATA & PLOT PSYCHOMETRIC FUNCTION ===============================
-    pThreshold = gamma^gamma;
-    thresholds = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
-    slopes = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
+    %% FOR EACH LOCATION: ESTIMATE THRESHOLD, EXTRACT QUEST+ DATA & PLOT PSYCHOMETRIC FUNCTION ===============================
+    thresholds   = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
+    slopes       = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
     ResponseProp = zeros(1,size(Gabor.x_ycoords,2)); % To store proportions of correct responses
-    contrasts = linspace(0,1,1000); % Range of contrast levels
-    proportions = zeros(size(Gabor.x_ycoords,2),100); % To store predicted proportions for each location
-    
-    for iLoc = 1:size(Gabor.x_ycoords,2)
-        % Percentage of Correct Response at each location
-        ResponseProp(iLoc) = sum(questHandles(iLoc).q.response(1:Gabor.nTrials))/Gabor.nTrials*100;
-        thresholds(iLoc) = QuestMean(questHandles(iLoc).q);
-        slopes(iLoc) = QuestBetaAnalysis(questHandles(iLoc).q);
+    contrasts    = logspace(-4, 0, 1000); % log-spaced for plotting
+    proportions  = zeros(size(Gabor.x_ycoords,2), length(contrasts));  % To store predicted proportions for each location
 
-        % If the current run has more than 25% response correct,
-        % the threshold and slope to plot will be for the current one. If
-        % not, it will take the values from the last run with more than
-        % 25% response correct.
-        % Estimate standard deviation of thresholds and slope as
-        % average of slopes from previous runs at this location
-        % prevThresholdStd = std([prevData(iLoc).Thresholds]);
+    for iLoc = 1:size(Gabor.x_ycoords,2)
+        % Percentage of correct responses at each location
+        trialOutcomes = questHandles(iLoc).q.trialData; % each row: [stim, outcome]
+        ResponseProp(iLoc) = sum([trialOutcomes.outcome] == 2) / Gabor.nTrials * 100;
+
+        % Maximum likelihood fit to get threshold and slope
+        % psiParamsDomain stores threshold in dB — convert back to linear
+        psiParamsIndex = qpListMaxArg(questHandles(iLoc).q.posterior);
+        psiParamsQuest = questHandles(iLoc).q.psiParamsDomain(psiParamsIndex,:);
+        thresholds(iLoc) = 10^(psiParamsQuest(1)/20); % threshold (linear)
+        slopes(iLoc)     = psiParamsQuest(2);          % slope (beta)
+
+        % Choose threshold/slope to plot (fall back to previous run if this one is bad)
         if ResponseProp(iLoc) >= pThreshold*100
             thresholdsPlot(iLoc) = thresholds(iLoc);
-            slopesPlot(iLoc) = slopes(iLoc);
+            slopesPlot(iLoc)     = slopes(iLoc);
         else
-            if Gabor.RunNumber ~= 1
-                % Find the last run with response > guessrate (25%)
+            if Gabor.RunNumber ~= 1 && exist('prevData','var')
                 idxRunToKeep = find([prevData(iLoc).ResponseProp] >= pThreshold*100);
-
-                % Get the slope and threshold from that run
-                thresholdsPlot(iLoc) = prevData(iLoc).Thresholds(max(idxRunToKeep)); % From the last run with more or equal to 25% correct responses
-                slopesPlot(iLoc) = prevData(iLoc).Slopes(max(idxRunToKeep)); % From all previous runs with more or equal to 25% correct responses
+                if ~isempty(idxRunToKeep)
+                    thresholdsPlot(iLoc) = prevData(iLoc).Thresholds(max(idxRunToKeep));
+                    slopesPlot(iLoc)     = prevData(iLoc).Slopes(max(idxRunToKeep));
+                else
+                    thresholdsPlot(iLoc) = thresholds(iLoc);
+                    slopesPlot(iLoc)     = slopes(iLoc);
+                end
             else
                 thresholdsPlot(iLoc) = thresholds(iLoc);
-                slopesPlot(iLoc) = slopes(iLoc);
+                slopesPlot(iLoc)     = slopes(iLoc);
             end
         end
 
-        % Weibull Psychometric Function
+        % Weibull Psychometric Function for plotting
+        % Uses log10(contrast) internally, matching qpPFWeibull convention
         for c = 1:length(contrasts)
-            proportions(iLoc,c) = lambda*gamma+(1-lambda)*(1-(1-gamma)*exp(-10.^(slopesPlot(iLoc)*(contrasts(c)-thresholdsPlot(iLoc)))));
+            proportions(iLoc,c) = lambda*gamma + (1-lambda)*(1-(1-gamma)*exp(-10.^(slopesPlot(iLoc)*(log10(contrasts(c))-log10(thresholdsPlot(iLoc))))));
         end
 
         % Define the contrast needed for pThreshold performance
         [~, idx] = min(abs(proportions(iLoc,:) - pThreshold));
         contrastsPerf(iLoc) = contrasts(idx);
     end
-    
+
     clc;
     for iLoc = 1:size(Gabor.x_ycoords,2)
-        fprintf('Location %d: Estimated threshold at %.1f%% performance = %.1f%%, Slope = %.3f\n', ...
-            iLoc, pThreshold*100, contrastsPerf(iLoc)*100,slopesPlot(iLoc)); % In percentage
+        fprintf('Location %d: Estimated threshold at %.1f%% performance = %.4f (%.1f%%), Slope = %.3f\n', ...
+            iLoc, pThreshold*100, contrastsPerf(iLoc), contrastsPerf(iLoc)*100, slopesPlot(iLoc));
     end
-   
+
     %% PLOT DATA ========================================================
     close all;
     figure('Color','white','Position',[0 0 ScreenRect(3) ScreenRect(4)/2]); hold on;
@@ -733,14 +771,14 @@ try
         axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
         set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
 
-        % Psychometric Function at each location
+        % Psychometric Function at each location (log x-axis for low contrasts)
         subplot(2,3,2); hold on;
-        plot(contrasts, proportions(iLoc,:), 'Color',colors(iLoc,:), 'LineWidth',2);
-        plot(contrasts, ones(1,length(contrasts))*pThreshold,'k--','LineWidth',1);
+        semilogx(contrasts, proportions(iLoc,:), 'Color',colors(iLoc,:), 'LineWidth',2);
+        semilogx(contrasts, ones(1,length(contrasts))*pThreshold,'k--','LineWidth',1);
         xlabel('Contrast'); ylabel({'Proportion','Correct'}); grid on; axis square;
         title({'Psychometric Functions','by Location'});
-        axis([0 0.5 0 1])
-        set(gca,'FontSize',20,'LineWidth',2)        
+        axis([1e-4 1 0 1])
+        set(gca,'FontSize',20,'LineWidth',2)
     end
 
     % Heat plot for % Correct Response
@@ -756,7 +794,7 @@ try
     subplot(2,3,4); hold on;
     scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, slopesPlot, ...
         'filled', 'MarkerEdgeColor','k');
-    colormap(parula);colorbar; caxis([3 5]); ylabel(colorbar,'Slope');
+    colormap(parula);colorbar; caxis([1 8]); ylabel(colorbar,'Slope');
     title('Slopes');
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
     set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
@@ -766,7 +804,9 @@ try
     subplot(2,3,5); hold on;
     scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, 1./contrastsPerf,...
         'filled', 'MarkerEdgeColor','k');
-    colormap(parula);colorbar; caxis([floor(min(1./contrastsPerf)), ceil(max(1./contrastsPerf))]); 
+    csLims = [floor(min(1./contrastsPerf)), ceil(max(1./contrastsPerf))];
+    if csLims(1) == csLims(2), csLims = csLims + [-1 1]; end
+    colormap(parula);colorbar; caxis(csLims);
     ylabel(colorbar,'CS = 1/Threshold');
     title(sprintf('Contrast Sensitivity at %.1f%%',pThreshold*100));
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
@@ -774,22 +814,22 @@ try
 
     %% CLEAN UP AND DATA SAVING
     WaitSecs(5);
-    
+
     disp('Writing RawData');
     RawData = struct('SF',[],'SC',[],'Run',[],'RespDuration',[]);
     RawData.SF = Freq;
     RawData.SC = Gabor.SpacialConstant_Deg(idxSCSize);
     RawData.Run = [RawData.Run; tmpData]; % X-coord, Y-coord, Contrast, Orientation, Response, isValid
     RawData.RespDuration = [RawData.RespDuration; respDuration];
-        
+
     for i = 1:length(timeStamp)
         if i > 1
             timeStamp(i,2) =   timeStamp(i)-timeStamp(i-1);
         end
     end
-    
+
     Priority(0);
-    
+
     disp('Saving temporary mat file...')
     if Parameters.Practice
         SaveNameTmp = sprintf('%s/Practice_%s_%s_%s',FolderName,Parameters.Subj_ID,Parameters.Subj_ScanDate,'tmp');
@@ -797,13 +837,13 @@ try
         SaveNameTmp = sprintf('%s/%s_%s_%s',FolderName,Parameters.Subj_ID,Parameters.Subj_ScanDate,'tmp');
     end
     save(SaveNameTmp);
-    
+
 catch ME
-    rethrow(ME)
     Priority(0);
     Screen('CloseAll');
-    Screen('LoadNormalizedGammaTable', Parameters.scrnNum, oldtable); % oldtable will be used in the end to restore the default gamma table
+    Screen('LoadNormalizedGammaTable', Parameters.scrnNum, oldtable);
     PsychPortAudio('Close', pahandle);
+    rethrow(ME)
 end
 
 %% Save data & Close screen
