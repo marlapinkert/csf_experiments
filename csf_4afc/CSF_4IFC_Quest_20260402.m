@@ -86,8 +86,9 @@ clear inCorrected_Spline;
 %% GABOR PARAMETERS ================================
 prompt = {'RUN NUMBER','SPATIAL FREQ. TO TEST (cpd)','NUMBER OF TRIALS PER LOCATION', ...
     'SD GAUSSIAN HULL (deg - NaN = no Gaussian Hull)',...
-    'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)'};
-definput = {'1','1','5','NaN','2','6'};
+    'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)', ...
+    'LOCATION SUBSET (all / meridians / center)'};
+definput = {'1','1','5','NaN','2','6','all'};
 answer = inputdlg(prompt,'Experimental parameters',[1 100],definput);
 
 Gabor.RunNumber = single(str2num(answer{1}));
@@ -96,6 +97,7 @@ Gabor.nTrials = single(str2num(answer{3}));
 Gabor.SpacialConstant_Deg = single(str2num(answer{4}));
 Gabor.TF = single(str2num(answer{5}));
 Gabor.PatchSize = single(str2num(answer{6}));
+Gabor.LocationSubset = lower(strtrim(answer{7})); % 'all' or 'meridians' (horizontal/vertical axes + center)
 Gabor.AllowedOri = [-45 0 45 90]; % 6 7 8 9
 
 clear answer prompt definput
@@ -168,6 +170,24 @@ Gabor.x_ycoords = [repmat([rangex],1,length(rangey));ypos];
 Gabor.x_ycoords(:,Gabor.ECC>ScreenRect(4)/2) = [];
 Gabor.Polar(Gabor.ECC>ScreenRect(4)/2) = [];
 Gabor.ECC(Gabor.ECC>ScreenRect(4)/2) = [];
+
+% Optionally restrict locations based on LocationSubset
+innerEcc = round(6*Parameters.pixperdeg); % 6 deg eccentricity in pixels
+if strcmp(Gabor.LocationSubset,'meridians')
+    % Keep only positions on cardinal axes at 6 deg eccentricity (1 per arm) + center
+    onMeridian = (Gabor.x_ycoords(1,:) == 0) | (Gabor.x_ycoords(2,:) == 0);
+    innerOrCenter = (round(Gabor.ECC) <= innerEcc);
+    keep = onMeridian & innerOrCenter;
+    Gabor.x_ycoords = Gabor.x_ycoords(:, keep);
+    Gabor.Polar     = Gabor.Polar(keep);
+    Gabor.ECC       = Gabor.ECC(keep);
+elseif strcmp(Gabor.LocationSubset,'center')
+    % Keep only the center position
+    keep = (Gabor.x_ycoords(1,:) == 0) & (Gabor.x_ycoords(2,:) == 0);
+    Gabor.x_ycoords = Gabor.x_ycoords(:, keep);
+    Gabor.Polar     = Gabor.Polar(keep);
+    Gabor.ECC       = Gabor.ECC(keep);
+end
 
 fprintf('\nNUMBER OF POINTS TESTED: %s\n',num2str(size(Gabor.x_ycoords,2)))
 
@@ -695,7 +715,12 @@ try
 
     % Assign each location in Gabor.x_ycoords a color based on its distance
     % from the center, so colors change smoothly from center to periphery.
-    distNorm = (Gabor.ECC - min(Gabor.ECC)) ./ (max(Gabor.ECC) - min(Gabor.ECC));
+    eccRange = max(Gabor.ECC) - min(Gabor.ECC);
+    if eccRange == 0
+        distNorm = zeros(size(Gabor.ECC)); % all same eccentricity (e.g. center only)
+    else
+        distNorm = (Gabor.ECC - min(Gabor.ECC)) ./ eccRange;
+    end
     cmap = turbo(256);
     colors = cmap( round(distNorm * 255) + 1 , : );
 
