@@ -1,7 +1,7 @@
 %% Behavioural CSF task - 4 alternative forced choice (4IFC) - Quest algorithm
-% This script will display a 6º diameter Grating patch, at one of the
+% This script will display a 6ï¿½ diameter Grating patch, at one of the
 % pre-defined locations across the visual field. These locations are spaced
-% 6º from each other. The contrast of the Gabor in the patch is defined
+% 6ï¿½ï¿½from each other. The contrast of the Gabor in the patch is defined
 % using a Quest algorithm. Participants have to judge the orientation of
 % the Gabor displayed in the patch out of 4 options (4AFC: horizontal,
 % vertical, positive and negative diagonals.
@@ -137,7 +137,7 @@ else
 end
 minKey = min(str2double(AllowedKey));
 SubsResp = minKey-1;
-clear KeyBoardIdx productNames
+clear productNames
 
 % Set random seed
 rSeed = RandStream('mt19937ar','Seed','shuffle');
@@ -307,7 +307,7 @@ try
         end
 
         % Display in command window
-        fprintf('Threshold = %s±%s%%, Slope = %s\n\n', ...
+        fprintf('Threshold = %sï¿½%s%%, Slope = %s\n\n', ...
             num2str(tGuess*100),num2str(tGuessSd*100),num2str(beta))
     else % Run > 1
         % Load the questHandles structure from previous runs
@@ -366,7 +366,7 @@ try
             questHandles(iLoc).q = QuestCreate(tGuess,tGuessSd,pThreshold,beta,lambda,gamma);
 
             % Display in command window
-            fprintf('Location: %s, Threshold = %s±%s%%, Slope = %s\n', ...
+            fprintf('Location: %s, Threshold = %sï¿½%s%%, Slope = %s\n', ...
                 num2str(iLoc), num2str(tGuess*100),num2str(tGuessSd*100),num2str(beta))
         end
     end
@@ -375,7 +375,13 @@ try
     
     %% WELCOME SCREEN
     % Load the instruction image
-    instructionImage = imread('resources_SC/Instructions.png');
+    if length(KeyBoardIdx)  < 2
+        instructionImage = imread('resources_SC/Instructions_single_keyboard.png');
+    else 
+        instructionImage = imread('resources_SC/Instructions.png');
+    end
+
+    clear KeyBoardIdx
     % Convert the image to a Psychtoolbox texture
     instructionTexture = Screen('MakeTexture', w, instructionImage);
     % Draw the instruction image
@@ -608,7 +614,7 @@ try
 %                 end
                 
                 % Display feedback for experimenter
-                fprintf('Target Contrast: %s%%, Target Ori: %sº, Response: %sº (%ss) - %s\n\n', ...
+                fprintf('Target Contrast: %s%%, Target Ori: %sï¿½, Response: %sï¿½ (%ss) - %s\n\n', ...
                     num2str(targContrast*100),...
                     num2str(targetOri),...
                     num2str(tmpData(TrialCounter,6)),...
