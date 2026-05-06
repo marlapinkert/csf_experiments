@@ -319,15 +319,18 @@ try
     pThreshold = gamma^gamma; % Threshold performance level (~70.7%)
 
     % Stimulus domain in dB units: qpPFWeibull expects 20*log10(contrast)
-    % Covers 0.0001 to 1 (dB: -80 to 0), 5000 steps
-    contrastDomainLog = linspace(-80, 0, 5000);
+    % Covers 0.0001 to 1 (dB: -60 to 0), 5000 steps - fine resolution so
+    % Quest+ can pick precise contrast values to present
+    contrastDomainLog = linspace(-60, 0, 5000);
 
-    % Threshold grid in dB — slope is fixed so only threshold is estimated
-    thresholdGridFull = linspace(-80, 0, 100); % possible threshold values in dB
+    % Threshold grid in dB - slope is fixed so only threshold is estimated.
+    % 200 points over -60 to 0 dB (0.1% to 100% contrast) gives ~0.3 dB
+    % resolution, fine enough for the posterior to converge well with ~20 trials
+    thresholdGridFull = linspace(-60, 0, 200);
 
     % Default prior: Gaussian centred at 20*log10(0.5) ~ -6 dB, SD = 20 dB
-    thresholdPriorMu = 20*log10(0.5);  % ~ -6 dB — start around 50% contrast
-    thresholdPriorSD = 10;             % 10 dB SD ~ half a decade
+    thresholdPriorMu = 20*log10(0.5);  % ~ -6 dB -> start around 50% contrast
+    thresholdPriorSD = 20;             % 20 dB SD
 
     fprintf('\n============= QUEST+ INITIALISATION =============\n')
 
@@ -768,18 +771,23 @@ try
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
     set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
 
-    % Heat plot for posterior entropy (lower = Quest+ is more certain)
-    posteriorEntropy = zeros(1, size(Gabor.x_ycoords,2));
+    % Heat plot for 95% credible interval width (in dB) — lower = more certain
+    ciWidth_dB = zeros(1, size(Gabor.x_ycoords,2));
     for iLoc = 1:size(Gabor.x_ycoords,2)
-        p = questHandles(iLoc).q.posterior;
-        p = p(p > 0);
-        posteriorEntropy(iLoc) = -sum(p .* log2(p));
+        p    = questHandles(iLoc).q.posterior;
+        tGrid = questHandles(iLoc).q.psiParamsDomain(:,1); % threshold grid in dB
+        % Marginal posterior over threshold (already 1D since slope is fixed)
+        pNorm = p / sum(p);
+        cdf   = cumsum(pNorm);
+        lo    = tGrid(find(cdf >= 0.025, 1, 'first'));
+        hi    = tGrid(find(cdf >= 0.975, 1, 'first'));
+        ciWidth_dB(iLoc) = hi - lo;
     end
     subplot(2,3,4); hold on;
-    scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, posteriorEntropy, ...
+    scatter(Gabor.x_ycoords(1,:), Gabor.x_ycoords(2,:), 200, ciWidth_dB, ...
         'filled', 'MarkerEdgeColor','k');
-    colormap(parula);colorbar; ylabel(colorbar,'Entropy (bits)');
-    title(sprintf('Posterior Entropy (slope fixed = %.1f)', beta));
+    colormap(parula);colorbar; ylabel(colorbar,'95% CI width (dB)');
+    title('Threshold uncertainty (95% CI)');
     axis([-ScreenRect(3)/2 ScreenRect(3)/2 -ScreenRect(4)/2 ScreenRect(4)/2 ]);
     set(gca,'FontSize',20,'LineWidth',2,'YDir','reverse')
 
