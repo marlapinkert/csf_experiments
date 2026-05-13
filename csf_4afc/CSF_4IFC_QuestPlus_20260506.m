@@ -321,12 +321,12 @@ try
     % Stimulus domain in dB units: qpPFWeibull expects 20*log10(contrast)
     % Covers 0.0001 to 1 (dB: -60 to 0), 5000 steps - fine resolution so
     % Quest+ can pick precise contrast values to present
-    contrastDomainLog = linspace(-60, 0, 5000);
+    contrastDomainLog = linspace(-80, 0, 5000);
 
     % Threshold grid in dB - slope is fixed so only threshold is estimated.
     % 200 points over -60 to 0 dB (0.1% to 100% contrast) gives ~0.3 dB
     % resolution, fine enough for the posterior to converge well with ~20 trials
-    thresholdGridFull = linspace(-60, 0, 200);
+    thresholdGridFull = linspace(-80, 0, 500);
 
     % Default prior: Gaussian centred at 20*log10(0.5) ~ -6 dB, SD = 20 dB
     thresholdPriorMu = 20*log10(0.5);  % ~ -6 dB -> start around 50% contrast
@@ -482,7 +482,7 @@ try
 
     %% ACTUAL EXPERIMENT MODULE
     TrialCounter = 0;
-    tmpData = single(NaN(size(Gabor.x_ycoords,2)*numTrialsPerLocation,7)); % Trial Number, X-Coord, Y-Coord, Contrast, Orientation, Response, isTrial
+    tmpData = single(NaN(size(Gabor.x_ycoords,2)*numTrialsPerLocation,8)); % Trial Number, X-Coord, Y-Coord, Contrast, Orientation, Response, isCorrect, EstimatedCS
     ResponseFbk = {'Incorrect','Correct'};
 
     for trial = 1:numTrialsPerLocation
@@ -647,6 +647,12 @@ try
                 isCorrect = (response == correctResponse);
                 % qpUpdate expects dB (20*log10(contrast)) and outcome: 1 = incorrect, 2 = correct
                 questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
+
+                % Store correctness and MAP CS estimate after this update
+                tmpData(TrialCounter,7) = single(isCorrect);
+                psiIdx = qpListMaxArg(questHandles(i).q.posterior);
+                psiDb  = questHandles(i).q.psiParamsDomain(psiIdx, 1);
+                tmpData(TrialCounter,8) = single(1 / (10^(psiDb/20))); % CS = 1/threshold
 
 %                 % Give audio & visual feedbacks
 %                 if isCorrect
@@ -861,9 +867,15 @@ save(SaveNameTmp);
 
 %% Save output
 
-% CSVSaveName = sprintf('%s/%s_%s.csv',FolderName,Parameters.Subj_ID,num2str(TIMESTAMP));
 disp('Renaming workspace ...')
 movefile([SaveNameTmp '.mat'],[SaveName '.mat']); % Rename the tmp save mat file
+
+disp('Saving CSV ...')
+CSVSaveName = [SaveName '.csv'];
+csvHeader = {'TrialNumber','X_coord','Y_coord','Contrast','Orientation','Response','isCorrect','EstimatedCS'};
+validRows  = ~isnan(tmpData(:,1));
+csvData    = [csvHeader; num2cell(double(tmpData(validRows,:)))];
+writecell(csvData, CSVSaveName);
 
 if Parameters.EyeTrack
     disp('Renaming EDF file ...')
