@@ -36,6 +36,7 @@ definput = {'Test','01-Jan-2000',datestr(DateToday),...
     '0','0','3',...
     '0','34','0',...
     '0','DisplayPlusPlus','0'};
+
 answer = inputdlg(prompt,'Experimental parameters',[1 85],definput);
 Parameters.Subj_ID        = answer{1};
 Parameters.Subj_DOB       = answer{2};
@@ -311,14 +312,14 @@ try
     pThreshold = gamma^gamma;
 
     if Parameters.EstimateSlope
-        slopeGrid = linspace(0.5, 10, 30);
+        slopeGrid = linspace(1.5, 6, 30);
     else
         slopeGrid = beta;
     end
 
-    contrastDomainLog  = linspace(-80, 0, 5000);
+    contrastDomainLog  = linspace(-80, 0, 1000);
     thresholdGridFull  = linspace(-80, 0, 500);
-    thresholdPriorMu   = 20*log10(0.5);
+    thresholdPriorMu   = 20*log10(0.1);
     thresholdPriorSD   = 20;
 
     fprintf('\n============= QUEST+ INITIALISATION =============\n')
@@ -402,39 +403,20 @@ try
     clear DecountStart
 
     %% ACTUAL EXPERIMENT MODULE
-    TrialCounter = 0;
-    userAborted  = false;
-    tmpData      = single(NaN(Parameters.TotalTrials, 8));
-    respDuration = single(NaN(1, Parameters.TotalTrials));
+    TrialCounter    = 0;
+    CompletedTrials = 0;
+    userAborted     = false;
+    totalTrialsAllLocs = Parameters.TotalTrials * nLocs;
+    tmpData      = single(NaN(totalTrialsAllLocs, 8));
+    respDuration = single(NaN(1, totalTrialsAllLocs));
     ResponseFbk  = {'Incorrect','Correct'};
 
-    % Number of complete location-blocks needed to reach TotalTrials
-    nReps = ceil(Parameters.TotalTrials / nLocs);
-
-    for trial = 1:nReps
+    % Each location gets TotalTrials trials, interleaved in shuffled blocks
+    for trial = 1:Parameters.TotalTrials
         locIdx = Shuffle(1:nLocs);
         for i = locIdx
             TrialCounter = TrialCounter + 1;
-            if TrialCounter > Parameters.TotalTrials
-                break
-            end
 
-            %% Break screen (before this trial if it's a break point)
-            if Parameters.BreakEvery > 0 && TrialCounter > 1 && mod(TrialCounter-1, Parameters.BreakEvery) == 0
-                Screen('TextSize', w, 48);
-                breakText = sprintf('Break!\n\nTrial %d of %d completed.\n\nPress any key to continue.', ...
-                    TrialCounter-1, Parameters.TotalTrials);
-                DrawFormattedText(w, breakText, 'center', 'center', [0 0 0]);
-                Screen('Flip', w);
-                pause(1);
-                KbWait();
-                Screen('TextSize', w, 64);
-                for c = 3:-1:1
-                    DrawFormattedText(w, num2str(c), 'center', 'center', [0 0 0]);
-                    Screen('Flip', w);
-                    WaitSecs(1);
-                end
-            end
 
         oriIdx          = randi(numel(Gabor.AllowedOri));
         targetOri       = Gabor.AllowedOri(oriIdx);
@@ -574,6 +556,7 @@ try
             psiDb  = questHandles(i).q.psiParamsDomain(psiIdx, 1);
             tmpData(TrialCounter,8) = single(1 / (10^(psiDb/20)));
 
+            CompletedTrials = CompletedTrials + 1;
             fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s\n\n', ...
                 num2str(targContrast*100), num2str(targetOri), ...
                 num2str(tmpData(TrialCounter,6)), ...
@@ -588,31 +571,46 @@ try
         csvData   = [csvHeader; num2cell(double(tmpData(validRows,:)))];
         writecell(csvData, CSVSaveNameTmp);
 
-        matSaveInterval = Parameters.BreakEvery;
-        if matSaveInterval == 0, matSaveInterval = 10; end
-        if mod(TrialCounter, matSaveInterval) == 0
-            save(SaveNameTmp, 'Parameters','Gabor','tmpData','timeStamp','respDuration', ...
-                'questHandles','SaveName','SaveNameTmp');
-        end
+        % .mat saved at break screens (above); when no breaks, saved only at end.
         % -------------------------------------------------------------------
 
         end % inner location loop
         if userAborted, break, end
+
+        %% Break screen after every BreakEvery passes through all locations
+        if Parameters.BreakEvery > 0 && mod(trial, Parameters.BreakEvery) == 0 && trial < Parameters.TotalTrials
+            Screen('TextSize', w, 48);
+            breakTextWait = sprintf('Break!\n\n%d trials completed.', ...
+                trial);
+            DrawFormattedText(w, breakTextWait, 'center', 'center', [0 0 0]);
+            Screen('Flip', w);
+            save(SaveNameTmp, 'Parameters','Gabor','tmpData','timeStamp','respDuration', ...
+                'questHandles','SaveName','SaveNameTmp');
+            pause(1);
+            breakTextReady = sprintf('Break!\n\n%d trials completed.\n\nPress any key to continue.', ...
+                trial);
+            DrawFormattedText(w, breakTextReady, 'center', 'center', [0 0 0]);
+            Screen('Flip', w);
+            KbWait();
+            Screen('TextSize', w, 64);
+            for c = 3:-1:1
+                DrawFormattedText(w, num2str(c), 'center', 'center', [0 0 0]);
+                Screen('Flip', w);
+                WaitSecs(1);
+            end
+        end
     end % outer repetition loop
 
     %% END SCREEN
-    Screen('FillOval', w, [1 1 1], Parameters.FixationPos);
-    Screen('Flip', w);
-    WaitSecs(5);
-
     Screen('TextSize', w, 64);
     if userAborted
-        text = sprintf('Task stopped.\n\n%d trials completed.', TrialCounter);
+        text = sprintf('Task stopped.\n\n%d trials completed.', round(CompletedTrials/nLocs));
     else
-        text = sprintf('Thank you ... Task complete!\n\n%d trials done.', Parameters.TotalTrials);
+        text = sprintf('Thank you ... Task complete!\n\n%d trials done.', CompletedTrials);
     end
     DrawFormattedText(w, text, 'center', 'center', [0 0 0]);
     Screen('Flip', w);
+    WaitSecs(5);
 
     %% FOR EACH LOCATION: ESTIMATE THRESHOLD, EXTRACT QUEST+ DATA & PLOT ===
     thresholds   = zeros(1,nLocs);
