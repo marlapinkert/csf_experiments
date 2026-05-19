@@ -563,17 +563,6 @@ try
                 num2str(round(respDuration(TrialCounter)+0.5,3)), ResponseFbk{isCorrect+1});
         end
 
-        %% INCREMENTAL SAVE after every trial --------------------------------
-        % CSV written every trial (lightweight, crash-safe).
-        % .mat (including questHandles) written at break points only to avoid
-        % timing disruption; fallback every 10 trials when BreakEvery == 0.
-        validRows = ~isnan(tmpData(:,1));
-        csvData   = [csvHeader; num2cell(double(tmpData(validRows,:)))];
-        writecell(csvData, CSVSaveNameTmp);
-
-        % .mat saved at break screens (above); when no breaks, saved only at end.
-        % -------------------------------------------------------------------
-
         end % inner location loop
         if userAborted, break, end
 
@@ -584,8 +573,11 @@ try
                 trial);
             DrawFormattedText(w, breakTextWait, 'center', 'center', [0 0 0]);
             Screen('Flip', w);
+            validRows = ~isnan(tmpData(:,1));
+            csvData   = [csvHeader; num2cell(double(tmpData(validRows,:)))];
+            writecell(csvData, CSVSaveNameTmp);
             save(SaveNameTmp, 'Parameters','Gabor','tmpData','timeStamp','respDuration', ...
-                'questHandles','SaveName','SaveNameTmp');
+                'questHandles','SaveName','SaveNameTmp', '-v7.3');
             pause(1);
             breakTextReady = sprintf('Break!\n\n%d trials completed.\n\nPress any key to continue.', ...
                 trial);
@@ -763,7 +755,7 @@ fprintf('\n')
 
 disp('Saving final mat file...')
 save(SaveNameTmp, 'Parameters','Gabor','RawData','tmpData','timeStamp','respDuration', ...
-    'questHandles','thresholds','slopes','ResponseProp','SaveName','SaveNameTmp');
+    'questHandles','thresholds','slopes','ResponseProp','SaveName','SaveNameTmp', '-v7.3');
 
 disp('Renaming workspace ...')
 movefile([SaveNameTmp '.mat'],[SaveName '.mat']);
