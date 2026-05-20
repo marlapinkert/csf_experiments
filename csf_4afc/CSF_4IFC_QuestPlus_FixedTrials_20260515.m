@@ -89,7 +89,7 @@ prompt = {'SPATIAL FREQ. TO TEST (cpd)','TOTAL NUMBER OF TRIALS', ...
     'SD GAUSSIAN HULL (deg - NaN = no Gaussian Hull)',...
     'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)', ...
     'LOCATION SUBSET (all / meridians / center)',...
-    'ESTIMATE SLOPE (0=fixed at 3.5 / 1=estimate)'};
+    'ESTIMATE SLOPE (0=fixed at 3.5 / 1=estimate free / 2=estimate with Gaussian prior)'};
 definput = {'1','100','25','NaN','2','6','all','0'};
 answer = inputdlg(prompt,'Experimental parameters',[1 100],definput);
 
@@ -311,11 +311,14 @@ try
     beta       = 3.5;
     pThreshold = gamma^gamma;
 
-    if Parameters.EstimateSlope
-        slopeGrid = linspace(1.5, 6, 30);
-    else
+    if Parameters.EstimateSlope == 0
         slopeGrid = beta;
+    else
+        slopeGrid = linspace(1.5, 4, 30);
     end
+
+    slopePriorMu = 3.5;
+    slopePriorSD = 1.0;
 
     contrastDomainLog  = linspace(-80, 0, 1000);
     thresholdGridFull  = linspace(-80, 0, 500);
@@ -334,20 +337,30 @@ try
         nPsi      = questHandles(iLoc).q.nPsiParamsDomain;
         gaussPrior = zeros(nPsi, 1);
         for iPsi = 1:nPsi
-            tDb = questHandles(iLoc).q.psiParamsDomain(iPsi, 1);
-            gaussPrior(iPsi) = normpdf(tDb, thresholdPriorMu, thresholdPriorSD);
+            tDb   = questHandles(iLoc).q.psiParamsDomain(iPsi, 1);
+            sDb   = questHandles(iLoc).q.psiParamsDomain(iPsi, 2);
+            pThresh = normpdf(tDb, thresholdPriorMu, thresholdPriorSD);
+            if Parameters.EstimateSlope == 2
+                pSlope = normpdf(sDb, slopePriorMu, slopePriorSD);
+            else
+                pSlope = 1;
+            end
+            gaussPrior(iPsi) = pThresh * pSlope;
         end
         questHandles(iLoc).q.posterior = qpUnitizeArray(gaussPrior);
         questHandles(iLoc).q.expectedNextEntropiesByStim = ...
             qpUpdateExpectedNextEntropiesByStim(questHandles(iLoc).q);
     end
 
-    if Parameters.EstimateSlope
-        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope estimated over [%.1f %.1f]\n\n', ...
-            thresholdPriorMu, thresholdPriorSD, slopeGrid(1), slopeGrid(end))
-    else
+    if Parameters.EstimateSlope == 0
         fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope fixed at %.1f\n\n', ...
             thresholdPriorMu, thresholdPriorSD, beta)
+    elseif Parameters.EstimateSlope == 1
+        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope estimated freely over [%.1f %.1f]\n\n', ...
+            thresholdPriorMu, thresholdPriorSD, slopeGrid(1), slopeGrid(end))
+    else
+        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope estimated with Gaussian prior (mu=%.1f, SD=%.1f) over [%.1f %.1f]\n\n', ...
+            thresholdPriorMu, thresholdPriorSD, slopePriorMu, slopePriorSD, slopeGrid(1), slopeGrid(end))
     end
 
     %% WELCOME SCREEN
