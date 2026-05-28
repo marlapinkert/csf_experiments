@@ -90,7 +90,7 @@ prompt = {'SPATIAL FREQ. TO TEST (cpd)','TOTAL NUMBER OF TRIALS', ...
     'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)', ...
     'LOCATION SUBSET (all / meridians / center)',...
     'ESTIMATE SLOPE (0=fixed at 3.5 / 1=estimate free / 2=estimate with Gaussian prior)'};
-definput = {'1','100','25','NaN','2','6','all','0'};
+definput = {'3','100','10','NaN','2','6','all','1'};
 answer = inputdlg(prompt,'Experimental parameters',[1 100],definput);
 
 Gabor.SFcpd               = single(str2num(answer{1}));
@@ -138,6 +138,9 @@ else
 end
 
 escapeKey = KbName('q');
+% Use -1 to check all keyboards for the escape key (experimenter may press
+% 'q' on a different device than the response pad).
+EscapePad = -1;
 if length(KeyBoardIdx) < 2
     AllowedKey = {'6^','7&','8*','9('};
 else
@@ -382,20 +385,26 @@ try
     end
     colormap gray;
 
+    % Wait for a key press to continue
     pause(0.5);
     KbWait(); close all; clear Stimulus;
 
-    %% Display all locations
+    %% Display all locations (tagged with X-Y coords) with an circle outline of 20deg radius
     Screen('TextSize', w, 16);
-    for i = 1:nLocs
+
+    for i = 1:size(Gabor.x_ycoords,2)
+        % Compute screen centered coordinates
         xpos = double(ScreenRect(3)/2 + Gabor.x_ycoords(1,i));
         ypos = double(ScreenRect(4)/2 + Gabor.x_ycoords(2,i));
+        % Draw the Gabor
         Screen('DrawTexture', w, gaborid(1), [], ...
             double(CenterRectOnPoint([0 0 Gabor.Size_px Gabor.Size_px], xpos, ypos)), ...
             0, [], 0.8, [], [], []);
+        % Add overlay text with x-y coordinates
         coordText = sprintf('(%.0f, %.0f)', Gabor.x_ycoords(1,i), Gabor.x_ycoords(2,i));
         DrawFormattedText(w, coordText, xpos-25, ypos, [0 0 0]);
     end
+    % Circle outline of 20deg radius
     Screen('FrameOval', w, [0 0 0], ...
         double([ScreenRect(3)/2 - 20*Parameters.pixperdeg, ScreenRect(4)/2 - 20*Parameters.pixperdeg, ...
         ScreenRect(3)/2 + 20*Parameters.pixperdeg, ScreenRect(4)/2 + 20*Parameters.pixperdeg]),2);
@@ -404,7 +413,7 @@ try
     clear xpos ypos coordText
 
     %% DECOUNT BEFORE STARTING
-    Screen('TextSize', w, 64);
+    Screen('TextSize', w, 64);  % set font size
     DecountStart = 5;
     while DecountStart >= 0
         text = sprintf('Starting in ...\n\n%s',num2str(DecountStart));
@@ -426,7 +435,7 @@ try
 
     % Each location gets TotalTrials trials, interleaved in shuffled blocks
     for trial = 1:Parameters.TotalTrials
-        locIdx = Shuffle(1:nLocs);
+        locIdx = Shuffle(1:size(Gabor.x_ycoords,2));
         for i = locIdx
             TrialCounter = TrialCounter + 1;
 
@@ -445,15 +454,18 @@ try
         if Parameters.EyeTrack
             Eyelink('message', 'ISI_START');
         end
-        Screen('FillRect', w, Parameters.Background);
+        % Draw fixation point
         Screen('FillOval', w, [0.4 0.4 0.4], Parameters.FixationPos);
+        % Calculate ISI
         ISITime = Parameters.ISILim(1) + (Parameters.ISILim(2)-Parameters.ISILim(1)).*rand(1,1);
+        % ISI timestamp
         timeStamp(end+1,1) = GetSecs;
         ISION = timeStamp(end,1);
+        % Present ISI
         while ISION-timeStamp(end,1) < ISITime
             ISION = Screen('Flip', w,[],1);
-            [kDown, ~, kCode] = KbCheck(double(ResponsePad));
-            if kDown && kCode(escapeKey), userAborted = true; break, end
+            [kDown, ~, kCode] = KbCheck(EscapePad); % Check if use aborts trial
+            if kDown && any(kCode(escapeKey)), userAborted = true; break, end
         end
         if userAborted, break, end
         if Parameters.EyeTrack
@@ -462,6 +474,7 @@ try
                 Eyelink('message', 'PRACTICE_TRIAL %d', TrialCounter);
             else
                 Eyelink('message', 'TRIAL_START %d', TrialCounter);
+                Eyelink('message', 'VALID_TRIAL %d', ValidTrialCounter);
             end
         end
 
@@ -469,16 +482,21 @@ try
         validTrial = 1;
         fprintf('Trial: %s; Contrast: %s%% \n', num2str(TrialCounter), num2str(targContrast*100))
 
+        % Gabor presentation ~ 500ms - Initialise
         CurrentFrame = 1; revs = 1; frm = 1;
+        % Calculate when to flip
         FlipReversalTime  = 0:Gabor.FlipReversalRate:Gabor.stimDurationWithRamp_secs;
         FlipReversalIndex = repmat([1,2],1,length(FlipReversalTime));
 
         timeStamp(end+1,1) = GetSecs;
         GratingOn = timeStamp(end,1);
         while GratingOn-timeStamp(end,1) <= Gabor.stimDurationWithRamp_secs
+            % Check the closest FlipReversalTime in order to get the FlipReversalIndex
             [~,closestIndex] = min(abs(FlipReversalTime-(GratingOn-timeStamp(end,1))));
-
+            
+            % Draw fixation point only if not presented at centre
             Screen('FillOval', w, [0.4 0 0], Parameters.FixationPos);
+            % Draw the Gabor
             Screen('DrawTexture', w, gaborid(FlipReversalIndex(closestIndex)), [], ...
                 double(CenterRectOnPoint([0 0 Gabor.Size_px Gabor.Size_px], ...
                 ScreenRect(3)/2 + Gabor.x_ycoords(1,i), ...
@@ -486,14 +504,14 @@ try
                 0+targetOri, [], abs(targContrast), [], [], []);
             GratingOn = Screen('Flip', w);
 
-            [kDown, ~, kCode] = KbCheck(double(ResponsePad));
-            if kDown && kCode(escapeKey), userAborted = true; break, end
+            [kDown, ~, kCode] = KbCheck(EscapePad); % Check if was aborted
+            if kDown && any(kCode(escapeKey)), userAborted = true; break, end
 
             if Parameters.EyeTrack && validTrial
                 if frm==1
                     Eyelink('message', 'STIMULUS_START');
                 end
-                [x,y]    = CheckEyePos(w,elparam);
+                [x,y] = CheckEyePos(w,elparam); %gives estimate of eye position
                 [inside] = CheckFixRad(x,y,[ScreenRect(3)/2 ScreenRect(4)/2], elparam.FixRadPix);
                 if ~inside && validTrial
                     Eyelink('message', 'FIXATION_BREAK');
@@ -513,17 +531,26 @@ try
         end
         if userAborted, break, end
 
-        if Parameters.EyeTrack
-            if validTrial==1
-                Eyelink('message', 'TRIAL_END %d', TrialCounter);
-            else
-                Eyelink('message', 'TRIAL_END_BROKEN %d', TrialCounter);
+
+        if validTrial==1
+            if Parameters.EyeTrack
+                Eyelink('message', 'TRIAL_END %d',TrialCounter);
             end
-            if NumInvalid == elparam.MaxInvTrials
+        else
+            if Parameters.EyeTrack
+                Eyelink('message', 'TRIAL_END_BROKEN %d',TrialCounter);
+            end
+        end
+        
+        % If there are more than elparam.MaxInvTrials then you will
+        % re-calibrate before the next trial
+        if Parameters.EyeTrack
+            if NumInvalid== elparam.MaxInvTrials
                 calibReq = 1;
             end
         end
-
+    
+        % Display fixation point
         Screen('FillOval', w, [0.6 0.6 0.6], Parameters.FixationPos);
         Screen('Flip', w);
 
@@ -532,12 +559,14 @@ try
             if Parameters.EyeTrack
                 Eyelink('message', 'RESP_START');
             end
+            % Get participant's response
             respTimeStart = GetSecs;
             timeStamp(end+1,1) = respTimeStart;
             keyIsDown = 0;
             while ~keyIsDown
                 [keyIsDown, secs, keyCode] = KbCheck(double(ResponsePad));
-                if keyIsDown && keyCode(escapeKey), userAborted = true; break, end
+                [~, ~, escCode] = KbCheck(EscapePad);
+                if any(escCode(escapeKey)), userAborted = true; break, end
                 reply = KbName(keyCode);
                 if iscell(reply), reply = reply{1}; end
                 if keyIsDown
@@ -558,9 +587,11 @@ try
             if userAborted, break, end
             timeStamp(end+1,1) = respTimeEnd;
             respDuration(TrialCounter) = single(respTimeEnd - respTimeStart);
-
+            
+            % Participant's response in tmpData matrix
             tmpData(TrialCounter,6) = Gabor.AllowedOri(single(response));
-
+            
+            %% Check correctness and update QUEST
             isCorrect = (response == correctResponse);
             questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
 
@@ -582,14 +613,17 @@ try
         %% Break screen after every BreakEvery passes through all locations
         if Parameters.BreakEvery > 0 && mod(trial, Parameters.BreakEvery) == 0 && trial < Parameters.TotalTrials
             Screen('TextSize', w, 48);
-            breakTextWait = sprintf('Break!\n\n%d trials completed.', ...
+            breakTextWait = sprintf('Break!\n\n%d trials per location completed.', ...
                 trial);
             DrawFormattedText(w, breakTextWait, 'center', 'center', [0 0 0]);
             Screen('Flip', w);
+            breakStamp = strrep(strrep(datestr(now),' ','_'),':','');
+            SaveNameBreak    = sprintf('%s/%s_%s_break%02d_%s', FolderName, Parameters.Subj_ID, Parameters.Subj_ScanDate, trial, breakStamp);
+            CSVSaveNameBreak = [SaveNameBreak '.csv'];
             validRows = ~isnan(tmpData(:,1));
             csvData   = [csvHeader; num2cell(double(tmpData(validRows,:)))];
-            writecell(csvData, CSVSaveNameTmp);
-            save(SaveNameTmp, 'Parameters','Gabor','tmpData','timeStamp','respDuration', ...
+            writecell(csvData, CSVSaveNameBreak);
+            save(SaveNameBreak, 'Parameters','Gabor','tmpData','timeStamp','respDuration', ...
                 'questHandles','SaveName','SaveNameTmp', '-v7.3');
             pause(1);
             breakTextReady = sprintf('Break!\n\n%d trials completed.\n\nPress any key to continue.', ...
@@ -618,13 +652,13 @@ try
     WaitSecs(5);
 
     %% FOR EACH LOCATION: ESTIMATE THRESHOLD, EXTRACT QUEST+ DATA & PLOT ===
-    thresholds   = zeros(1,nLocs);
-    slopes       = zeros(1,nLocs);
-    ResponseProp = zeros(1,nLocs);
-    contrasts    = logspace(-4, 0, 1000);
-    proportions  = zeros(nLocs, length(contrasts));
-
-    for iLoc = 1:nLocs
+    thresholds = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
+    slopes = zeros(1,size(Gabor.x_ycoords,2)); % To store estimated contrast thresholds
+    ResponseProp = zeros(1,size(Gabor.x_ycoords,2)); % To store proportions of correct responses
+    contrasts = linspace(0,1,1000); % Range of contrast levels
+    proportions = zeros(size(Gabor.x_ycoords,2),100); % To store predicted proportions for each location
+    
+    for iLoc = 1:size(Gabor.x_ycoords,2)
         trialOutcomes    = questHandles(iLoc).q.trialData;
         nTrialsTotal     = length(trialOutcomes);
         ResponseProp(iLoc) = sum([trialOutcomes.outcome] == 2) / nTrialsTotal * 100;
@@ -755,12 +789,13 @@ catch ME
 end
 
 %% Save data & close screen ==============================================
+% Close screen
 sca
 
 time2 = clock;
 Parameters.TimeTakenMins = etime(time2,time1)/60;
 fprintf('Time spent: %s minutes\n',num2str(Parameters.TimeTakenMins,'%0.2f'))
-
+% Restore original gamma & close PsychPortAudio
 Screen('LoadNormalizedGammaTable', Parameters.scrnNum, oldtable);
 PsychPortAudio('Close', pahandle);
 
