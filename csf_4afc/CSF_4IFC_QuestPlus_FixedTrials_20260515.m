@@ -324,13 +324,32 @@ try
 
     contrastDomainLog  = linspace(-80, 0, 1000);
     thresholdGridFull  = linspace(-80, 0, 500);
-    thresholdPriorMu   = 20*log10(0.1);
     thresholdPriorSD   = 20;
+
+    % Location-dependent prior: threshold (linear contrast) = intercept + slope * eccentricity_deg
+    % 0.3 cpd: intercept=0.2101, slope=-0.0074
+    % 3.0 cpd: intercept=0.0200, slope= 0.0021
+    if Gabor.SFcpd <= 0.3
+        priorEccIntercept = 0.2101;
+        priorEccSlope     = -0.0074;
+    else
+        priorEccIntercept = 0.0200;
+        priorEccSlope     =  0.0021;
+    end
 
     fprintf('\n============= QUEST+ INITIALISATION =============\n')
 
     questHandles = struct();
     for iLoc = 1:nLocs
+        eccDeg = Gabor.ECC(iLoc) / Parameters.pixperdeg;
+        priorContrastLinear = priorEccIntercept + priorEccSlope * eccDeg;
+        if priorContrastLinear <= 0
+            warning('Location %d (ecc=%.1f deg, SF=%.1f cpd): linear prior formula gives contrast=%.4f <= 0. Clamping to 0.001. Check your intercept/slope values.', ...
+                iLoc, eccDeg, Gabor.SFcpd, priorContrastLinear);
+            priorContrastLinear = 0.001;
+        end
+        thresholdPriorMu = 20 * log10(priorContrastLinear);
+
         questHandles(iLoc).q = qpInitialize( ...
             'stimParamsDomainList', {contrastDomainLog}, ...
             'psiParamsDomainList',  {thresholdGridFull, slopeGrid, gamma, lambda}, ...
@@ -352,17 +371,20 @@ try
         questHandles(iLoc).q.posterior = qpUnitizeArray(gaussPrior);
         questHandles(iLoc).q.expectedNextEntropiesByStim = ...
             qpUpdateExpectedNextEntropiesByStim(questHandles(iLoc).q);
+
+        fprintf('  Loc %d: ecc=%.1f deg, prior mu=%.2f dB (contrast=%.4f)\n', ...
+            iLoc, eccDeg, thresholdPriorMu, priorContrastLinear)
     end
 
     if Parameters.EstimateSlope == 0
-        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope fixed at %.1f\n\n', ...
-            thresholdPriorMu, thresholdPriorSD, beta)
+        fprintf('SF=%.1f cpd | prior intercept=%.4f, slope=%.4f (linear contrast) | SD=%.1f dB | slope fixed at %.1f\n\n', ...
+            Gabor.SFcpd, priorEccIntercept, priorEccSlope, thresholdPriorSD, beta)
     elseif Parameters.EstimateSlope == 1
-        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope estimated freely over [%.1f %.1f]\n\n', ...
-            thresholdPriorMu, thresholdPriorSD, slopeGrid(1), slopeGrid(end))
+        fprintf('SF=%.1f cpd | prior intercept=%.4f, slope=%.4f (linear contrast) | SD=%.1f dB | slope estimated freely over [%.1f %.1f]\n\n', ...
+            Gabor.SFcpd, priorEccIntercept, priorEccSlope, thresholdPriorSD, slopeGrid(1), slopeGrid(end))
     else
-        fprintf('Using Gaussian prior: threshold centred at %.2f dB (SD=%.1f dB), slope estimated with Gaussian prior (mu=%.1f, SD=%.1f) over [%.1f %.1f]\n\n', ...
-            thresholdPriorMu, thresholdPriorSD, slopePriorMu, slopePriorSD, slopeGrid(1), slopeGrid(end))
+        fprintf('SF=%.1f cpd | prior intercept=%.4f, slope=%.4f (linear contrast) | SD=%.1f dB | slope estimated with Gaussian prior (mu=%.1f, SD=%.1f) over [%.1f %.1f]\n\n', ...
+            Gabor.SFcpd, priorEccIntercept, priorEccSlope, thresholdPriorSD, slopePriorMu, slopePriorSD, slopeGrid(1), slopeGrid(end))
     end
 
     %% WELCOME SCREEN
