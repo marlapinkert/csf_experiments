@@ -176,9 +176,8 @@ Gabor.ECC(Gabor.ECC>ScreenRect(4)/2)          = [];
 
 innerEcc = round(6*Parameters.pixperdeg);
 if strcmp(Gabor.LocationSubset,'meridians')
-    onMeridian    = (Gabor.x_ycoords(1,:) == 0) | (Gabor.x_ycoords(2,:) == 0);
-    innerOrCenter = (round(Gabor.ECC) <= innerEcc);
-    keep = onMeridian & innerOrCenter;
+    onMeridian = (Gabor.x_ycoords(1,:) == 0) | (Gabor.x_ycoords(2,:) == 0);
+    keep = onMeridian;
     Gabor.x_ycoords = Gabor.x_ycoords(:, keep);
     Gabor.Polar     = Gabor.Polar(keep);
     Gabor.ECC       = Gabor.ECC(keep);
