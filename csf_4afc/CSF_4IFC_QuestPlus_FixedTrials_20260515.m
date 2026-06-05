@@ -206,7 +206,7 @@ end
 % Incremental save paths (written after every trial)
 SaveNameTmp = sprintf('%s/%s_%s_tmp',FolderName,Parameters.Subj_ID,Parameters.Subj_ScanDate);
 CSVSaveNameTmp = [SaveNameTmp '.csv'];
-csvHeader = {'TrialNumber','X_coord','Y_coord','Contrast','Orientation','Response','isCorrect','EstimatedCS'};
+csvHeader = {'TrialNumber','X_coord','Y_coord','Contrast','Orientation','Response','isCorrect','EstimatedCS','isCatchTrial'};
 
 %% GABOR PATCH INITIALISATION =============================================
 Gabor_Initialisation
@@ -449,8 +449,51 @@ try
     TrialCounter    = 0;
     CompletedTrials = 0;
     userAborted     = false;
-    totalTrialsAllLocs = Parameters.TotalTrials * nLocs;
-    tmpData      = single(NaN(totalTrialsAllLocs, 8));
+
+    % Build catch trial schedule: ~10% catch trials per location, spread evenly
+    % within each run (= passes between breaks).
+    % catchSchedule(iLoc, trial) == 1 means insert a catch trial for location
+    % iLoc after the Quest+ trial on that pass.
+    Parameters.CatchContrast = 0.5;
+    catchSchedule = false(nLocs, Parameters.TotalTrials);
+
+    % Determine run boundaries
+    if Parameters.BreakEvery > 0
+        runStarts = 1 : Parameters.BreakEvery : Parameters.TotalTrials;
+        runEnds   = [runStarts(2:end)-1, Parameters.TotalTrials];
+    else
+        runStarts = 1;
+        runEnds   = Parameters.TotalTrials;
+    end
+    nRuns = numel(runStarts);
+
+    % Place at least 1 catch trial per location per run, evenly spaced within
+    % the run but with a random offset per location so they don't all fall
+    % on the same pass.
+    for iRun = 1:nRuns
+        runPasses     = runStarts(iRun):runEnds(iRun);
+        nRunPasses    = numel(runPasses);
+        nCatchThisRun = max(1, round(0.1 * nRunPasses));
+        % Divide the run into nCatchThisRun equal bins; pick one pass per bin
+        binEdges = round(linspace(0, nRunPasses, nCatchThisRun+1));
+        for iLoc = 1:nLocs
+            catchIdx = zeros(1, nCatchThisRun);
+            for iBin = 1:nCatchThisRun
+                binStart = binEdges(iBin) + 1;
+                binEnd   = binEdges(iBin+1);
+                catchIdx(iBin) = randi([binStart, binEnd]);
+            end
+            catchSchedule(iLoc, runPasses(catchIdx)) = true;
+        end
+    end
+
+    nCatchPerLoc = sum(catchSchedule(1,:));
+    nCatchTotal  = sum(catchSchedule(:));
+    fprintf('Catch trials: %d per location per run x %d runs = %d total\n', ...
+        round(nCatchTotal/nRuns/nLocs), nRuns, nCatchTotal)
+
+    totalTrialsAllLocs = Parameters.TotalTrials * nLocs + nCatchTotal;
+    tmpData      = single(NaN(totalTrialsAllLocs, 9)); % col 9 = isCatchTrial
     respDuration = single(NaN(1, totalTrialsAllLocs));
     ResponseFbk  = {'Incorrect','Correct'};
 
@@ -459,7 +502,7 @@ try
         locIdx = Shuffle(1:size(Gabor.x_ycoords,2));
         for i = locIdx
             TrialCounter = TrialCounter + 1;
-
+            isCatchTrial = false;
 
         oriIdx          = randi(numel(Gabor.AllowedOri));
         targetOri       = Gabor.AllowedOri(oriIdx);
@@ -470,6 +513,7 @@ try
         targContrast = min(max(targContrast, 0.0001), 1);
 
         tmpData(TrialCounter,1:5) = [TrialCounter, Gabor.x_ycoords(1,i), Gabor.x_ycoords(2,i), targContrast, targetOri];
+        tmpData(TrialCounter,9)   = 0; % Quest+ trial
 
         %% ISI presentation
         if Parameters.EyeTrack
@@ -612,23 +656,121 @@ try
             % Participant's response in tmpData matrix
             tmpData(TrialCounter,6) = Gabor.AllowedOri(single(response));
             
-            %% Check correctness and update QUEST
+            %% Check correctness and update QUEST (skip update for catch trials)
             isCorrect = (response == correctResponse);
-            questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
+            if ~isCatchTrial
+                questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
+                psiIdx = qpListMaxArg(questHandles(i).q.posterior);
+                psiDb  = questHandles(i).q.psiParamsDomain(psiIdx, 1);
+                tmpData(TrialCounter,8) = single(1 / (10^(psiDb/20)));
+            end
 
             tmpData(TrialCounter,7) = single(isCorrect);
-            psiIdx = qpListMaxArg(questHandles(i).q.posterior);
-            psiDb  = questHandles(i).q.psiParamsDomain(psiIdx, 1);
-            tmpData(TrialCounter,8) = single(1 / (10^(psiDb/20)));
 
             CompletedTrials = CompletedTrials + 1;
-            fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s\n\n', ...
+            catchTag = ''; if isCatchTrial, catchTag = ' [CATCH]'; end
+            fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s%s\n\n', ...
+                num2str(targContrast*100), num2str(targetOri), ...
+                num2str(tmpData(TrialCounter,6)), ...
+                num2str(round(respDuration(TrialCounter)+0.5,3)), ResponseFbk{isCorrect+1}, catchTag);
+        end
+
+        end % inner location loop
+        if userAborted, break, end
+
+        %% Insert catch trials scheduled for this pass (shuffled order across locations)
+        catchLocsThisPass = find(catchSchedule(:, trial))';
+        catchLocsThisPass = Shuffle(catchLocsThisPass);
+        for i = catchLocsThisPass
+            TrialCounter = TrialCounter + 1;
+            isCatchTrial = true;
+
+            oriIdx          = randi(numel(Gabor.AllowedOri));
+            targetOri       = Gabor.AllowedOri(oriIdx);
+            correctResponse = oriIdx;
+            targContrast    = Parameters.CatchContrast;
+
+            tmpData(TrialCounter,1:5) = [TrialCounter, Gabor.x_ycoords(1,i), Gabor.x_ycoords(2,i), targContrast, targetOri];
+            tmpData(TrialCounter,9)   = 1; % catch trial
+
+            %% ISI
+            if Parameters.EyeTrack, Eyelink('message', 'ISI_START'); end
+            Screen('FillOval', w, [0.4 0.4 0.4], Parameters.FixationPos);
+            ISITime = Parameters.ISILim(1) + (Parameters.ISILim(2)-Parameters.ISILim(1)).*rand(1,1);
+            timeStamp(end+1,1) = GetSecs; ISION = timeStamp(end,1);
+            while ISION-timeStamp(end,1) < ISITime
+                ISION = Screen('Flip', w,[],1);
+                [kDown, ~, kCode] = KbCheck(EscapePad);
+                if kDown && any(kCode(escapeKey)), userAborted = true; break, end
+            end
+            if userAborted, break, end
+
+            %% Stimulus presentation
+            validTrial = 1;
+            fprintf('Trial: %s; Contrast: %s%% [CATCH]\n', num2str(TrialCounter), num2str(targContrast*100))
+            CurrentFrame = 1; revs = 1; frm = 1;
+            FlipReversalTime  = 0:Gabor.FlipReversalRate:Gabor.stimDurationWithRamp_secs;
+            FlipReversalIndex = repmat([1,2],1,length(FlipReversalTime));
+
+            timeStamp(end+1,1) = GetSecs; GratingOn = timeStamp(end,1);
+            while GratingOn-timeStamp(end,1) <= Gabor.stimDurationWithRamp_secs
+                [~,closestIndex] = min(abs(FlipReversalTime-(GratingOn-timeStamp(end,1))));
+                Screen('FillOval', w, [0.4 0 0], Parameters.FixationPos);
+                Screen('DrawTexture', w, gaborid(FlipReversalIndex(closestIndex)), [], ...
+                    double(CenterRectOnPoint([0 0 Gabor.Size_px Gabor.Size_px], ...
+                    ScreenRect(3)/2 + Gabor.x_ycoords(1,i), ...
+                    ScreenRect(4)/2 + Gabor.x_ycoords(2,i))), ...
+                    0+targetOri, [], abs(targContrast), [], [], []);
+                GratingOn = Screen('Flip', w);
+                [kDown, ~, kCode] = KbCheck(EscapePad);
+                if kDown && any(kCode(escapeKey)), userAborted = true; break, end
+                frm = frm+1;
+            end
+            if userAborted, break, end
+
+            Screen('FillOval', w, [0.6 0.6 0.6], Parameters.FixationPos);
+            Screen('Flip', w);
+
+            %% Response (no Quest+ update)
+            respTimeStart = GetSecs;
+            timeStamp(end+1,1) = respTimeStart;
+            keyIsDown = 0;
+            while ~keyIsDown
+                [keyIsDown, secs, keyCode] = KbCheck(double(ResponsePad));
+                [~, ~, escCode] = KbCheck(EscapePad);
+                if any(escCode(escapeKey)), userAborted = true; break, end
+                reply = KbName(keyCode);
+                if iscell(reply), reply = reply{1}; end
+                if keyIsDown
+                    if ismember(reply,AllowedKey)
+                        switch reply
+                            case AllowedKey{1}; response = 1;
+                            case AllowedKey{2}; response = 2;
+                            case AllowedKey{3}; response = 3;
+                            case AllowedKey{4}; response = 4;
+                        end
+                        respTimeEnd = GetSecs;
+                        break
+                    else
+                        keyIsDown = 0;
+                    end
+                end
+            end
+            if userAborted, break, end
+            timeStamp(end+1,1) = respTimeEnd;
+            respDuration(TrialCounter) = single(respTimeEnd - respTimeStart);
+
+            tmpData(TrialCounter,6) = Gabor.AllowedOri(single(response));
+            isCorrect = (response == correctResponse);
+            tmpData(TrialCounter,7) = single(isCorrect);
+            % col 8 (estimated CS) left as NaN for catch trials
+
+            CompletedTrials = CompletedTrials + 1;
+            fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s [CATCH]\n\n', ...
                 num2str(targContrast*100), num2str(targetOri), ...
                 num2str(tmpData(TrialCounter,6)), ...
                 num2str(round(respDuration(TrialCounter)+0.5,3)), ResponseFbk{isCorrect+1});
         end
-
-        end % inner location loop
         if userAborted, break, end
 
         %% Break screen after every BreakEvery passes through all locations
