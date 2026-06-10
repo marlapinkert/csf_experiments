@@ -170,9 +170,11 @@ Gabor.x_ycoords = [repmat([rangex],1,length(rangey));ypos];
 
 [Gabor.Polar,Gabor.ECC] = cart2pol(Gabor.x_ycoords(1,:),Gabor.x_ycoords(2,:));
 
-Gabor.x_ycoords(:,Gabor.ECC>ScreenRect(4)/2) = [];
-Gabor.Polar(Gabor.ECC>ScreenRect(4)/2)        = [];
-Gabor.ECC(Gabor.ECC>ScreenRect(4)/2)          = [];
+patchSizePx = Gabor.PatchSize * Parameters.pixperdeg;
+Gabor.x_ycoords(:,Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2) = [];
+Gabor.Polar(Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2)        = [];
+Gabor.ECC(Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2)          = [];
+clear patchSizePx
 
 innerEcc = round(6*Parameters.pixperdeg);
 if strcmp(Gabor.LocationSubset,'meridians')
@@ -425,10 +427,11 @@ try
         coordText = sprintf('(%.0f, %.0f)', Gabor.x_ycoords(1,i), Gabor.x_ycoords(2,i));
         DrawFormattedText(w, coordText, xpos-25, ypos, [0 0 0]);
     end
-    % Circle outline of 20deg radius
+    % Circle outline matches the eccentricity filter cutoff (ScreenRect(4)/2)
+    circleRadPx = ScreenRect(4)/2;
     Screen('FrameOval', w, [0 0 0], ...
-        double([ScreenRect(3)/2 - 20*Parameters.pixperdeg, ScreenRect(4)/2 - 20*Parameters.pixperdeg, ...
-        ScreenRect(3)/2 + 20*Parameters.pixperdeg, ScreenRect(4)/2 + 20*Parameters.pixperdeg]),2);
+        double([ScreenRect(3)/2 - circleRadPx, ScreenRect(4)/2 - circleRadPx, ...
+        ScreenRect(3)/2 + circleRadPx, ScreenRect(4)/2 + circleRadPx]),2);
     Screen('Flip', w);
     KbWait();
     clear xpos ypos coordText
