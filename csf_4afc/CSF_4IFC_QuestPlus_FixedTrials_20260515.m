@@ -34,7 +34,7 @@ prompt = {'SUBJECT ID (001)','DOB (DD-MMM-YYYY)','TESTING DATE (DD-MMM-YYYY)',..
     'EYETRACKER (0/1)','SET-UP (BOLD, DisplayPlusPlus, EPSON)','DEBUG MODE (0/1)?'};
 definput = {'Test','01-Jan-2000',datestr(DateToday),...
     '0','0','3',...
-    '0','34','0',...
+    '0','51','0',...
     '0','DisplayPlusPlus','0'};
 
 answer = inputdlg(prompt,'Experimental parameters',[1 85],definput);
@@ -89,8 +89,9 @@ prompt = {'SPATIAL FREQ. TO TEST (cpd)','TOTAL NUMBER OF TRIALS', ...
     'SD GAUSSIAN HULL (deg - NaN = no Gaussian Hull)',...
     'TEMPORAL FREQ. (Hz)','PATCH SIZE (deg diameter)', ...
     'LOCATION SUBSET (all / meridians / center)',...
-    'ESTIMATE SLOPE (0=fixed at 3.5 / 1=estimate free / 2=estimate with Gaussian prior)'};
-definput = {'3','100','10','NaN','2','6','all','1'};
+    'ESTIMATE SLOPE (0=fixed at 3.5 / 1=estimate free / 2=estimate with Gaussian prior)',...
+    'PATCH EXCLUSION (strict = exclude all clipping circle / vertical = exclude only top-bottom clipping)'};
+definput = {'3','100','10','NaN','2','6','all','1','vertical'};
 answer = inputdlg(prompt,'Experimental parameters',[1 100],definput);
 
 Gabor.SFcpd               = single(str2num(answer{1}));
@@ -101,6 +102,7 @@ Gabor.TF                  = single(str2num(answer{5}));
 Gabor.PatchSize           = single(str2num(answer{6}));
 Gabor.LocationSubset      = lower(strtrim(answer{7}));
 Parameters.EstimateSlope  = single(str2double(answer{8}));
+Gabor.PatchExclusion      = lower(strtrim(answer{9})); % 'strict' or 'vertical'
 Gabor.AllowedOri          = [-45 0 45 90];
 
 % RunNumber is always 1 for this script (single continuous session)
@@ -170,11 +172,20 @@ Gabor.x_ycoords = [repmat([rangex],1,length(rangey));ypos];
 
 [Gabor.Polar,Gabor.ECC] = cart2pol(Gabor.x_ycoords(1,:),Gabor.x_ycoords(2,:));
 
-patchSizePx = Gabor.PatchSize * Parameters.pixperdeg;
-Gabor.x_ycoords(:,Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2) = [];
-Gabor.Polar(Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2)        = [];
-Gabor.ECC(Gabor.ECC>ScreenRect(4)/2 - patchSizePx/2)          = [];
-clear patchSizePx
+patchSizePx  = Gabor.PatchSize * Parameters.pixperdeg;
+screenRadius = ScreenRect(4)/2;
+if strcmp(Gabor.PatchExclusion, 'strict')
+    % Exclude any patch whose centre is too close to the screen edge in any direction
+    exclude = Gabor.ECC > screenRadius - patchSizePx/2;
+else
+    % 'vertical': exclude only patches whose top/bottom edge clips the circle
+    % (side patches that clip left/right are kept)
+    exclude = abs(Gabor.x_ycoords(2,:)) + patchSizePx/2 > screenRadius;
+end
+Gabor.x_ycoords(:, exclude) = [];
+Gabor.Polar(exclude)         = [];
+Gabor.ECC(exclude)           = [];
+clear patchSizePx screenRadius exclude
 
 innerEcc = round(6*Parameters.pixperdeg);
 if strcmp(Gabor.LocationSubset,'meridians')
@@ -252,7 +263,7 @@ if Parameters.EyeTrack
         elparam.FixRadDeg = 2;
     end
     elparam.FixRadPix    = elparam.FixRadDeg*Parameters.pixperdeg;
-    elparam.MaxInvTrials = 20;
+    elparam.MaxInvTrials = 10;
 
     InitialiseEyeLink_2IFC;
 
@@ -276,6 +287,7 @@ try
                 return
             end
         end
+        Eyelink('StartRecording');
     end
 
     pause(0.5);
@@ -331,7 +343,7 @@ try
     % Location-dependent prior: threshold (linear contrast) = intercept + slope * eccentricity_deg
     % 0.3 cpd: intercept=0.2101, slope=-0.0074
     % 3.0 cpd: intercept=0.0200, slope= 0.0021
-    if Gabor.SFcpd <= 0.3
+    if Gabor.SFcpd <= 0.31
         priorEccIntercept = 0.2101;
         priorEccSlope     = -0.0074;
     else
@@ -449,9 +461,12 @@ try
     clear DecountStart
 
     %% ACTUAL EXPERIMENT MODULE
-    TrialCounter    = 0;
-    CompletedTrials = 0;
-    userAborted     = false;
+    TrialCounter        = 0;
+    CompletedTrials     = 0;
+    ValidTrialCounter   = 0;
+    userAborted         = false;
+    NumInvalid          = 0;
+    calibReq            = 0;
 
     % Build catch trial schedule: ~10% catch trials per location, spread evenly
     % within each run (= passes between breaks).
@@ -499,6 +514,9 @@ try
     tmpData      = single(NaN(totalTrialsAllLocs, 9)); % col 9 = isCatchTrial
     respDuration = single(NaN(1, totalTrialsAllLocs));
     ResponseFbk  = {'Incorrect','Correct'};
+
+    % Queue of location indices for trials invalidated by fixation breaks.
+    missedTrialQueue = zeros(0, 1);
 
     % Each location gets TotalTrials trials, interleaved in shuffled blocks
     for trial = 1:Parameters.TotalTrials
@@ -585,6 +603,7 @@ try
                     Eyelink('message', 'FIXATION_BREAK');
                     validTrial = 0;
                     NumInvalid = NumInvalid+1;
+                    missedTrialQueue(end+1) = i;
                     PsychPortAudio('FillBuffer', pahandle, double(EyeBeep));
                     PsychPortAudio('Start', pahandle);
                     PsychPortAudio('Stop', pahandle,1);
@@ -610,14 +629,23 @@ try
             end
         end
         
-        % If there are more than elparam.MaxInvTrials then you will
-        % re-calibrate before the next trial
-        if Parameters.EyeTrack
-            if NumInvalid== elparam.MaxInvTrials
-                calibReq = 1;
+        % Re-calibrate if too many consecutive invalid trials
+        if Parameters.EyeTrack && NumInvalid >= elparam.MaxInvTrials
+            Eyelink('message', 'RECALIBRATION_START');
+            eyeLinkClearScreen(0);
+            calibresult = EyelinkDoTrackerSetup(el);
+            if calibresult == el.TERMINATE_KEY
+                userAborted = true;
             end
+            % EyelinkDoTrackerSetup stops recording internally; restart it
+            WaitSecs(0.05);
+            Eyelink('StartRecording');
+            WaitSecs(0.05);
+            NumInvalid = 0;
+            calibReq   = 0;
         end
-    
+        if userAborted, break, end
+
         % Display fixation point
         Screen('FillOval', w, [0.6 0.6 0.6], Parameters.FixationPos);
         Screen('Flip', w);
@@ -670,7 +698,8 @@ try
 
             tmpData(TrialCounter,7) = single(isCorrect);
 
-            CompletedTrials = CompletedTrials + 1;
+            CompletedTrials   = CompletedTrials + 1;
+            ValidTrialCounter = ValidTrialCounter + 1;
             catchTag = ''; if isCatchTrial, catchTag = ' [CATCH]'; end
             fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s%s\n\n', ...
                 num2str(targContrast*100), num2str(targetOri), ...
@@ -768,7 +797,8 @@ try
             tmpData(TrialCounter,7) = single(isCorrect);
             % col 8 (estimated CS) left as NaN for catch trials
 
-            CompletedTrials = CompletedTrials + 1;
+            CompletedTrials   = CompletedTrials + 1;
+            ValidTrialCounter = ValidTrialCounter + 1;
             fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s [CATCH]\n\n', ...
                 num2str(targContrast*100), num2str(targetOri), ...
                 num2str(tmpData(TrialCounter,6)), ...
@@ -805,6 +835,174 @@ try
             end
         end
     end % outer repetition loop
+
+    %% RESCHEDULED TRIALS (fixation-break replay)
+    % Trials invalidated by fixation breaks are replayed here in shuffled
+    % order. If a replay trial is also broken, it is re-queued; this
+    % continues until the queue is empty.
+    while ~isempty(missedTrialQueue) && ~userAborted
+        % Shuffle the current queue so retries are interleaved
+        missedTrialQueue = Shuffle(missedTrialQueue);
+
+        nextQueue = zeros(0, 1); % accumulate re-broken trials
+        for qIdx = 1:numel(missedTrialQueue)
+            if userAborted, break, end
+            i            = missedTrialQueue(qIdx);
+            isCatchTrial = false;
+
+            oriIdx          = randi(numel(Gabor.AllowedOri));
+            targetOri       = Gabor.AllowedOri(oriIdx);
+            correctResponse = oriIdx;
+
+            % Query Quest+ fresh — uses all data collected so far
+            stimValDb    = qpQuery(questHandles(i).q);
+            targContrast = 10^(stimValDb(1)/20);
+            targContrast = min(max(targContrast, 0.0001), 1);
+
+            TrialCounter = TrialCounter + 1;
+            % Grow tmpData if needed
+            if TrialCounter > size(tmpData, 1)
+                tmpData      = [tmpData;      single(NaN(100, 9))];
+                respDuration = [respDuration, single(NaN(1, 100))];
+            end
+            tmpData(TrialCounter, 1:5) = [TrialCounter, Gabor.x_ycoords(1,i), Gabor.x_ycoords(2,i), targContrast, targetOri];
+            tmpData(TrialCounter, 9)   = 0;
+
+            fprintf('RESCHEDULED Trial: %s; Contrast: %s%%\n', num2str(TrialCounter), num2str(targContrast*100))
+
+            %% ISI
+            if Parameters.EyeTrack, Eyelink('message', 'ISI_START'); end
+            Screen('FillOval', w, [0.4 0.4 0.4], Parameters.FixationPos);
+            ISITime = Parameters.ISILim(1) + (Parameters.ISILim(2)-Parameters.ISILim(1)).*rand(1,1);
+            timeStamp(end+1,1) = GetSecs; ISION = timeStamp(end,1);
+            while ISION-timeStamp(end,1) < ISITime
+                ISION = Screen('Flip', w,[],1);
+                [kDown, ~, kCode] = KbCheck(EscapePad);
+                if kDown && any(kCode(escapeKey)), userAborted = true; break, end
+            end
+            if userAborted, break, end
+            if Parameters.EyeTrack
+                Eyelink('message', 'ISI_END %d', TrialCounter-1);
+                Eyelink('message', 'TRIAL_START %d', TrialCounter);
+            end
+
+            %% Stimulus
+            validTrial = 1;
+            frm = 1;
+            FlipReversalTime  = 0:Gabor.FlipReversalRate:Gabor.stimDurationWithRamp_secs;
+            FlipReversalIndex = repmat([1,2],1,length(FlipReversalTime));
+            timeStamp(end+1,1) = GetSecs; GratingOn = timeStamp(end,1);
+            while GratingOn-timeStamp(end,1) <= Gabor.stimDurationWithRamp_secs
+                [~,closestIndex] = min(abs(FlipReversalTime-(GratingOn-timeStamp(end,1))));
+                Screen('FillOval', w, [0.4 0 0], Parameters.FixationPos);
+                Screen('DrawTexture', w, gaborid(FlipReversalIndex(closestIndex)), [], ...
+                    double(CenterRectOnPoint([0 0 Gabor.Size_px Gabor.Size_px], ...
+                    ScreenRect(3)/2 + Gabor.x_ycoords(1,i), ...
+                    ScreenRect(4)/2 + Gabor.x_ycoords(2,i))), ...
+                    0+targetOri, [], abs(targContrast), [], [], []);
+                GratingOn = Screen('Flip', w);
+                [kDown, ~, kCode] = KbCheck(EscapePad);
+                if kDown && any(kCode(escapeKey)), userAborted = true; break, end
+
+                if Parameters.EyeTrack && validTrial
+                    if frm==1, Eyelink('message', 'STIMULUS_START'); end
+                    [x,y] = CheckEyePos(w,elparam);
+                    [inside] = CheckFixRad(x,y,[ScreenRect(3)/2 ScreenRect(4)/2], elparam.FixRadPix);
+                    if ~inside
+                        Eyelink('message', 'FIXATION_BREAK');
+                        validTrial = 0;
+                        NumInvalid = NumInvalid+1;
+                        nextQueue(end+1) = i;
+                        PsychPortAudio('FillBuffer', pahandle, double(EyeBeep));
+                        PsychPortAudio('Start', pahandle);
+                        PsychPortAudio('Stop', pahandle,1);
+                        Screen('FillRect', w, [1,0,0], Parameters.FixationPos);
+                        Screen('Flip',w);
+                    end
+                elseif Parameters.EyeTrack && ~validTrial
+                    Screen('FillRect', w, [1,0,0], Parameters.FixationPos);
+                    Screen('Flip',w);
+                end
+                frm = frm+1;
+            end
+            if userAborted, break, end
+
+            if Parameters.EyeTrack
+                if validTrial
+                    Eyelink('message', 'TRIAL_END %d', TrialCounter);
+                else
+                    Eyelink('message', 'TRIAL_END_BROKEN %d', TrialCounter);
+                end
+            end
+
+            Screen('FillOval', w, [0.6 0.6 0.6], Parameters.FixationPos);
+            Screen('Flip', w);
+
+            %% Response & Quest+ update
+            if validTrial
+                if Parameters.EyeTrack, Eyelink('message', 'RESP_START'); end
+                respTimeStart = GetSecs;
+                timeStamp(end+1,1) = respTimeStart;
+                keyIsDown = 0;
+                while ~keyIsDown
+                    [keyIsDown, secs, keyCode] = KbCheck(double(ResponsePad));
+                    [~, ~, escCode] = KbCheck(EscapePad);
+                    if any(escCode(escapeKey)), userAborted = true; break, end
+                    reply = KbName(keyCode);
+                    if iscell(reply), reply = reply{1}; end
+                    if keyIsDown
+                        if ismember(reply, AllowedKey)
+                            switch reply
+                                case AllowedKey{1}; response = 1;
+                                case AllowedKey{2}; response = 2;
+                                case AllowedKey{3}; response = 3;
+                                case AllowedKey{4}; response = 4;
+                            end
+                            respTimeEnd = GetSecs;
+                            break
+                        else
+                            keyIsDown = 0;
+                        end
+                    end
+                end
+                if userAborted, break, end
+                timeStamp(end+1,1) = respTimeEnd;
+                respDuration(TrialCounter) = single(respTimeEnd - respTimeStart);
+
+                tmpData(TrialCounter,6) = Gabor.AllowedOri(single(response));
+                isCorrect = (response == correctResponse);
+                questHandles(i).q = qpUpdate(questHandles(i).q, 20*log10(targContrast), isCorrect+1);
+                psiIdx = qpListMaxArg(questHandles(i).q.posterior);
+                psiDb  = questHandles(i).q.psiParamsDomain(psiIdx, 1);
+                tmpData(TrialCounter,7) = single(isCorrect);
+                tmpData(TrialCounter,8) = single(1 / (10^(psiDb/20)));
+
+                CompletedTrials   = CompletedTrials + 1;
+                ValidTrialCounter = ValidTrialCounter + 1;
+                fprintf('Target Contrast: %s%%, Target Ori: %sdeg, Response: %sdeg (%ss) - %s [RESCHEDULED]\n\n', ...
+                    num2str(targContrast*100), num2str(targetOri), ...
+                    num2str(tmpData(TrialCounter,6)), ...
+                    num2str(round(respDuration(TrialCounter)+0.5,3)), ResponseFbk{isCorrect+1});
+            end
+
+            % Re-calibrate if too many invalid trials (same check as main loop)
+            if Parameters.EyeTrack && NumInvalid >= elparam.MaxInvTrials
+                Eyelink('message', 'RECALIBRATION_START');
+                eyeLinkClearScreen(0);
+                calibresult = EyelinkDoTrackerSetup(el);
+                if calibresult == el.TERMINATE_KEY
+                    userAborted = true;
+                end
+                WaitSecs(0.05);
+                Eyelink('StartRecording');
+                WaitSecs(0.05);
+                NumInvalid = 0;
+                calibReq   = 0;
+            end
+            if userAborted, break, end
+        end
+        missedTrialQueue = nextQueue;
+    end
 
     %% END SCREEN
     Screen('TextSize', w, 64);
@@ -986,6 +1184,8 @@ if exist(CSVSaveNameTmp,'file')
 end
 
 if Parameters.EyeTrack
+    Eyelink('StopRecording');
+    Eyelink('CloseFile');
     disp('Renaming EDF file ...')
     oldDir = sprintf('%s/%s_%s_%s.edf',FolderName,Parameters.Subj_ID,Parameters.Subj_ScanDate,'tmp');
     newDir = [SaveName '.edf'];
