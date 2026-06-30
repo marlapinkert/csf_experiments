@@ -20,6 +20,10 @@ if elparam.TEST
     t = GetSecs;
 else
     evt = Eyelink('newestfloatsample'); %pulls current EyeLink estimate
+    if ~isstruct(evt)
+        x = 0; y = 0; t = GetSecs;
+        return
+    end
     x = evt.gx(elparam.EyeTest);
     y = evt.gy(elparam.EyeTest);
     t = evt.time;
